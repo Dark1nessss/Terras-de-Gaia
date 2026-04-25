@@ -94,7 +94,7 @@ export default function LiveStreamPlayer() {
               <span className="w-1.5 h-1.5 bg-red-600 rounded-full animate-pulse" />
               <span className="text-[10px] font-black text-white uppercase tracking-[0.1em]">Direto</span>
            </div>
-           <span className="text-[9px] font-bold text-white/40 uppercase italic tracking-widest">Porto Canal</span>
+           <span className="text-[9px] font-bold text-white/40 uppercase italic tracking-widest">Terras de Gaia</span>
         </div>
       </div>
     </div>
