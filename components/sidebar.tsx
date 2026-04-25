@@ -11,17 +11,17 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const menuItems = [
-    { label: "Clube", icon: <Shield size={24} />, hasSub: true },
-    { label: "Futebol", icon: <Trophy size={24} />, hasSub: true },
-    { label: "Modalidades", icon: <Users size={24} />, hasSub: true },
-    { label: "Notícias", icon: <Newspaper size={24} />, hasSub: false },
-    { label: "Transparência", icon: <Info size={24} />, hasSub: false },
-    { label: "Agenda", icon: <Calendar size={24} />, hasSub: false },
-    { label: "Loja", icon: <ShoppingBag size={24} />, hasSub: false },
-    { label: "Bilhetes", icon: <Ticket size={24} />, hasSub: false },
-    { label: "Sócios", icon: <Users size={24} />, hasSub: true },
-    { label: "Multimédia", icon: <Tv size={24} />, hasSub: false },
-    { label: "Apps", icon: <AppWindow size={24} />, hasSub: false },
+    { label: "Clube", icon: <Shield size={20} />, hasSub: true },
+    { label: "Futebol", icon: <Trophy size={20} />, hasSub: true },
+    { label: "Modalidades", icon: <Users size={20} />, hasSub: true },
+    { label: "Notícias", icon: <Newspaper size={20} />, hasSub: false },
+    { label: "Transparência", icon: <Info size={20} />, hasSub: false },
+    { label: "Agenda", icon: <Calendar size={20} />, hasSub: false },
+    { label: "Loja", icon: <ShoppingBag size={20} />, hasSub: false },
+    { label: "Bilhetes", icon: <Ticket size={20} />, hasSub: false },
+    { label: "Sócios", icon: <Users size={20} />, hasSub: true },
+    { label: "Multimédia", icon: <Tv size={20} />, hasSub: false },
+    { label: "Apps", icon: <AppWindow size={20} />, hasSub: false },
   ];
 
   return (
@@ -41,7 +41,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        {/* Header: FC Porto Style */}
+        {/* Header */}
         <div className="sticky top-0 z-10 flex items-center justify-between p-4 border-none bg-[#2c272f]">
           <div className="flex items-center gap-3">
             <Link href="/">
@@ -52,10 +52,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 height={48}
                 className="object-contain"
               />
-              {/* Terras de Gaia must be on the right side of the image not below */}
-              <span className="font-bold uppercase text-sm tracking-wide">
-                Terras de Gaia
-              </span>
             </Link>
           </div>
           <button onClick={onClose} className="p-2 text-white/40 hover:text-white transition-colors">
@@ -71,7 +67,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               type="button"
               className="group relative shrink-0 flex items-center justify-between gap-2 rounded-sm px-4 py-3 text-left transition duration-300 active:scale-[0.98] enabled:cursor-pointer hover:bg-transparent"
             >
-              <div className="flex items-center gap-8">
+              <div className="flex items-center gap-4">
                 {/* Icon Color Spec: Default #969199, Hover #00a6f0 */}
                 <div className="text-[#969199] group-hover:text-[#00a6f0] transition-colors duration-300">
                   {item.icon}
@@ -82,7 +78,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                     {item.label}
                   </span>
                   {/* Subtle highlight bar from your screenshot */}
-                  <div className="absolute -bottom-1.5 left-0 w-6 h-[2px] bg-white/10 group-hover:bg-[#00a6f0] group-hover:w-full transition-all duration-300" />
+                  <div className="absolute -bottom-1.5 left-0 w-6 h-0.5 bg-white/10 group-hover:bg-[#00a6f0] group-hover:w-full transition-all duration-300" />
                 </div>
               </div>
 
