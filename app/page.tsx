@@ -1,7 +1,7 @@
-import { getPosts } from "./lib/wp";
 import Navbar from "@/components/navbar";
 import Hero from "@/components/hero";
 import LiveStreamPlayer from "@/components/minplayer";
+import KineticNews from "@/components/testnews";
 import ContentHub from "@/components/programs";
 import { Metadata } from "next";
 
@@ -11,13 +11,12 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const posts = await getPosts();
-
   return (
     <div className="bg-white">
       <Navbar />
       <Hero />
       <ContentHub />
+      <KineticNews />
       <LiveStreamPlayer />
     </div>
   );

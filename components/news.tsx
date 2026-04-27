@@ -1,79 +1,109 @@
-import { ChevronRight, Calendar} from "lucide-react";
+import { Calendar, ArrowUpRight, Clock, MessageSquare } from "lucide-react";
 import { getPosts } from "../app/lib/wp";
+import Link from "next/link";
+import Image from "next/image";
 
-const posts = await getPosts();
+export async function News() {
+  const posts = await getPosts();
 
-// display posts in frontend
+  if (!posts || !Array.isArray(posts) || posts.length === 0) return null;
 
-const news = [
-  {
-    id: 1,
-    category: "Desporto",
-    title: "FC Porto vence clássico e assume a liderança do campeonato",
-    date: "27 Abril, 2026",
-  },
-  {
-    id: 2,
-    category: "Região",
-    title: "Novas infraestruturas em Gaia prometem melhorar mobilidade urbana",
-    date: "26 Abril, 2026",
-  },
-  {
-    id: 3,
-    category: "Cultura",
-    title: "Festival de Verão confirma primeiras atrações internacionais",
-    date: "26 Abril, 2026",
-  },
-];
+  const mainStory = posts[0];
+  const listStories = posts.slice(1, 5); // 4 more stories for the side/bottom
 
-export function News() {
   return (
-    <>
-      {/* 3. NEWS SECTION (Integrated directly) */}
-      <section className="py-16 border-t border-white/5 bg-[#0a0c10]">
-        <div className="container mx-auto px-6">
-          <div className="flex items-end justify-between mb-12">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-black uppercase italic tracking-tighter text-white">
-                Últimas <span className="text-[#00a6f0]">Notícias</span>
-              </h2>
-              <div className="h-1 w-12 bg-[#00a6f0] mt-2" />
+    <section className="py-20 bg-[#0a0c10] font-nurom">
+      <div className="container mx-auto px-6">
+        
+        {/* Header - Traditional Newspaper Style */}
+        <div className="border-y border-white/10 py-6 mb-12 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex items-center gap-4">
+            <span className="bg-[#00a6f0] text-white text-[10px] font-black px-2 py-0.5 uppercase tracking-tighter">Live</span>
+            <div className="text-white/40 text-[10px] font-bold uppercase tracking-[0.2em]">
+              {new Date().toLocaleDateString('pt-PT', { weekday: 'long', day: 'numeric', month: 'long' })}
             </div>
-            <button className="flex items-center gap-2 text-white/50 hover:text-[#00a6f0] transition-colors uppercase text-xs font-bold tracking-widest">
-              Ver Todas <ChevronRight size={16} />
-            </button>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {news.map((item) => (
-              <article key={item.id} className="group cursor-pointer">
-                {/* News Thumbnail Placeholder */}
-                <div className="relative aspect-3/2 mb-6 overflow-hidden rounded-sm border border-white/10 bg-white/5">
-                  <div className="absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-colors z-10" />
-                  {/* Category Badge */}
-                  <span className="absolute top-4 left-4 z-20 bg-[#00a6f0] text-white text-[10px] font-black uppercase px-2 py-1 italic tracking-widest">
-                    {item.category}
-                  </span>
-                </div>
-
-                {/* Metadata */}
-                <div className="flex items-center gap-2 text-white/40 text-[10px] font-bold uppercase tracking-widest mb-3">
-                  <Calendar size={12} className="text-[#00a6f0]" />
-                  {item.date}
-                </div>
-
-                {/* Title */}
-                <h3 className="text-xl md:text-2xl text-white leading-tight group-hover:text-[#00a6f0] transition-colors uppercase italic tracking-tighter">
-                  {item.title}
-                </h3>
-
-                {/* Animated underline */}
-                <div className="mt-6 w-8 group-hover:w-full h-px bg-white/10 group-hover:bg-[#00a6f0] transition-all duration-500" />
-              </article>
-            ))}
-          </div>
+          <h2 className="text-2xl font-black uppercase italic tracking-tighter text-white">
+            Terras de Gaia <span className="text-[#00a6f0]">Gazeta</span>
+          </h2>
+          <Link href="/noticias" className="text-white/40 hover:text-[#00a6f0] text-[10px] font-black uppercase tracking-widest transition-colors">
+            Edição Digital →
+          </Link>
         </div>
-      </section>
-    </>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          {/* MAIN COLUMN (Featured Story) */}
+          <div className="lg:col-span-8">
+            <Link href={`/post/${mainStory.slug}`} className="group block">
+              <div className="relative aspect-video mb-6 overflow-hidden bg-[#161b22] border border-white/5">
+                {mainStory._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
+                  <Image
+                    src={mainStory._embedded['wp:featuredmedia'][0].source_url}
+                    alt="Main"
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                )}
+                <div className="absolute top-0 right-0 bg-[#00a6f0] text-white text-[10px] font-black uppercase px-4 py-2">
+                  {mainStory._embedded?.['wp:term']?.[0]?.[0]?.name || "Destaque"}
+                </div>
+              </div>
+              
+              <h3 
+                className="text-4xl md:text-5xl text-white font-black leading-none uppercase italic tracking-tighter mb-4 group-hover:text-[#00a6f0] transition-colors"
+                dangerouslySetInnerHTML={{ __html: mainStory.title?.rendered || "" }}
+              />
+              <div
+                className="text-white/50 text-lg line-clamp-2 mb-6 font-medium border-l-2 border-[#00a6f0] pl-4"
+                dangerouslySetInnerHTML={{ __html: mainStory.excerpt?.rendered || "" }}
+              />
+            </Link>
+          </div>
+
+          {/* SIDEBAR (Traditional News Feed) */}
+          <div className="lg:col-span-4 flex flex-col gap-6">
+            <div className="bg-white/5 p-4 mb-2">
+              <span className="text-[#00a6f0] text-[10px] font-black uppercase tracking-widest">Última Hora</span>
+            </div>
+            
+            {listStories.map((post: any) => (
+              <Link 
+                href={`/post/${post.slug}`} 
+                key={post.id} 
+                className="group flex flex-col border-b border-white/5 pb-6 last:border-0"
+              >
+                <div className="flex justify-between items-start gap-4 mb-2">
+                  <span className="text-[#00a6f0] text-[9px] font-black uppercase tracking-tighter">
+                    {post._embedded?.['wp:term']?.[0]?.[0]?.name || "Gaia"}
+                  </span>
+                  <div className="flex items-center gap-1 text-white/20 text-[9px]">
+                    <Clock size={10} />
+                    {new Date(post.date).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })}
+                  </div>
+                </div>
+                <h4 
+                  className="text-lg text-white font-black leading-tight uppercase italic tracking-tighter group-hover:text-[#00a6f0] transition-colors"
+                  dangerouslySetInnerHTML={{ __html: post.title?.rendered || "" }}
+                />
+              </Link>
+            ))}
+
+            {/* Unique Niche Widget: Weather or Stock placeholder */}
+            <div className="mt-auto p-6 border border-dashed border-white/10 rounded-sm">
+              <div className="flex items-center justify-between text-white/40 mb-4">
+                <span className="text-[10px] font-black uppercase">Gaia Agora</span>
+                <ArrowUpRight size={14} />
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="text-3xl text-white font-black">18°C</div>
+                <div className="text-[10px] text-white/60 leading-tight uppercase font-bold">Céu Limpo<br/>Vila Nova de Gaia</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
   );
 }
