@@ -36,7 +36,7 @@ export default function LiveStreamPlayer() {
 
   if (viewState === "hidden") {
     return (
-      <div className="fixed bottom-6 right-6 z-[60] flex items-center justify-center">
+      <div className="fixed bottom-6 right-6 z-60 flex items-center justify-center">
         <span 
           className="absolute inset-0 rounded-full bg-blue-900/40 animate-ping" 
           style={{ animationDuration: "2.4s" }} 
@@ -54,7 +54,7 @@ export default function LiveStreamPlayer() {
   return (
     <div 
       ref={playerRef}
-      className="fixed bottom-6 right-6 z-[60] w-[320px] md:w-[420px] aspect-video rounded-lg overflow-hidden shadow-2xl bg-black border border-white/5 transition-all duration-500 ease-in-out"
+      className="fixed bottom-6 right-6 z-60 w-[320px] md:w-105 aspect-video rounded-lg overflow-hidden shadow-2xl bg-black border border-white/5 transition-all duration-500 ease-in-out"
     >
       {/* Top Action Bar */}
       <div className="absolute top-2 right-2 z-30 flex gap-2">
@@ -98,7 +98,7 @@ export default function LiveStreamPlayer() {
               className="flex items-center gap-2 pointer-events-auto group/live"
            >
               <span className={`w-1.5 h-1.5 rounded-full ${isLive ? 'bg-red-600 animate-pulse' : 'bg-gray-500'}`} />
-              <span className={`text-[10px] font-black uppercase tracking-[0.1em] transition-colors ${isLive ? 'text-white' : 'text-gray-400 group-hover/live:text-white'}`}>
+              <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${isLive ? 'text-white' : 'text-gray-400 group-hover/live:text-white'}`}>
                 Direto
               </span>
            </button>

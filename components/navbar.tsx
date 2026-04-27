@@ -48,7 +48,7 @@ export default function Navbar() {
         </button>
         
         <div className="flex items-center gap-3 group cursor-pointer">
-          <div className="relative flex-shrink-0">
+          <div className="relative shrink-0">
             {/* Image link sends user to the top of the page */}
             <Link href="/">
               <Image

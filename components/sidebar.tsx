@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { 
-  X, Trophy, Shield, Users, Newspaper, Info, Calendar, 
+  X, Trophy, Shield, Newspaper, Calendar, 
   ChevronRight, MessageSquare, ArrowLeft, Search, 
   MonitorPlay, Radio, BookOpen, Phone 
 } from "lucide-react";
@@ -64,14 +64,14 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     <>
       {/* Backdrop */}
       <div 
-      className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] transition-opacity duration-400 ease-in-out ${
+      className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-100 transition-opacity duration-400 ease-in-out ${
         isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={handleClose}
       />
 
       <aside 
-      className={`fixed top-0 left-0 z-[110] h-dvh w-[85%] md:w-[320px] bg-[#2c272f] text-white font-nurom shadow-[20px_0_50px_rgba(0,0,0,0.5)] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col ${
+      className={`fixed top-0 left-0 z-110 h-dvh w-[85%] md:w-[320px] bg-[#2c272f] text-white font-nurom shadow-[20px_0_50px_rgba(0,0,0,0.5)] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col ${
         isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -88,7 +88,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             ) : (
               <Link href="/" className="flex items-center gap-3">
                 <Image
-                  src="/logo.png"
+                  src="/logo-tg.png"
                   alt="Jornal Diário Logo"
                   width={48}
                   height={48}
@@ -130,7 +130,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                       <span className="font-bold uppercase text-[15px] tracking-wide">
                         {item.label}
                       </span>
-                      <div className="absolute -bottom-1.5 left-0 w-6 h-[2px] bg-white/10 group-hover:bg-[#00a6f0] group-hover:w-full transition-all duration-300" />
+                      <div className="absolute -bottom-1.5 left-0 w-6 h-0.5 bg-white/10 group-hover:bg-[#00a6f0] group-hover:w-full transition-all duration-300" />
                     </div>
                   </div>
 
@@ -153,7 +153,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                     <span className="font-bold uppercase text-[15px] tracking-wide text-white/80 group-hover:text-[#00a6f0] transition-colors">
                       {sub}
                     </span>
-                    <div className="absolute -bottom-1.5 left-0 w-6 h-[2px] bg-white/10 group-hover:bg-[#00a6f0] group-hover:w-full transition-all duration-300" />
+                    <div className="absolute -bottom-1.5 left-0 w-6 h-0.5 bg-white/10 group-hover:bg-[#00a6f0] group-hover:w-full transition-all duration-300" />
                   </div>
                 </button>
               ))}

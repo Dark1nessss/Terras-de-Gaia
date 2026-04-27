@@ -1,6 +1,6 @@
 export default function Hero() {
   return (
-    <section className="relative h-screen w-full overflow-hidden flex flex-col justify-end font-nurom z-0">
+    <section className="relative h-dvh w-full overflow-hidden flex flex-col justify-end font-nurom z-0">
       {/* Background Video */}
       <video 
         autoPlay muted loop playsInline 
@@ -27,13 +27,13 @@ export default function Hero() {
 
         {/* Headlines: Adjusting size for Mobile */}
         <div className="max-w-4xl select-none">
-          <h1 className="text-4xl md:text-7xl font-black uppercase italic tracking-tighter leading-[0.8] mb-4 md:mb-6 drop-shadow-2xl">
+          <h1 className="text-5xl md:text-7xl font-black uppercase italic tracking-tighter leading-[0.8] mb-4 md:mb-6 drop-shadow-2xl">
             Jornal <br /> 
             <span className="text-[#00a6f0]">Diário</span>
           </h1>
           
           <div className="relative border-l-[3px] border-[#00a6f0] pl-4 md:pl-6 py-1 md:py-2">
-            <p className="text-xs md:text-lg text-white/90 font-bold max-w-sm md:max-w-xl leading-tight italic tracking-tight uppercase">
+            <p className="text-md md:text-lg text-white/90 font-bold max-w-sm md:max-w-xl leading-tight italic tracking-tight uppercase">
               Espaço de notícias que marcam a atualidade <br className="hidden md:block" /> 
               do desporto e da região.
             </p>

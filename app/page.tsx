@@ -1,8 +1,9 @@
 import { getPosts } from "./lib/wp";
-import Navbar from "../components/navbar";
-import Hero from "../components/hero";
+import Navbar from "@/components/navbar";
+import Hero from "@/components/hero";
+import LiveStreamPlayer from "@/components/minplayer";
+import ContentHub from "@/components/programs";
 import { Metadata } from "next";
-import LiveStreamPlayer from "../components/minplayer";
 
 export const metadata: Metadata = {
   title: "Jornal Diário - Terras de Gaia",
@@ -13,15 +14,11 @@ export default async function HomePage() {
   const posts = await getPosts();
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-white">
       <Navbar />
       <Hero />
+      <ContentHub />
       <LiveStreamPlayer />
-      <main className="container mx-auto py-12 px-6">
-        <section className="h-[100vh]">
-          <h2 className="text-3xl font-bold mb-6">Últimas Notícias</h2>
-        </section>
-      </main>
     </div>
   );
 }
