@@ -1,6 +1,9 @@
+"use client";
+
+import React, { useRef } from 'react';
 import { Clock } from "lucide-react";
 
-const days = ["Segunda, 27/04", "Terça, 28/04", "Quarta, 29/04", "Quinta, 30/04", "Sexta, 1/05"];
+const days = ["Segunda, 27/04", "Terça, 28/04", "Quarta, 29/04", "Quinta, 30/04", "Sexta, 1/05", "Sábado, 2/05", "Domingo, 3/05"];
 
 const schedule = [
   { time: "9:30 - 11:25", title: "Manhã Desportiva", color: "#1e3a8a" },
@@ -9,48 +12,65 @@ const schedule = [
 ];
 
 export function TVGuideGrid() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   return (
     <section className="bg-[#0a0c10] pb-24 font-nurom border-t border-white/5">
       <div className="container mx-auto px-6 pt-12">
         <h2 className="text-3xl font-black uppercase italic tracking-tighter text-white mb-8">
           Guia TV
         </h2>
-
-        {/* Day Tabs with Parallelogram Shape */}
-        <div className="flex overflow-x-auto gap-4 mb-10 pb-2 scrollbar-hide border-b border-white/5 px-4">
+        <div 
+          ref={scrollRef}
+          className="flex overflow-x-auto mb-10 pb-1 scroll-smooth scrollbar-hide snap-x snap-mandatory border-b border-white/10"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
           {days.map((day, i) => (
             <button 
               key={day}
               className={`
-                relative shrink-0 transition-all duration-300 group before:absolute before:inset-0 before:-skew-x-8 before:transition-colors
+                relative shrink-0 transition-all duration-300 group snap-start
+                /* Slanted Background using before element */
+                before:absolute before:inset-0 before:-skew-x-12 before:origin-bottom
                 ${i === 0 
-                  ? "before:bg-[#161b22] text-[#00a6f0] before:border-b-2 before:border-[#00a6f0]" 
-                  : "text-white/30 hover:text-white/60 before:bg-white/5 hover:before:bg-white/10"
+                  ? "text-[#00a6f0] before:bg-[#161b22] z-10" 
+                  : "text-white/30 hover:text-white/60 before:bg-white/5"
                 }
               `}
             >
-              <span className="relative block px-8 py-4 text-[11px] font-black uppercase italic tracking-[0.2em] whitespace-nowrap">
+              {/* Text content un-skewed for readability */}
+              <span className="relative block px-12 py-5 text-[11px] font-black uppercase italic tracking-[0.15em] whitespace-nowrap">
                 {day}
               </span>
+              {i === 0 && (
+                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#00a6f0] -skew-x-12 translate-y-[1px]" />
+              )}
+              
+              {/* Vertical Divider Line */}
+              {i < days.length - 1 && (
+                <div className="absolute right-0 top-1/4 h-1/2 w-[1px] bg-white/10 -skew-x-12" />
+              )}
             </button>
           ))}
+          {/* Edge spacer for the last slanted tab */}
+          <div className="min-w-[40px] shrink-0" />
         </div>
 
-        {/* Schedule List */}
+        {/* Schedule list remains focused on the grid */}
         <div className="space-y-3">
           {schedule.map((item, idx) => (
             <div 
               key={idx} 
-              className="group flex items-center bg-[#161b22]/40 hover:bg-[#161b22]/80 transition-all rounded-lg overflow-hidden border border-white/5"
+              className="group flex items-center bg-[#161b22]/40 hover:bg-[#161b22]/60 transition-all rounded-lg overflow-hidden border border-white/5"
             >
               <div 
                 className="w-48 aspect-video flex items-center justify-center p-4 relative shrink-0"
                 style={{ backgroundColor: item.color }}
               >
-                <span className="text-white font-black uppercase italic text-xs text-center leading-tight">
+                <span className="text-white font-black uppercase italic text-xs text-center leading-tight drop-shadow-md">
                   {item.title}
                 </span>
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
+                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors" />
               </div>
               
               <div className="flex flex-col px-8">
