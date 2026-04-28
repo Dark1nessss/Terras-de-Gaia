@@ -9,14 +9,27 @@ export default function LiveStreamPlayer() {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const [isLive, setIsLive] = useState(true);
-  const [hasStream, setHasStream] = useState(true); // Toggle this based on your API
+  const [hasStream, setHasStream] = useState(true);
 
   const playerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const clickTimer = useRef<NodeJS.Timeout | null>(null);
 
   const videoId = "jfKfPfyJRdk";
-  // YouTube embed with JS API enabled for custom controls
   const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&enablejsapi=1`;
+
+  const handleInteraction = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    if (e.detail === 1) {
+      clickTimer.current = setTimeout(() => {
+        setIsPlaying((prev) => !prev);
+      }, 250);
+    } else if (e.detail === 2) {
+      if (clickTimer.current) clearTimeout(clickTimer.current);
+      toggleFullscreen();
+    }
+  };
 
   // Fix cascading render & sync storage
   useEffect(() => {
@@ -44,7 +57,6 @@ export default function LiveStreamPlayer() {
   const syncToLive = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (iframeRef.current) {
-      // Refreshing src is the safest way to "Catch up" without a complex API
       iframeRef.current.src = embedUrl;
     }
     setIsLive(true);
@@ -107,10 +119,7 @@ export default function LiveStreamPlayer() {
             {/* Desktop Interaction Overlay */}
             <div 
               className="absolute inset-0 z-40 cursor-pointer" 
-              onClick={(e) => {
-                if (e.detail === 1) setIsPlaying(!isPlaying);
-                if (e.detail === 2) toggleFullscreen();
-              }} 
+              onClick={handleInteraction}
             />
 
             {/* Bottom Broadcast Controller */}
