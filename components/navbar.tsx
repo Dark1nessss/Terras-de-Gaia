@@ -4,27 +4,36 @@ import { Menu, Phone, MessageCircle, MoreVertical } from "lucide-react";
 import Sidebar from "./sidebar";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
   const [scrollY, setScrollY] = useState(0);
   const [isSolid, setIsSolid] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
-    const handleScroll = () => {
-      // Trigger solid state when scrolled past 93.5% of the viewport height (Hero size)
+    const checkStatus = () => {
       const currentScroll = window.scrollY;
-      const heroHeight = window.innerHeight * .935;
-
       setScrollY(currentScroll);
-      setIsSolid(window.scrollY > heroHeight);
+
+      if (pathname === "/") {
+        // Home page behavior: dynamic scroll
+        const heroHeight = window.innerHeight * 0.935;
+        setIsSolid(currentScroll > heroHeight);
+      } else {
+        setIsSolid(true);
+      }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    checkStatus();
+
+    window.addEventListener("scroll", checkStatus);
+    return () => window.removeEventListener("scroll", checkStatus);
+  }, [pathname]);
 
   const getNavbarStyles = () => {
+    if (pathname !== "/") return "bg-[#0045ac] shadow-2xl"; // Always solid on non-home pages
     if (scrollY === 0) return "bg-transparent"; // Invisible at top
     if (isSolid) return "bg-[#0045ac] shadow-2xl"; // Hard Solid
     return "bg-white/5 backdrop-blur-[12px] border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"; // Glassy

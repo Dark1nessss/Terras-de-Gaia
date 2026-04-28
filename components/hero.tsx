@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Hero() {
   return (
     <section className="relative h-dvh w-full overflow-hidden flex flex-col justify-end font-nurom z-0">
@@ -49,6 +51,7 @@ export default function Hero() {
         <div className="container mx-auto px-0 md:px-6 flex flex-row items-center">
           
           {/* Primary Button - Emission */}
+          <Link href="/live">
           <button className="
             [--h:60px] md:[--h:64px] [--x:calc(var(--h)/2/7.115)] 
             flex-1 md:flex-none relative h-(--h) px-4 md:px-12 flex items-center justify-center font-black isolate transition-all active:scale-95 cursor-pointer group
@@ -64,6 +67,7 @@ export default function Hero() {
               </span>
             </div>
           </button>
+          </Link>
           
           {/* Secondary Button - Programs */}
           <button className="
