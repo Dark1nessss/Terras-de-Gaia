@@ -24,7 +24,7 @@ export function ProgramSlider() {
   };
 
   return (
-    <section className="bg-[#0a0c10] py-12 font-nurom overflow-hidden">
+    <section className="bg-[#0a0c10] py-12 font-nurom overflow-hidden select-none">
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-3xl font-black uppercase italic tracking-tighter text-white">

@@ -15,7 +15,7 @@ export function TVGuideGrid() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section className="bg-[#0a0c10] pb-24 font-nurom border-t border-white/5">
+    <section className="bg-[#0a0c10] pb-24 font-nurom border-t border-white/5 select-none">
       <div className="container mx-auto px-6 pt-12">
         <h2 className="text-3xl font-black uppercase italic tracking-tighter text-white mb-8">
           Guia TV
@@ -31,7 +31,7 @@ export function TVGuideGrid() {
               className={`
                 relative shrink-0 transition-all duration-300 group snap-start
                 /* Slanted Background using before element */
-                before:absolute before:inset-0 before:-skew-x-12 before:origin-bottom
+                before:absolute before:inset-0 before:-skew-x-12 before:origin-bottom cursor-pointer
                 ${i === 0 
                   ? "text-[#00a6f0] before:bg-[#161b22] z-10" 
                   : "text-white/30 hover:text-white/60 before:bg-white/5"
@@ -61,7 +61,7 @@ export function TVGuideGrid() {
           {schedule.map((item, idx) => (
             <div 
               key={idx} 
-              className="group flex items-center bg-[#161b22]/40 hover:bg-[#161b22]/60 transition-all rounded-lg overflow-hidden border border-white/5"
+              className="group flex items-center bg-[#161b22]/40 hover:bg-[#161b22]/60 transition-all rounded-lg overflow-hidden border border-white/5 select-none cursor-pointer"
             >
               <div 
                 className="w-48 aspect-video flex items-center justify-center p-4 relative shrink-0"

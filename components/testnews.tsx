@@ -24,7 +24,7 @@ export default function NeuralNews() {
       <div className="container mx-auto px-8 relative z-20 flex flex-col lg:flex-row gap-24 items-start">
         
         {/* STICKY SIDEBAR */}
-        <aside className="sticky top-20 hidden lg:flex flex-col gap-10 min-w-[240px] z-30 py-4 self-start">
+        <aside className="sticky top-20 hidden lg:flex flex-col gap-10 min-w-[240px] z-30 py-4 self-start cursor-crosshair">
           <div className="text-[#00a6f0] text-[9px] font-mono tracking-[0.5em] mb-12 flex items-center gap-2">
             <span className="w-2 h-2 bg-[#00a6f0] animate-pulse" />
             UNIDADE_GAIA // FEED
@@ -35,7 +35,7 @@ export default function NeuralNews() {
               <button
                 key={cat}
                 onClick={() => setActiveTab(cat)}
-                className="group flex items-center gap-4 text-left outline-none"
+                className="group flex items-center gap-4 text-left outline-none cursor-crosshair"
               >
                 <div className={`h-[2px] transition-all duration-700 ease-in-out ${
                   activeTab === cat 

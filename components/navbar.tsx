@@ -51,7 +51,7 @@ export default function Navbar() {
         {/* Hamburger Trigger */}
         <button 
           onClick={() => setIsSidebarOpen(true)}
-          className="text-white hover:bg-white/20 p-2 rounded-full transition-colors"
+          className="text-white hover:text-neutral-400 p-2 rounded-full transition-colors cursor-pointer"
         >
           <Menu size={24} />
         </button>
