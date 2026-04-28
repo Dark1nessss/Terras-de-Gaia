@@ -3,7 +3,8 @@ const API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || process.env.WORDPRE
 export async function getPosts() {
   const res = await fetch(`${API_URL}/posts?_embed`);
   next: { revalidate: 180 }; // Revalidate the data every 180 seconds/3 minutes
-  console.log("Data:", res);
+  // if need testing uncomment below!
+  // console.log("Data:", res);
     if (!res.ok){
       throw new Error('Failed to fetch posts');
     }

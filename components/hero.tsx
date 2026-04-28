@@ -47,38 +47,37 @@ export default function Hero() {
       <div className="w-screen h-px bg-white/10 relative z-40 left-1/2 -translate-x-1/2" />
 
       {/* 3. Glued Buttons Area - Responsive Layout */}
-      <div className="w-full bg-[#1a181e]/80 backdrop-blur-xl relative z-50 border-t border-white/5">
-        <div className="container mx-auto px-0 md:px-6 flex flex-row items-center">
-          
-          {/* Primary Button - Emission */}
-          <Link href="/live">
+      <div className="w-full bg-[#1a181e]/80 backdrop-blur-xl relative z-50 border-t border-white/5 overflow-hidden">
+        <div className="container mx-auto px-0 md:px-6 flex flex-row items-center md:justify-start">
+        <Link href="/programs">
           <button className="
-            [--h:60px] md:[--h:64px] [--x:calc(var(--h)/2/7.115)] 
-            flex-1 md:flex-none relative h-(--h) px-4 md:px-12 flex items-center justify-center font-black isolate transition-all active:scale-95 cursor-pointer group
-            before:absolute before:-z-10 before:-inset-x-(--x) before:inset-y-0 before:-skew-x-8 before:bg-[#0055ff]
+            [--h:50px] md:[--h:40px] [--x:calc(var(--h)/2/7.115)] 
+            flex-1 md:flex-none md:order-2 relative h-(--h) px-4 md:px-8 flex items-center justify-center font-black transition-all group cursor-pointer isolate
+            before:absolute before:-z-10 before:-inset-x-(--x) before:inset-y-0 before:-skew-x-8 hover:before:bg-white/10
           ">
-            <div className="flex items-center gap-2 md:gap-4">
-              <span className="text-white uppercase italic tracking-tight md:tracking-widest text-[10px] md:text-[12px] whitespace-nowrap">
-                Emissão Direto
-              </span>
-              <span className="relative flex size-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full size-2 bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,1)]"></span>
-              </span>
-            </div>
-          </button>
-          </Link>
-          
-          {/* Secondary Button - Programs */}
-          <button className="
-            [--h:60px] md:[--h:64px] [--x:calc(var(--h)/2/7.115)] 
-            flex-1 md:flex-none relative h-(--h) px-4 md:px-16 flex items-center justify-center font-black transition-all group cursor-pointer
-            before:absolute before:-z-10 before:-inset-x-(--x) before:inset-y-0 before:-skew-x-8 before:bg-white/5 md:hover:before:bg-white/10
-          ">
-            <span className="text-white/60 group-hover:text-white uppercase italic tracking-tight md:tracking-widest text-[10px] md:text-[12px] transition-colors relative">
+            <span className="text-white/60 group-hover:text-white uppercase italic tracking-tight md:tracking-widest text-[10px] md:text-[11px] transition-colors relative">
               Programas
             </span>
           </button>
+        </Link>
+          <Link href="/live" className="flex-[1.8] md:flex-none md:order-1"> 
+            <button className="
+              [--h:50px] md:[--h:40px] [--x:calc(var(--h)/2/7.115)] 
+              w-full md:w-auto relative h-(--h) px-6 md:px-8 flex items-center justify-center font-black isolate transition-all active:scale-95 cursor-pointer group
+              before:absolute before:-z-10 before:-inset-x-(--x) before:inset-y-0 before:-skew-x-8 before:bg-[#0055ff]
+            ">
+              <div className="flex items-center gap-2 md:gap-3">
+                <span className="text-white uppercase italic tracking-tight md:tracking-widest text-[10px] md:text-[11px] whitespace-nowrap">
+                  Ver emissão em direto
+                </span>
+                <span className="relative flex size-1.5 md:size-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full size-1.5 md:size-2 bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,1)]"></span>
+                </span>
+              </div>
+            </button>
+          </Link>
+
         </div>
       </div>
     </section>
