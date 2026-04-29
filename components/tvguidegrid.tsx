@@ -43,17 +43,17 @@ export function TVGuideGrid() {
                 {day}
               </span>
               {i === 0 && (
-                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#00a6f0] -skew-x-12 translate-y-[1px]" />
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00a6f0] -skew-x-12 translate-y-px" />
               )}
               
               {/* Vertical Divider Line */}
               {i < days.length - 1 && (
-                <div className="absolute right-0 top-1/4 h-1/2 w-[1px] bg-white/10 -skew-x-12" />
+                <div className="absolute right-0 top-1/4 h-1/2 w-px bg-white/10 -skew-x-12" />
               )}
             </button>
           ))}
           {/* Edge spacer for the last slanted tab */}
-          <div className="min-w-[40px] shrink-0" />
+          <div className="min-w-10 shrink-0" />
         </div>
 
         {/* Schedule list remains focused on the grid */}

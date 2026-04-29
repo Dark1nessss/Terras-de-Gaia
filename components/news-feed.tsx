@@ -43,7 +43,7 @@ export function NewsFeed({ initialPosts }: { initialPosts: any[] }) {
       </div>
 
       {/* RIGHT: Sidebar */}
-      <div className="lg:col-span-4 flex flex-col justify-between h-full lg:max-h-[580px]"> 
+      <div className="lg:col-span-4 flex flex-col justify-between h-full lg:max-h-145"> 
         <div className="flex flex-col h-full overflow-hidden">
           <div className="bg-white/5 p-4 mb-4 shrink-0">
             <span className="text-[#00a6f0] text-[10px] font-black uppercase tracking-widest">Feed de Notícias</span>
@@ -82,7 +82,7 @@ export function NewsFeed({ initialPosts }: { initialPosts: any[] }) {
 
           {/* Weather Widget */}
           <div className="mt-auto shrink-0">
-            <div className="p-5 border border-dashed border-white/20 rounded-sm bg-white/[0.02] hover:border-white/40 transition-colors cursor-default">
+            <div className="p-5 border border-dashed border-white/20 rounded-sm bg-white/2 hover:border-white/40 transition-colors cursor-default">
               <div className="flex items-center justify-between text-white/40 mb-2">
                 <span className="text-[10px] font-black uppercase tracking-widest">Gaia Agora</span>
                 <ArrowUpRight size={14} className="text-[#00a6f0]" />

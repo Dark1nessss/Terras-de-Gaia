@@ -56,14 +56,14 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   return (
     <>
       <div 
-        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] transition-opacity duration-400 ease-in-out ${
+        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-100 transition-opacity duration-400 ease-in-out ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={handleClose}
       />
 
       <aside 
-        className={`fixed top-0 left-0 z-[110] h-dvh w-[85%] md:w-[320px] bg-[#2c272f] text-white font-nurom shadow-[20px_0_50px_rgba(0,0,0,0.5)] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col ${
+        className={`fixed top-0 left-0 z-110 h-dvh w-[85%] md:w-[320px] bg-[#2c272f] text-white font-nurom shadow-[20px_0_50px_rgba(0,0,0,0.5)] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

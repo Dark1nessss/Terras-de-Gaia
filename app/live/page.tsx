@@ -1,4 +1,4 @@
-import { Tv, Clock, Info, Calendar } from "lucide-react";
+import { Tv, Info, Calendar } from "lucide-react";
 import Link from "next/link";
 
 // Mock Data for DRYness - later fetch from WP or API
@@ -53,7 +53,7 @@ export default function LivePage() {
             </div>
             
             {/* Live Description Block */}
-            <div className="mt-8 p-8 bg-white/[0.02] border border-white/5 rounded-sm">
+            <div className="mt-8 p-8 bg-white/2 border border-white/5 rounded-sm">
               <h2 className="text-2xl font-black uppercase italic mb-4">Jornal Diário — Edição da Tarde</h2>
               <p className="text-white/60 leading-relaxed max-w-3xl">
                 Acompanhe as principais notícias que marcam a atualidade de Vila Nova de Gaia e da região. 
@@ -76,7 +76,7 @@ export default function LivePage() {
               {DAILY_SCHEDULE.map((item, idx) => (
                 <div 
                   key={idx}
-                  className={`group p-5 flex items-center justify-between border-b border-white/5 transition-all duration-300 hover:bg-white/[0.03] ${item.active ? 'bg-white/5 border-l-4 border-l-[#00a6f0]' : ''}`}
+                  className={`group p-5 flex items-center justify-between border-b border-white/5 transition-all duration-300 hover:bg-white/3 ${item.active ? 'bg-white/5 border-l-4 border-l-[#00a6f0]' : ''}`}
                 >
                   <div className="flex items-center gap-5">
                     <span className={`text-xs font-black italic ${item.active ? 'text-[#00a6f0]' : 'text-white/30'}`}>

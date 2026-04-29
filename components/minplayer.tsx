@@ -101,7 +101,7 @@ export default function LiveStreamPlayer() {
           <div className="absolute inset-0 z-40" onClick={handleInteraction} />
 
           {/* Bottom Bar */}
-          <div className={`absolute bottom-0 inset-x-0 h-14 z-50 bg-gradient-to-t from-black flex items-center px-5 justify-between transition-all 
+          <div className={`absolute bottom-0 inset-x-0 h-14 z-50 bg-linear-to-t from-black flex items-center px-5 justify-between transition-all 
             ${isFullscreen ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100'}`}>
             <div className="flex items-center gap-5 pointer-events-auto">
               <button onClick={() => setIsPlaying(!isPlaying)} className="text-white cursor-pointer">{isPlaying ? <Pause size={20} fill="white" /> : <Play size={20} fill="white" />}</button>

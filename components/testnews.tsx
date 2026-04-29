@@ -19,12 +19,12 @@ export default function NeuralNews() {
   return (
     <section className="bg-[#020406] py-40 relative cursor-crosshair min-h-screen block overflow-x-hidden">
       {/* Overlays */}
-      <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.05)_50%)] bg-[length:100%_4px] z-10 opacity-20" />
+      <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.05)_50%)] bg-size-[100%_4px] z-10 opacity-20" />
       
       <div className="container mx-auto px-8 relative z-20 flex flex-col lg:flex-row gap-24 items-start">
         
         {/* STICKY SIDEBAR */}
-        <aside className="sticky top-20 hidden lg:flex flex-col gap-10 min-w-[240px] z-30 py-4 self-start cursor-crosshair">
+        <aside className="sticky top-20 hidden lg:flex flex-col gap-10 min-w-60 z-30 py-4 self-start cursor-crosshair">
           <div className="text-[#00a6f0] text-[9px] font-mono tracking-[0.5em] mb-12 flex items-center gap-2">
             <span className="w-2 h-2 bg-[#00a6f0] animate-pulse" />
             UNIDADE_GAIA // FEED
@@ -37,7 +37,7 @@ export default function NeuralNews() {
                 onClick={() => setActiveTab(cat)}
                 className="group flex items-center gap-4 text-left outline-none cursor-crosshair"
               >
-                <div className={`h-[2px] transition-all duration-700 ease-in-out ${
+                <div className={`h-0.5 transition-all duration-700 ease-in-out ${
                   activeTab === cat 
                     ? 'w-12 bg-[#00a6f0] shadow-[0_0_12px_#00a6f0]' 
                     : 'w-3 bg-white/10 group-hover:w-8 group-hover:bg-white/30'
@@ -55,7 +55,7 @@ export default function NeuralNews() {
         {/* ANIMATED GRID CONTAINER */}
         <motion.div 
           layout
-          className="flex-grow grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16 md:gap-y-0 min-h-[500px]"
+          className="grow grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16 md:gap-y-0 min-h-125"
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
           <AnimatePresence mode="popLayout" initial={false}>
@@ -76,7 +76,7 @@ export default function NeuralNews() {
                     index % 2 !== 0 ? 'md:translate-y-24' : ''
                   }`}
                 >
-                  <div className="relative bg-gradient-to-br from-white/[0.03] to-transparent backdrop-blur-md border border-white/10 p-8 transition-all duration-500 group-hover:border-[#00a6f0]/50 group-hover:bg-white/[0.05]">
+                  <div className="relative bg-linear-to-br from-white/3 to-transparent backdrop-blur-md border border-white/10 p-8 transition-all duration-500 group-hover:border-[#00a6f0]/50 group-hover:bg-white/5">
                     <div className="absolute top-4 right-6 font-mono text-[8px] text-white/20 tracking-tighter">
                       LOG_REF::{item.id}00X // 2026
                     </div>
@@ -91,7 +91,7 @@ export default function NeuralNews() {
                           {item.title}
                         </h3>
                         <div className="flex items-center gap-4">
-                           <div className="h-[1px] flex-grow bg-white/5 group-hover:bg-[#00a6f0]/30 transition-all" />
+                           <div className="h-px grow bg-white/5 group-hover:bg-[#00a6f0]/30 transition-all" />
                            <span className="text-[9px] font-black uppercase tracking-[0.3em]" style={{ color: item.color }}>
                             {item.cat}
                            </span>
