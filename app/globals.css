@@ -124,6 +124,7 @@
   }
   html {
     @apply font-nurom;
+    @apply scroll-smooth;
   }
 }
 

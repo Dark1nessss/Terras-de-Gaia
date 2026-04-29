@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { ChevronRight, ChevronLeft, Clock, Play } from 'lucide-react';
 
 const programs = [
@@ -14,6 +14,30 @@ const programs = [
 export function ProgramSlider() {
   // Reference to the scrollable container for manual button control
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Dragging state
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!scrollRef.current) return;
+    setIsDragging(true);
+    // Get starting point and current scroll position
+    setStartX(e.pageX - scrollRef.current.offsetLeft);
+    setScrollLeft(scrollRef.current.scrollLeft);
+  };
+
+  const handleMouseLeave = () => setIsDragging(false);
+  const handleMouseUp = () => setIsDragging(false);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !scrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX) * 2; // Multiplier adjusts scroll speed
+    scrollRef.current.scrollLeft = scrollLeft - walk;
+  };
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
@@ -46,19 +70,23 @@ export function ProgramSlider() {
             </button>
           </div>
         </div>
-
-        {/* Update: Added 'snap-x snap-mandatory' for the sliding 'snap' effect 
-            Update: Added padding-right to the last item via a ghost div 
-        */}
         <div 
           ref={scrollRef}
-          className="flex overflow-x-auto gap-5 scroll-smooth scrollbar-hide snap-x snap-mandatory pb-4"
+          onMouseDown={handleMouseDown}
+          onMouseLeave={handleMouseLeave}
+          onMouseUp={handleMouseUp}
+          onMouseMove={handleMouseMove}
+          className={`flex overflow-x-auto gap-5 scroll-smooth scrollbar-hide snap-x snap-mandatory pb-4 ${
+            isDragging ? 'cursor-grabbing' : 'cursor-grab'
+          }`}
           style={{ WebkitOverflowScrolling: 'touch' }} // Smooth momentum on iOS
         >
           {programs.map((prog) => (
             <div 
               key={prog.id} 
-              className="min-w-[85%] sm:min-w-[45%] lg:min-w-[320px] group cursor-pointer snap-start"
+              className={`min-w-[85%] sm:min-w-[45%] lg:min-w-[320px] group snap-start ${
+                isDragging ? 'pointer-events-none' : 'cursor-pointer'
+              }`}
             >
               <div className="relative aspect-video overflow-hidden rounded-xl mb-4 bg-[#161b22] border border-white/5">
                 <div 
