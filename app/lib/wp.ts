@@ -1,8 +1,9 @@
 const API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || process.env.WORDPRESS_API_URL;
 
 export async function getPosts() {
-  const res = await fetch(`${API_URL}/posts?_embed`);
-  next: { revalidate: 180 }; // Revalidate the data every 180 seconds/3 minutes
+  const res = await fetch(`${API_URL}/posts?_embed`, {
+    next: { revalidate: 180 } // Revalidate the data every 180 seconds/3 minutes
+  });
   // if need testing uncomment below!
   // console.log("Data:", res);
     if (!res.ok){
@@ -12,8 +13,10 @@ export async function getPosts() {
 }
 
 export async function getPostBySlug(slug: string) {
-  const res = await fetch(`${API_URL}/posts?slug=${slug}&_embed`);
-  next: { revalidate: 180 }; // Revalidate the data every 180 seconds/3 minutes
+  const res = await fetch(`${API_URL}/posts?slug=${slug}&_embed`, {
+    next: { revalidate: 180 } // Revalidate the data every 180 seconds/3 minutes
+  });
+
     if (!res.ok){
       throw new Error('Failed to fetch post');
     }
@@ -22,6 +25,18 @@ export async function getPostBySlug(slug: string) {
 }
 
 export async function getLeagueTable() {
-  const res = await fetch(`${API_URL}/leagues?_embed`);
+  const res = await fetch(`${API_URL}/leagues?_embed`, {
+    next: { revalidate: 180 }
+  });
+  return res.json();
+}
+
+export async function getPostsByCategory(categorySlug: string) {
+  // We fetch posts by the category slug to get the whole list for that sport
+  const res = await fetch(`${API_URL}/posts?category_slug=${categorySlug}&_embed`, {
+    next: { revalidate: 180 }
+  });
+  
+  if (!res.ok) throw new Error('Failed to fetch category posts');
   return res.json();
 }

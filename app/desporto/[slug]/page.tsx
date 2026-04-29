@@ -1,52 +1,65 @@
-import { notFound } from "next/navigation";
+import { getPostsByCategory } from "@/app/lib/wp";
+import { SportsHero } from "@/components/sports-hero";
+import { VideoCard } from "@/components/video-card";
+import { SidebarWidget } from "@/components/sidebar-widget";
+import { Trophy, PlayCircle } from "lucide-react";
 
-const SPORT_CONFIG: Record<string, { title: string; widgetId: string; theme: string }> = {
-  futebol: { title: "Futebol", widgetId: "zz_fb_1", theme: "#00a6f0" },
-  futsal: { title: "Futsal", widgetId: "zz_fs_1", theme: "#ff4500" },
-  andebol: { title: "Andebol", widgetId: "zz_an_1", theme: "#00ffcc" },
-};
-
-// 1. Change to async function
-export default async function SportSlugPage({ 
-  params 
-}: { 
-  params: Promise<{ slug: string }> // 2. Define params as a Promise
-}) {
-  // 3. Await the params
-  const resolvedParams = await params;
-  const slug = resolvedParams.slug;
+export default async function SportsCategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params; // Properly unwrap the promise
+  const posts = await getPostsByCategory(slug);
   
-  const sport = SPORT_CONFIG[slug.toLowerCase()];
+  // Debugging: If nothing appears, check your terminal for this log
+  if (!posts || posts.length === 0) {
+    return (
+      <div className="min-h-screen bg-[#0a0c10] flex items-center justify-center text-white/20 uppercase font-black italic">
+        Sem conteúdos de {slug} disponíveis
+      </div>
+    );
+  }
 
-  if (!sport) return notFound();
+  const [mainStory, ...secondaryNews] = posts;
 
   return (
-    <main className="min-h-screen bg-[#020406] pt-32 pb-20 px-4 md:px-8 font-nurom">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-[#00a6f0] font-mono text-[10px] tracking-[0.4em] mb-4 uppercase">
-          Unidade_Gaia // Desporto // {slug}
+    <main className="min-h-screen bg-[#0a0c10] text-white pt-24 pb-12 font-nurom">
+      <div className="container mx-auto px-6">
+        
+        {/* Section Header */}
+        <div className="flex items-center gap-4 mb-10 border-l-4 border-[#00a6f0] pl-6">
+          <h1 className="text-5xl font-black uppercase italic tracking-tighter">
+            Desporto <span className="text-[#00a6f0]">{slug}</span>
+          </h1>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-12">
-          <div className="flex-grow">
-            <h1 className="text-6xl font-black italic uppercase text-white mb-12 tracking-tighter">
-              {sport.title}
-            </h1>
-            <div className="p-10 border border-white/5 bg-white/[0.02]">
-               <p className="text-white/40">Conteúdo para {sport.title} a carregar...</p>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Main Column */}
+          <div className="lg:col-span-9 space-y-12">
+            <SportsHero post={mainStory} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {secondaryNews.map((post: any) => (
+                <VideoCard key={post.id} post={post} />
+              ))}
             </div>
           </div>
 
-          <aside className="w-full lg:w-80 shrink-0">
-            <div className="sticky top-24 border border-white/10 bg-white/[0.02] p-6">
-              <h2 className="text-white text-xs font-bold uppercase tracking-widest mb-6 flex items-center gap-2">
-                <span className="w-2 h-2 bg-[#00a6f0]" /> Classificação
-              </h2>
-              <div className="aspect-[3/4] bg-black/40 border border-dashed border-white/10 flex items-center justify-center">
-                 <span className="text-white/20 font-mono text-[10px]">WIDGET_{sport.widgetId}</span>
+          {/* Sidebar */}
+          <div className="lg:col-span-3 space-y-8">
+            <SidebarWidget title="Classificações" icon={<Trophy size={18} />}>
+              <div className="text-[10px] font-bold text-white/40 uppercase italic">
+                Brevemente: Live Scores
               </div>
-            </div>
-          </aside>
+            </SidebarWidget>
+            
+            <SidebarWidget title="Mais Vistos" icon={<PlayCircle size={18} />}>
+               {posts.slice(0, 3).map((p: any) => (
+                 <div key={p.id} className="group border-b border-white/5 pb-3 last:border-0 mb-3">
+                    <p className="text-[9px] text-[#00a6f0] font-black uppercase mb-1">Vídeo</p>
+                    <p className="text-sm font-black uppercase italic group-hover:text-[#00a6f0] transition-colors leading-tight">
+                      {p.title.rendered}
+                    </p>
+                 </div>
+               ))}
+            </SidebarWidget>
+          </div>
         </div>
       </div>
     </main>
