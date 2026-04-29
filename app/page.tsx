@@ -1,7 +1,6 @@
 import Navbar from "@/components/navbar";
 import Hero from "@/components/hero";
 import LiveStreamPlayer from "@/components/minplayer";
-import KineticNews from "@/components/testnews";
 import ContentHub from "@/components/programs";
 import { Metadata } from "next";
 
@@ -16,7 +15,6 @@ export default async function HomePage() {
       <Navbar />
       <Hero />
       <ContentHub />
-      <KineticNews />
       <LiveStreamPlayer />
     </div>
   );

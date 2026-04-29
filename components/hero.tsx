@@ -49,10 +49,10 @@ export default function Hero() {
       {/* 3. Glued Buttons Area - Responsive Layout */}
       <div className="w-full bg-[#1a181e]/80 backdrop-blur-xl relative z-50 border-t border-white/5 overflow-hidden">
         <div className="container mx-auto px-0 md:px-6 flex flex-row items-center md:justify-start">
-        <Link href="/programs">
+        <Link href="/programs" className="flex-[0.4] md:flex-none md:order-2">
           <button className="
             [--h:50px] md:[--h:40px] [--x:calc(var(--h)/2/7.115)] 
-            flex-1 md:flex-none md:order-2 relative h-(--h) px-4 md:px-8 flex items-center justify-center font-black transition-all group cursor-pointer isolate
+            w-full md:w-auto relative h-(--h) px-4 md:px-8 flex items-center justify-center font-black transition-all group cursor-pointer isolate
             before:absolute before:-z-10 before:-inset-x-(--x) before:inset-y-0 before:-skew-x-8 hover:before:bg-white/10
           ">
             <span className="text-white/60 group-hover:text-white uppercase italic tracking-tight md:tracking-widest text-[10px] md:text-[11px] transition-colors relative">
@@ -60,7 +60,7 @@ export default function Hero() {
             </span>
           </button>
         </Link>
-          <Link href="/live" className="flex-[1.8] md:flex-none md:order-1"> 
+          <Link href="/live" className="flex-[0.6] md:flex-none md:order-1">
             <button className="
               [--h:50px] md:[--h:40px] [--x:calc(var(--h)/2/7.115)] 
               w-full md:w-auto relative h-(--h) px-6 md:px-8 flex items-center justify-center font-black isolate transition-all active:scale-95 cursor-pointer group
