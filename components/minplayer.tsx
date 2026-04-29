@@ -59,8 +59,15 @@ export default function LiveStreamPlayer() {
   if (viewState === "hidden") {
     return (
       <div className="fixed bottom-6 right-6 z-70">
-        <button onClick={() => toggleView("pip")} className="w-14 h-14 flex items-center justify-center rounded-full bg-[#0055ff] text-white shadow-lg border border-white/10 active:scale-90 transition-all">
-          <Tv size={24} fill="currentColor" />
+        <button 
+          onClick={() => toggleView("pip")} 
+          className="group relative w-14 h-14 flex items-center justify-center rounded-full bg-[#0055ff] text-white shadow-lg border border-white/10 active:scale-95 transition-all"
+        >
+          {/* The Blue Broadcast Pulse */}
+          <span className="absolute inset-0 rounded-full bg-[#0055ff] animate-ping opacity-40 group-hover:opacity-60" />
+          
+          {/* The Icon (Static Center) */}
+          <Tv size={24} fill="currentColor" className="relative z-10" />
         </button>
       </div>
     );
