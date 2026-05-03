@@ -3,6 +3,7 @@ import Hero from "@/components/hero";
 import LiveStreamPlayer from "@/components/minplayer";
 import ContentHub from "@/components/programs";
 import { Metadata } from "next";
+import Footer from "@/components/footer";
 
 export const metadata: Metadata = {
   title: "Jornal Diário - Terras de Gaia",
@@ -12,7 +13,6 @@ export const metadata: Metadata = {
 export default async function HomePage() {
   return (
     <div className="bg-white">
-      <Navbar />
       <Hero />
       <ContentHub />
       <LiveStreamPlayer />

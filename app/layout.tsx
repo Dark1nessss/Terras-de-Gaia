@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
+import Footer from "@/components/footer";
+import Navbar from "@/components/navbar";
 
 // get nurom font from .ttf file in public/fonts
 const nuromFont = localFont({
@@ -24,7 +26,11 @@ export default function RootLayout({
       lang="en"
       className={`${nuromFont.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body>
+        <Navbar />
+          {children}
+        <Footer />
+      </body>
     </html>
   );
 }

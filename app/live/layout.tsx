@@ -14,7 +14,6 @@ export default function LiveLayout({
 }) {
   return (
     <>
-    	<Navbar />
     	{children}
     </>
   );

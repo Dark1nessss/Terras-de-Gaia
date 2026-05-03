@@ -14,7 +14,6 @@ export default function InstitucionalLayout({
 }>) {
   return (
     <>
-      <Navbar />
 			{children}
     </>
   );
