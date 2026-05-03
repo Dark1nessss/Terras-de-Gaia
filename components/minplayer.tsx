@@ -29,6 +29,30 @@ export default function LiveStreamPlayer() {
     return () => document.removeEventListener("fullscreenchange", handleFsChange);
   }, []);
 
+  // Listen to isPlaying state changes and send postMessage to YouTube IFrame API
+  useEffect(() => {
+    if (iframeRef.current && iframeRef.current.contentWindow) {
+      const message = JSON.stringify({
+        event: "command",
+        func: isPlaying ? "playVideo" : "pauseVideo",
+        args: [],
+      });
+      iframeRef.current.contentWindow.postMessage(message, "*");
+    }
+  }, [isPlaying]);
+
+  // Listen to isMuted state changes and send postMessage to YouTube IFrame API
+  useEffect(() => {
+    if (iframeRef.current && iframeRef.current.contentWindow) {
+      const message = JSON.stringify({
+        event: "command",
+        func: isMuted ? "mute" : "unMute",
+        args: [],
+      });
+      iframeRef.current.contentWindow.postMessage(message, "*");
+    }
+  }, [isMuted]);
+
   const toggleFullscreen = useCallback(() => {
     if (!playerRef.current) return;
     if (!document.fullscreenElement) {
@@ -87,7 +111,7 @@ export default function LiveStreamPlayer() {
         </div>
       ) : (
         <div className="relative w-full h-full">
-          <iframe ref={iframeRef} src={embedUrl} className="w-full h-full pointer-events-none scale-[1.01]" allow="autoplay; fullscreen" />
+          <iframe ref={iframeRef} src={embedUrl} className="w-full h-full pointer-events-none" allow="autoplay; fullscreen" />
           
           {/* Top Bar - Hidden when FS */}
           {!isFullscreen && (

@@ -39,14 +39,15 @@ export default function LivePage() {
           {/* LEFT: Video Player */}
           <div className="lg:col-span-8">
             <div className="relative aspect-video bg-black shadow-2xl border border-white/5 overflow-hidden group">
-              <iframe 
+              <iframe
                 src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=1&modestbranding=1`}
-                className="w-full h-full"
+                className="w-full h-full pointer-events-none"
                 allow="autoplay; fullscreen"
               />
               <div className="absolute top-4 left-4 pointer-events-none">
                  <div className="bg-black/60 backdrop-blur-md px-3 py-1 border border-white/10 rounded flex items-center gap-2">
                     <Tv size={14} className="text-[#00a6f0]" />
+                    {/* Get the name of the program later on!!*/}
                     <span className="text-[10px] font-black uppercase italic">Canal Principal</span>
                  </div>
               </div>

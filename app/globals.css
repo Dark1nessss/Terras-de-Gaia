@@ -140,3 +140,9 @@
     height: 0 !important;
   }
 }
+
+iframe {
+  width: 300% !important;
+  height: 100% !important;
+  margin-left: -100% !important;
+}
