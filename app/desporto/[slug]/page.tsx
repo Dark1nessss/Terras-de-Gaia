@@ -1,8 +1,9 @@
-import { getPostsByCategory } from "@/app/lib/wp";
+import { getPostsByCategory } from "@/components/lib/wp";
 import { SportsHero } from "@/components/sports-hero";
 import { VideoCard } from "@/components/video-card";
 import { SidebarWidget } from "@/components/sidebar-widget";
 import { Trophy, PlayCircle } from "lucide-react";
+import { Breadcrumb } from "@/components/breadcrumb";
 
 export default async function SportsCategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params; // Properly unwrap the promise
@@ -23,6 +24,15 @@ export default async function SportsCategoryPage({ params }: { params: Promise<{
     <main className="min-h-screen bg-[#0a0c10] text-white pt-24 pb-12 font-nurom">
       <div className="container mx-auto px-6">
         
+        {/* Breadcrumb */}
+        <Breadcrumb 
+          items={[
+            { label: "Inicial", href: "/" },
+            ...(slug !== "desporto" ? [{ label: "Desporto", href: "/desporto" }] : [])
+          ]} 
+          current={slug !== "desporto" ? slug.charAt(0).toUpperCase() + slug.slice(1) : "Desporto"}
+        />
+
         {/* Section Header */}
         <div className="flex items-center gap-4 mb-10 border-l-4 border-[#00a6f0] pl-6">
           <h1 className="text-5xl font-black uppercase italic tracking-tighter">

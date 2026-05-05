@@ -1,4 +1,4 @@
-import { getPosts } from "../app/lib/wp";
+import { getPosts } from "./lib/wp";
 import Link from "next/link";
 import { NewsFeed } from "./news-feed";
 

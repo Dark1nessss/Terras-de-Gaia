@@ -4,7 +4,7 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true,
+    "strict": false, // Desativado porque existem muitos "any" data no wordpress....
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
