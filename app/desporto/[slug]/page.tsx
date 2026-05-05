@@ -2,14 +2,13 @@ import { getPostsByCategory } from "@/components/lib/wp";
 import { SportsHero } from "@/components/sports-hero";
 import { VideoCard } from "@/components/video-card";
 import { SidebarWidget } from "@/components/sidebar-widget";
-import { Trophy, PlayCircle } from "lucide-react";
+import { Trophy, PlayCircle, TrendingUp } from "lucide-react";
 import { Breadcrumb } from "@/components/breadcrumb";
 
 export default async function SportsCategoryPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params; // Properly unwrap the promise
+  const { slug } = await params;
   const posts = await getPostsByCategory(slug);
   
-  // Debugging: If nothing appears, check your terminal for this log
   if (!posts || posts.length === 0) {
     return (
       <div className="min-h-screen bg-[#0a0c10] flex items-center justify-center text-white/20 uppercase font-black italic">
@@ -19,6 +18,10 @@ export default async function SportsCategoryPage({ params }: { params: Promise<{
   }
 
   const [mainStory, ...secondaryNews] = posts;
+  const sportName = slug
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
 
   return (
     <main className="min-h-screen bg-[#0a0c10] text-white pt-24 pb-12 font-nurom">
@@ -30,44 +33,83 @@ export default async function SportsCategoryPage({ params }: { params: Promise<{
             { label: "Inicial", href: "/" },
             ...(slug !== "desporto" ? [{ label: "Desporto", href: "/desporto" }] : [])
           ]} 
-          current={slug !== "desporto" ? slug.charAt(0).toUpperCase() + slug.slice(1) : "Desporto"}
+          current={slug !== "desporto" ? sportName : "Desporto"}
         />
 
         {/* Section Header */}
-        <div className="flex items-center gap-4 mb-10 border-l-4 border-[#00a6f0] pl-6">
-          <h1 className="text-5xl font-black uppercase italic tracking-tighter">
-            Desporto <span className="text-[#00a6f0]">{slug}</span>
-          </h1>
+        <div className="mb-16">
+          <div className="flex items-end gap-6 border-l-4 border-[#00a6f0] pl-6 mb-2">
+            <h1 className="text-5xl md:text-6xl font-black uppercase italic tracking-tighter">
+              {slug === "desporto" ? "Desporto" : (
+                <>
+                  <span>Desporto</span> <span className="text-[#00a6f0]">{sportName}</span>
+                </>
+              )}
+            </h1>
+          </div>
+          <p className="text-white/40 text-sm uppercase tracking-widest font-bold">
+            {posts.length} {posts.length === 1 ? 'artigo' : 'artigos'}
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Main Column */}
           <div className="lg:col-span-9 space-y-12">
             <SportsHero post={mainStory} />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {secondaryNews.map((post: any) => (
-                <VideoCard key={post.id} post={post} />
-              ))}
-            </div>
+            
+            {secondaryNews.length > 0 && (
+              <div>
+                <div className="flex items-center gap-4 mb-8">
+                  <h2 className="text-2xl font-black uppercase italic tracking-tighter">Últimas Notícias</h2>
+                  <div className="h-0.5 flex-1 bg-white/10" />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {secondaryNews.map((post: any) => (
+                    <VideoCard key={post.id} post={post} />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Sidebar */}
           <div className="lg:col-span-3 space-y-8">
             <SidebarWidget title="Classificações" icon={<Trophy size={18} />}>
-              <div className="text-[10px] font-bold text-white/40 uppercase italic">
-                Brevemente: Live Scores
+              <div className="space-y-3">
+                <div className="text-[10px] font-bold text-white/40 uppercase italic">
+                  Brevemente: Live Scores
+                </div>
+                <div className="h-32 bg-gradient-to-b from-white/5 to-transparent rounded flex items-center justify-center">
+                  <p className="text-white/30 text-xs">Scores ao vivo em breve</p>
+                </div>
               </div>
             </SidebarWidget>
             
-            <SidebarWidget title="Mais Vistos" icon={<PlayCircle size={18} />}>
-               {posts.slice(0, 3).map((p: any) => (
-                 <div key={p.id} className="group border-b border-white/5 pb-3 last:border-0 mb-3">
-                    <p className="text-[9px] text-[#00a6f0] font-black uppercase mb-1">Vídeo</p>
-                    <p className="text-sm font-black uppercase italic group-hover:text-[#00a6f0] transition-colors leading-tight">
-                      {p.title.rendered}
+            <SidebarWidget title="Mais Vistos" icon={<TrendingUp size={18} />}>
+              <div className="space-y-4">
+                {posts.slice(0, 3).map((p: any, idx: number) => (
+                  <div key={p.id} className="group border-b border-white/5 pb-3 last:border-0">
+                    <div className="flex items-start gap-3 mb-2">
+                      <div className="text-[#00a6f0] font-black text-lg leading-none">#{idx + 1}</div>
+                      <p className="text-[9px] text-[#00a6f0] font-black uppercase leading-tight">Destaque</p>
+                    </div>
+                    <p className="text-xs font-black uppercase italic group-hover:text-[#00a6f0] transition-colors leading-snug line-clamp-2">
+                      {p.title.rendered.replace(/<[^>]*>/g, '')}
                     </p>
-                 </div>
-               ))}
+                  </div>
+                ))}
+              </div>
+            </SidebarWidget>
+
+            <SidebarWidget title="Informação" icon={<PlayCircle size={18} />}>
+              <div className="space-y-3 text-[11px] text-white/50 leading-relaxed">
+                <p>
+                  Acompanhe toda a cobertura de <strong className="text-white">{sportName}</strong> em tempo real.
+                </p>
+                <p>
+                  Notícias, análises e estatísticas sobre as principais competições e eventos da modalidade.
+                </p>
+              </div>
             </SidebarWidget>
           </div>
         </div>

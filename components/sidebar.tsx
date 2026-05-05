@@ -3,11 +3,18 @@
 import { useState, useEffect } from "react";
 import { 
   X, Trophy, Shield, Newspaper, Calendar, 
-  ChevronRight, MessageSquare, ArrowLeft, Search, 
-  MonitorPlay, Radio, BookOpen, Phone 
+  ChevronRight, MessageSquare, ArrowLeft, Radio, BookOpen, Phone 
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+
+interface MenuItem {
+  label: string;
+  icon: React.ReactNode;
+  hasSub: boolean;
+  path?: string;
+  subItems?: string[];
+}
 
 interface SidebarProps {
   isOpen: boolean;
@@ -17,11 +24,17 @@ interface SidebarProps {
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
 
-  // Added 'path' to items that don't have submenus
-  const menuItems = [
-    { label: "Pesquisa", icon: <Search size={24} />, hasSub: false, path: "/pesquisa" },
-    { label: "Programas", icon: <MonitorPlay size={24} />, hasSub: false, path: "/programas" },
-    { label: "Informação", icon: <Newspaper size={24} />, hasSub: false, path: "/noticias" },
+  const menuItems: MenuItem[] = [
+    { 
+      label: "Informação", 
+      icon: <Newspaper size={24} />, 
+      hasSub: true, 
+      subItems: [
+        "Política", "Saúde", "Espaço Cidadão", "Música",
+        "Empresas e Empreendedorismo", "Lazer", "Multimédia e Informática",
+        "Acidentes e Socorro", "Água e Energia", "Alimentação e Agricultura"
+      ]
+    },
     { 
       label: "Desporto", 
       icon: <Trophy size={24} />, 
@@ -32,10 +45,10 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         "Ginástica", "Artes Marciais", "Ténis de Mesa"
       ] 
     },
-    { label: "Agenda", icon: <Calendar size={24} />, hasSub: false, path: "/institucional/agenda" },
     { label: "Transmissões", icon: <Radio size={24} />, hasSub: false, path: "/live" },
-    { label: "Revista Terras de Gaia", icon: <BookOpen size={24} />, hasSub: false, path: "/institucional/revista" },
-    { label: "Terras de Gaia", icon: <Shield size={24} />, hasSub: false, path: "/institucional/historia" },
+    { label: "Agenda", icon: <Calendar size={24} />, hasSub: false, path: "/institucional/agenda" },
+    { label: "Revista", icon: <BookOpen size={24} />, hasSub: false, path: "/institucional/revista" },
+    { label: "Sobre Nós", icon: <Shield size={24} />, hasSub: false, path: "/institucional/historia" },
     { label: "Contactos", icon: <Phone size={24} />, hasSub: false, path: "/institucional/contactos" },
   ];
 
@@ -53,6 +66,18 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     return () => { document.body.style.overflow = "unset"; };
   }, [isOpen]);
 
+  const getSubItems = (label: string) => {
+    const item = menuItems.find(m => m.label === label);
+    return item?.subItems || [];
+  };
+
+  const getSubLink = (activeSubmenu: string, subItem: string) => {
+    if (activeSubmenu === "Informação") {
+      return `/categoria/${subItem.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-')}`;
+    }
+    return `/desporto/${subItem.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-')}`;
+  };
+
   return (
     <>
       <div 
@@ -67,6 +92,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
+        {/* Header */}
         <div className="sticky top-0 z-10 flex items-center justify-between p-4 border-none bg-[#2c272f]">
           <div className="flex items-center gap-3">
             {activeSubmenu ? (
@@ -85,54 +111,55 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           </button>
         </div>
 
+        {/* Main Menu */}
         <div className="relative flex-1 overflow-hidden">
           <div className={`flex h-full w-[200%] transition-transform duration-400 ease-[cubic-bezier(0.05,0.7,0.1,1)] ${activeSubmenu ? "-translate-x-1/2" : "translate-x-0"}`}>
             
             {/* MAIN MENU LIST */}
             <div className="w-1/2 h-full overflow-y-auto scrollbar-hide flex flex-col px-2 py-4 gap-1">
               {menuItems.map((item) => (
-                item.hasSub ? (
-                  <button 
-                    key={item.label}
-                    onClick={() => setActiveSubmenu(item.label)}
-                    className="group relative shrink-0 flex items-center justify-between gap-2 rounded-sm px-4 py-3 text-left transition duration-300 active:scale-[0.98] cursor-pointer"
-                  >
-                    <div className="flex items-center gap-8">
-                      <div className="text-[#969199] group-hover:text-[#00a6f0] transition-colors">{item.icon}</div>
-                      <div className="relative">
-                        <span className="font-bold uppercase text-[15px] tracking-wide">{item.label}</span>
-                        <div className="absolute -bottom-1.5 left-0 w-6 h-0.5 bg-white/10 group-hover:bg-[#00a6f0] group-hover:w-full transition-all duration-300" />
+                <div key={item.label}>
+                  {item.hasSub ? (
+                    <button 
+                      onClick={() => setActiveSubmenu(item.label)}
+                      className="group relative w-full flex items-center justify-between gap-2 rounded-sm px-4 py-3 text-left transition duration-300 active:scale-[0.98] cursor-pointer"
+                    >
+                      <div className="flex items-center gap-8">
+                        <div className="text-[#969199] group-hover:text-[#00a6f0] transition-colors">{item.icon}</div>
+                        <div className="relative">
+                          <span className="font-bold uppercase text-[15px] tracking-wide">{item.label}</span>
+                          <div className="absolute -bottom-1.5 left-0 w-6 h-0.5 bg-white/10 group-hover:bg-[#00a6f0] group-hover:w-full transition-all duration-300" />
+                        </div>
                       </div>
-                    </div>
-                    <ChevronRight size={16} className="text-[#969199] group-hover:text-[#00a6f0] group-hover:translate-x-1 transition-all" />
-                  </button>
-                ) : (
-                  <Link 
-                    key={item.label}
-                    href={item.path || "#"}
-                    onClick={handleClose}
-                    className="group relative shrink-0 flex items-center justify-between gap-2 rounded-sm px-4 py-3 text-left transition duration-300 active:scale-[0.98]"
-                  >
-                    <div className="flex items-center gap-8">
-                      <div className="text-[#969199] group-hover:text-[#00a6f0] transition-colors">{item.icon}</div>
-                      <div className="relative">
-                        <span className="font-bold uppercase text-[15px] tracking-wide">{item.label}</span>
-                        <div className="absolute -bottom-1.5 left-0 w-6 h-0.5 bg-white/10 group-hover:bg-[#00a6f0] group-hover:w-full transition-all duration-300" />
+                      <ChevronRight size={16} className="text-[#969199] group-hover:text-[#00a6f0] group-hover:translate-x-1 transition-all" />
+                    </button>
+                  ) : (
+                    <Link 
+                      href={item.path || "#"}
+                      onClick={handleClose}
+                      className="group relative flex items-center justify-between gap-2 rounded-sm px-4 py-3 text-left transition duration-300 active:scale-[0.98]"
+                    >
+                      <div className="flex items-center gap-8">
+                        <div className="text-[#969199] group-hover:text-[#00a6f0] transition-colors">{item.icon}</div>
+                        <div className="relative">
+                          <span className="font-bold uppercase text-[15px] tracking-wide">{item.label}</span>
+                          <div className="absolute -bottom-1.5 left-0 w-6 h-0.5 bg-white/10 group-hover:bg-[#00a6f0] group-hover:w-full transition-all duration-300" />
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                )
+                    </Link>
+                  )}
+                </div>
               ))}
             </div>
 
             {/* SUBMENU LIST */}
             <div className="w-1/2 h-full overflow-y-auto scrollbar-hide flex flex-col px-2 py-4 gap-1">
-              {menuItems.find(m => m.label === activeSubmenu)?.subItems?.map((sub) => (
+              {getSubItems(activeSubmenu || "").map((sub) => (
                 <Link 
                   key={sub}
-                  href={`/desporto/${sub.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-')}`}
+                  href={getSubLink(activeSubmenu || "", sub)}
                   onClick={handleClose}
-                  className="group relative shrink-0 flex flex-col px-10 py-3 text-left transition duration-300 active:scale-[0.98]"
+                  className="group relative flex flex-col px-10 py-3 text-left transition duration-300 active:scale-[0.98]"
                 >
                   <div className="relative w-fit">
                     <span className="font-bold uppercase text-[15px] tracking-wide text-white/80 group-hover:text-[#00a6f0] transition-colors">{sub}</span>
