@@ -3,10 +3,12 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Eye } from "lucide-react";
 import Link from "next/link";
-import { getPostBySlug } from "@/components/lib/wp";
+import { getPostBySlug } from "@/lib/wp";
 import { ShareButton } from "@/components/share-button";
 import { Metadata } from "next";
 import { Breadcrumb } from "@/components/breadcrumb";
+import { decodeHtml } from "@/lib/decode-html";
+import { formatDate } from "@/lib/date";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -61,7 +63,7 @@ export default async function SinglePostPage({ params }: Props) {
               href: categoryName === "Desporto" ? `/desporto/${categorySlug}` : `/categoria/${categorySlug}`
             }
           ]} 
-          current={post.title.rendered.replace(/<[^>]*>/g, "").slice(0, 50)}
+          current={decodeHtml(post.title.rendered).replace(/<[^>]*>/g, "").slice(0, 50)}
         />
 
         {/* Article Content */}
@@ -82,11 +84,7 @@ export default async function SinglePostPage({ params }: Props) {
               <div>
                 <span className="text-white/30">Publicado em </span>
                 <span className="text-white/80 font-semibold">
-                  {new Date(post.date).toLocaleDateString("pt-PT", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
+                  {formatDate(post.date, "full")}
                 </span>
               </div>
             </div>
@@ -112,7 +110,7 @@ export default async function SinglePostPage({ params }: Props) {
 
           {/* Rodapé do Artigo com partilha e leituras */}
           <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
-            <ShareButton title={post.title.rendered} slug={post.slug} />
+            <ShareButton title={decodeHtml(post.title.rendered)} />
             <span className="text-xs text-white/30 flex items-center gap-2">
               <Eye size={14} /> 245 leituras
             </span>

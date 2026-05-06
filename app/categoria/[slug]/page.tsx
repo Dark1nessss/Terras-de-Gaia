@@ -1,9 +1,7 @@
-import { getPostsByCategoryPaginated } from "@/components/lib/wp";
+import { getPostsByCategoryPaginated } from "@/lib/wp";
 import { FeaturedPostSection } from "@/components/featured-post-section";
-import { InfiniteScrollPosts } from "@/components/infinite-scroll-posts";
+import { InfiniteScrollPosts } from "@/components/infinite-scroll";
 import { Breadcrumb } from "@/components/breadcrumb";
-import Link from "next/link";
-import Image from "next/image";
 
 export default async function CategoryPage({ 
   params,

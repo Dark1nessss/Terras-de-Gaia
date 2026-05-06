@@ -1,6 +1,6 @@
-import { getPostsByCategory } from "@/components/lib/wp";
+import { getPostsByCategory } from "@/lib/wp";
 import { SportsHero } from "@/components/sports-hero";
-import { VideoCard } from "@/components/video-card";
+import { InfiniteScrollPosts } from "@/components/infinite-scroll";
 import { SidebarWidget } from "@/components/sidebar-widget";
 import { Trophy, PlayCircle, TrendingUp } from "lucide-react";
 import { Breadcrumb } from "@/components/breadcrumb";
@@ -63,17 +63,18 @@ export default async function SportsCategoryPage({ params }: { params: Promise<{
                   <h2 className="text-2xl font-black uppercase italic tracking-tighter">Últimas Notícias</h2>
                   <div className="h-0.5 flex-1 bg-white/10" />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {secondaryNews.map((post: any) => (
-                    <VideoCard key={post.id} post={post} />
-                  ))}
-                </div>
+                <InfiniteScrollPosts 
+                  slug={slug} 
+                  initialPosts={secondaryNews}
+                  variant="grid-2"
+                  showVideoCards={true}
+                />
               </div>
             )}
           </div>
 
           {/* Sidebar */}
-          <div className="lg:col-span-3 space-y-8">
+          <div className="lg:col-span-3 space-y-8 sticky top-32 self-start">
             <SidebarWidget title="Classificações" icon={<Trophy size={18} />}>
               <div className="space-y-3">
                 <div className="text-[10px] font-bold text-white/40 uppercase italic">

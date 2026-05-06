@@ -1,5 +1,7 @@
 import { Tv, Info, Calendar } from "lucide-react";
 import Link from "next/link";
+import { ShareButton } from "@/components/share-button";
+import { formatDate } from "@/lib/date";
 
 // Mock Data for DRYness - later fetch from WP or API
 const DAILY_SCHEDULE = [
@@ -29,7 +31,7 @@ export default function LivePage() {
             </h1>
           </div>
           <div className="text-right hidden md:block">
-            <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">Quarta-feira, 29 de Abril</p>
+            <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">{formatDate(new Date(), "full")}</p>
           </div>
         </div>
 
@@ -60,6 +62,11 @@ export default function LivePage() {
                 Acompanhe as principais notícias que marcam a atualidade de Vila Nova de Gaia e da região. 
                 Entrevistas em estúdio, reportagens locais e a análise desportiva diária.
               </p>
+              <div className="mt-6">
+                <ShareButton 
+                  title="Jornal Diario - Edição da Tarde"
+                />
+              </div>
             </div>
           </div>
 
@@ -70,7 +77,7 @@ export default function LivePage() {
                 <Calendar size={18} className="text-white" />
                 <span className="font-black uppercase italic tracking-tighter">Programação</span>
               </div>
-              <span className="text-[10px] font-bold opacity-80 uppercase">Hoje</span>
+              <span className="text-xs font-bold opacity-80 uppercase">Hoje</span>
             </div>
 
             <div className="space-y-1">
@@ -87,13 +94,13 @@ export default function LivePage() {
                       <p className={`text-sm font-black uppercase tracking-tight italic ${item.active ? 'text-white' : 'text-white/60 group-hover:text-white'}`}>
                         {item.title}
                       </p>
-                      <p className="text-[9px] font-bold text-[#00a6f0] uppercase tracking-widest mt-0.5">
+                      <p className="text-xs font-bold text-[#00a6f0] uppercase tracking-widest mt-0.5">
                         {item.category}
                       </p>
                     </div>
                   </div>
                   {item.active && (
-                    <span className="text-[9px] font-black uppercase text-[#00a6f0] animate-pulse">Agora</span>
+                    <span className="text-xs font-black uppercase text-[#00a6f0] animate-pulse">Agora</span>
                   )}
                 </div>
               ))}
@@ -103,12 +110,12 @@ export default function LivePage() {
             <div className="mt-auto p-6 border border-dashed border-white/20 flex flex-col gap-4">
                <div className="flex items-center gap-3 text-white/40">
                   <Info size={16} />
-                  <span className="text-[10px] font-bold uppercase tracking-widest">Informações</span>
+                  <span className="text-xs font-bold uppercase tracking-widest">Informações</span>
                </div>
                <p className="text-xs text-white/50 leading-relaxed italic">
                  Dificuldades com a emissão? Contacte o nosso suporte técnico através do canal oficial.
                </p>
-               <Link href="/contactos" className="inline-block text-center py-3 border border-white/10 text-[10px] font-black uppercase hover:bg-white hover:text-black transition-all">
+               <Link href="/contactos" className="inline-block text-center py-3 border border-white/10 text-xs font-black uppercase hover:bg-white hover:text-black transition-all">
                   Pedir Ajuda
                </Link>
             </div>

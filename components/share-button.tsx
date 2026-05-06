@@ -2,16 +2,26 @@
 
 import { useState, useEffect } from "react";
 import { Check, Copy } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { SOCIAL_LINKS } from "@/lib/contact";
 
-export function ShareButton({ title, slug }: { title: string; slug: string }) {
+interface ShareButtonProps {
+  title: string;
+}
+
+export function ShareButton({ title }: ShareButtonProps) {
   const [copied, setCopied] = useState(false);
   const [currentUrl, setCurrentUrl] = useState("");
+  const pathname = usePathname();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setCurrentUrl(`${window.location.origin}/post/${slug}`);
+      const baseUrl = window.location.origin;
+      // Automatically build URL from current pathname
+      const fullPath = baseUrl + pathname;
+      setCurrentUrl(fullPath);
     }
-  }, [slug]);
+  }, [pathname]);
 
   const copyToClipboard = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -23,7 +33,7 @@ export function ShareButton({ title, slug }: { title: string; slug: string }) {
   const shareLinks = [
     {
       name: "Facebook",
-      href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`,
+      href: SOCIAL_LINKS.facebook + `?u=${encodeURIComponent(currentUrl)}`,
       color: "hover:text-[#1877F2] hover:bg-[#1877F2]/10 hover:border-[#1877F2]/20",
       icon: (
         <svg
@@ -38,7 +48,7 @@ export function ShareButton({ title, slug }: { title: string; slug: string }) {
     },
     {
       name: "X / Twitter",
-      href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(title)}`,
+      href: SOCIAL_LINKS.twitter + `?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(title)}`,
       color: "hover:text-white hover:bg-white/10 hover:border-white/20",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
@@ -48,7 +58,7 @@ export function ShareButton({ title, slug }: { title: string; slug: string }) {
     },
     {
       name: "WhatsApp",
-      href: `https://api.whatsapp.com/send?text=${encodeURIComponent(`${title} - ${currentUrl}`)}`,
+      href: SOCIAL_LINKS.whatsapp + `?text=${encodeURIComponent(`${title} - ${currentUrl}`)}`,
       color: "hover:text-[#25D366] hover:bg-[#25D366]/10 hover:border-[#25D366]/20",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
@@ -58,7 +68,7 @@ export function ShareButton({ title, slug }: { title: string; slug: string }) {
     },
     {
       name: "Instagram",
-      href: "https://www.instagram.com/",
+      href: SOCIAL_LINKS.instagram + "/",
       color: "hover:text-[#E1306C] hover:bg-[#E1306C]/10 hover:border-[#E1306C]/20",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">

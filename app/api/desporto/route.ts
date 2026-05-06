@@ -1,5 +1,4 @@
 import { getPostsByCategoryPaginated } from "@/lib/wp";
-import { NextRequest, NextResponse } from "next/server";
 
 const requestCounts = new Map<string, { count: number; reset: number }>();
 
@@ -16,14 +15,14 @@ function getRateLimit(ip: string) {
   return data;
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(request: Request) {
   try {
     const ip = request.headers.get('x-forwarded-for') || 'unknown';
     const rateLimit = getRateLimit(ip);
     
     // Max 30 requests per minute per IP
     if (rateLimit.count > 30) {
-      return NextResponse.json(
+      return Response.json(
         { error: 'Rate limit exceeded' },
         { status: 429, headers: { 'Retry-After': '60' } }
       );
@@ -38,7 +37,7 @@ export async function GET(request: NextRequest) {
     const maxPages = 50; // Prevent deep pagination abuse
 
     if (!slug || page > maxPages) {
-      return NextResponse.json(
+      return Response.json(
         { error: 'Invalid parameters' },
         { status: 400 }
       );
@@ -47,7 +46,7 @@ export async function GET(request: NextRequest) {
     const { posts, totalPosts } = await getPostsByCategoryPaginated(slug, page, perPage);
     const hasMore = (page * perPage) < totalPosts;
 
-    return NextResponse.json({
+    return Response.json({
       posts,
       hasMore,
       total: totalPosts,
@@ -55,7 +54,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Category API error:', error);
-    return NextResponse.json(
+    return Response.json(
       { error: 'Failed to fetch posts' },
       { status: 500 }
     );

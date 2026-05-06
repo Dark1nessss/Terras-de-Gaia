@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { decodeHtml } from "@/lib/decode-html";
 
 interface FeaturedPostProps {
   post: {
@@ -29,10 +30,10 @@ export function FeaturedPostSection({ post }: FeaturedPostProps) {
         <div className="md:col-span-2 flex flex-col justify-between">
           <div>
             <h2 className="text-3xl font-black italic uppercase mb-4 leading-tight group-hover:text-[#00a6f0] transition-colors">
-              {post.title.rendered.replace(/<[^>]*>/g, "")}
+              {decodeHtml(post.title.rendered)}
             </h2>
             <p className="text-white/60 leading-relaxed mb-4">
-              {post.excerpt?.rendered.replace(/<[^>]*>/g, "").slice(0, 200)}...
+              {decodeHtml(post.excerpt?.rendered).slice(0, 200)}...
             </p>
           </div>
           <div className="flex items-center gap-4 text-sm text-white/50">

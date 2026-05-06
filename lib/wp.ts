@@ -1,3 +1,5 @@
+import { enrichPosts } from "./post-enricher";
+
 const API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || process.env.WORDPRESS_API_URL;
 const WP_USER = process.env.WP_USER;
 const WP_APP_PASSWORD = process.env.WP_APP_PASSWORD;
@@ -31,11 +33,7 @@ export async function getPosts() {
   // Log a sample of the embedded author data for inspection
   console.log("getPosts - Embedded author data (first post):", posts[0]?._embedded?.['author']);
 
-  return await Promise.all(posts.map(async (post: any) => {
-    post.author_name = await extractAuthorName(post);
-    post.category = extractCategory(post);
-    return post;
-  }));
+  return enrichPosts(posts);
 }
 
 export async function getPostBySlug(slug: string) {
@@ -62,7 +60,7 @@ export async function getPostBySlug(slug: string) {
       post.category = extractCategory(post);
     }
 
-    return post;
+    return post ? (await enrichPosts([post]))[0] : null;
   } catch (error) {
     console.error("Erro ao obter o post:", error);
     return null;
@@ -121,22 +119,19 @@ export async function getPostsByCategoryPaginated(categorySlug: string, page: nu
   if (!res.ok) throw new Error('Failed to fetch category posts');
 
   const posts = await res.json();
-  const totalPages = parseInt(res.headers.get('x-wp-totalpages') || '1', 10);
   const totalPosts = parseInt(res.headers.get('x-wp-total') || '0', 10);
+  const totalPages = parseInt(res.headers.get('x-wp-totalpages') || '1', 10);
+  const enrichedPosts = await enrichPosts(posts);
 
-  return await Promise.all(posts.map(async (post: any) => {
-    post.author_name = await extractAuthorName(post);
-    post.category = extractCategory(post);
-    return post;
-  })).then(posts => ({
-    posts,
+  return {
+    posts: enrichedPosts,
     totalPages,
     totalPosts,
     currentPage: page
-  }));
+  };
 }
 
-async function extractAuthorName(post: any): Promise<string> {
+export async function extractAuthorName(post: any): Promise<string> {
   if (post.author_name) {
     return post.author_name;
   }
@@ -156,7 +151,7 @@ async function extractAuthorName(post: any): Promise<string> {
   return "Redação";
 }
 
-function extractCategory(post: any) {
+export function extractCategory(post: any) {
   const categoryTerm = post._embedded?.['wp:term']?.[0]?.[0];
   
   return {
@@ -179,5 +174,27 @@ async function getUserById(userId: number): Promise<string> {
   } catch (error) {
     console.error("Erro ao obter usuário:", error);
     return "Redação";
+  }
+}
+
+export async function getPrograms() {
+  console.log("Fetching programs from:", `${API_URL}/programs?_embed`);
+  try {
+    const res = await fetch(`${API_URL}/programs?_embed`, {
+      headers: getAuthHeaders(),
+      next: { revalidate: 180 }
+    });
+
+    if (!res.ok) {
+      console.warn("Programs endpoint not found. Status:", res.status);
+      return [];
+    }
+
+    const programs = await res.json();
+    console.log("Programs fetched:", programs.length);
+    return programs;
+  } catch (error) {
+    console.error("Error fetching programs:", error);
+    return [];
   }
 }
