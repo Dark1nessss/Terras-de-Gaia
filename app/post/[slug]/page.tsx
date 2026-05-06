@@ -7,7 +7,7 @@ import { getPostBySlug } from "@/lib/wp";
 import { ShareButton } from "@/components/share-button";
 import { Metadata } from "next";
 import { Breadcrumb } from "@/components/breadcrumb";
-import { decodeHtml } from "@/lib/decode-html";
+import { decodeHtml, truncateBreadcrumbTitle } from "@/lib/decode-html";
 import { formatDate } from "@/lib/date";
 
 interface Props {
@@ -63,7 +63,7 @@ export default async function SinglePostPage({ params }: Props) {
               href: categoryName === "Desporto" ? `/desporto/${categorySlug}` : `/categoria/${categorySlug}`
             }
           ]} 
-          current={decodeHtml(post.title.rendered).replace(/<[^>]*>/g, "").slice(0, 50)}
+          current={truncateBreadcrumbTitle((post.title.rendered), 50)}
         />
 
         {/* Article Content */}

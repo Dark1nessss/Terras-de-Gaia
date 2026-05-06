@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { cleanText } from "@/lib/decode-html";
 
 interface BreadcrumbItem {
   label: string;
@@ -20,11 +21,13 @@ function generateBreadcrumbs(pathname: string): BreadcrumbItem[] {
   
   segments.forEach((segment, idx) => {
     const href = '/' + segments.slice(0, idx + 1).join('/');
-    const label = segment
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
-    
+    const label = cleanText(
+      segment
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
+    );
+
     crumbs.push({ label, href });
   });
   
@@ -43,7 +46,7 @@ export function Breadcrumb({ items, current }: BreadcrumbProps) {
             href={item.href}
             className="hover:text-[#00a6f0] transition-colors"
           >
-            {item.label}
+            {cleanText(item.label)}
           </Link>
           {idx < breadcrumbs.length - 1 && <ChevronRight size={12} className="text-white/30" />}
         </div>
@@ -51,7 +54,7 @@ export function Breadcrumb({ items, current }: BreadcrumbProps) {
       {current && (
         <>
           <ChevronRight size={12} className="text-white/20" />
-          <span className="text-white/70 font-semibold whitespace-nowrap">{current}</span>
+          <span className="text-white/70 font-semibold whitespace-nowrap">{cleanText(current)}</span>
         </>
       )}
     </nav>

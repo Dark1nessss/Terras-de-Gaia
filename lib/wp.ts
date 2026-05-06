@@ -99,11 +99,7 @@ export async function getPostsByCategory(categorySlug: string) {
   
   console.log("getPostsByCategory - Embedded author data (first post):", posts[0]?._embedded?.['author']);
 
-  return await Promise.all(posts.map(async (post: any) => {
-    post.author_name = await extractAuthorName(post);
-    post.category = extractCategory(post);
-    return post;
-  }));
+  return await enrichPosts(posts);
 }
 
 export async function getPostsByCategoryPaginated(categorySlug: string, page: number = 1, perPage: number = 12) {

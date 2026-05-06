@@ -34,3 +34,17 @@ export function stripHtml(html: string): string {
 export function cleanText(text: string): string {
   return stripHtml(decodeHtml(text));
 }
+
+export function truncateBreadcrumbTitle(text: string, maxLength: number = 60): string {
+  if (text.length <= maxLength) return text;
+  
+  const truncated = text.slice(0, maxLength);
+  const lastSpaceIndex = truncated.lastIndexOf(' ');
+  
+  // If last space is reasonably close, truncate there instead
+  if (lastSpaceIndex > maxLength * 0.65) {
+    return truncated.slice(0, lastSpaceIndex) + '…';
+  }
+  
+  return truncated + '…';
+}
