@@ -10,7 +10,7 @@ export function SportsHero({ post }: { post: any }) {
       />
       <div className="absolute inset-0 bg-linear-to-t from-[#0a0c10] via-transparent to-transparent" />
       <div className="absolute bottom-0 p-8 w-full md:w-2/3">
-        <span className="bg-[#00a6f0] text-white text-[10px] font-black px-2 py-1 uppercase mb-4 inline-block">Destaque Desportivo</span>
+        <span className="bg-[#00a6f0] text-white text-xs font-black px-2 py-1 uppercase mb-4 inline-block">Destaque Desportivo</span>
         <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter leading-none group-hover:text-[#00a6f0] transition-colors"
             dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
       </div>

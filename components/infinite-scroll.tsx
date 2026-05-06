@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { VideoCard } from "./video-card";
 import { LoadingSpinner } from "@/components/loading-spinner";
-import { getCachedData, setCachedData } from "@/lib/cache";
+import { getCachedData, setCachedData, invalidateCache, setLastRoute } from "@/lib/cache";
 
 interface Post {
   id: number;
@@ -42,14 +42,39 @@ export function InfiniteScrollPosts({
   const [page, setPage] = useState(2);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const observerTarget = useRef<HTMLDivElement>(null);
   const [lastFetchSize, setLastFetchSize] = useState(12);
+  const retryCountRef = useRef(0);
+  const MAX_RETRIES = 3;
 
-  // Auto-detect API endpoint from pathname
+  // Detect route changes and clear cache
+  useEffect(() => {
+    setLastRoute(pathname);
+    // Reset state on route change
+    setPosts(initialPosts);
+    setPage(2);
+    setHasMore(true);
+    setError(null);
+    retryCountRef.current = 0;
+  }, [pathname, initialPosts]);
+
+  // Setup periodic refresh every 180s
+  useEffect(() => {
+    const refreshInterval = setInterval(() => {
+      invalidateCache(`/api/`);
+      // Force re-fetch by resetting page
+      setPage(2);
+      setPosts(initialPosts);
+    }, 180000); // 180 seconds
+
+    return () => clearInterval(refreshInterval);
+  }, [initialPosts]);
+
   const getApiEndpoint = useCallback(() => {
     if (pathname.includes('/desporto/')) return '/api/desporto';
     if (pathname.includes('/categoria/')) return '/api/category';
-    return '/api/category'; // Default fallback
+    return '/api/category';
   }, [pathname]);
 
   const apiEndpoint = getApiEndpoint();
@@ -80,12 +105,19 @@ export function InfiniteScrollPosts({
     }
 
     setIsLoading(true);
+    setError(null);
+
     try {
       const res = await fetch(`${apiEndpoint}?slug=${slug}&page=${page}`);
+      
+      if (!res.ok) {
+        throw new Error(`API Error: ${res.status}`);
+      }
+
       const data = await res.json();
 
       if (data.posts && data.posts.length > 0) {
-        setCachedData(cacheKey, data.posts); // Cache the response
+        setCachedData(cacheKey, data.posts); // Cache successful response
         
         const existingIds = new Set(posts.map(p => p.id));
         const newPosts = data.posts.filter((post: any) => !existingIds.has(post.id));
@@ -96,16 +128,27 @@ export function InfiniteScrollPosts({
         
         setPage((prev) => prev + 1);
         setHasMore(data.hasMore);
-        setLastFetchSize(newPosts.length); // Track actual fetched count
+        setLastFetchSize(newPosts.length);
+        retryCountRef.current = 0; // Reset retry count on success
       } else {
         setHasMore(false);
       }
     } catch (error) {
       console.error("Error loading more posts:", error);
+      setCachedData(cacheKey, null, true); // Mark cache as error
+      setError("Erro ao carregar artigos. Tentando novamente...");
+      
+      // Retry logic
+      if (retryCountRef.current < MAX_RETRIES) {
+        retryCountRef.current++;
+        setTimeout(() => {
+          loadMorePosts();
+        }, 2000 + (retryCountRef.current * 1000)); // Exponential backoff
+      }
     } finally {
       setIsLoading(false);
     }
-  }, [slug, page, isLoading, hasMore, apiEndpoint, posts]); // Remove 'posts' from deps
+  }, [slug, page, isLoading, hasMore, apiEndpoint, posts]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -155,14 +198,14 @@ export function InfiniteScrollPosts({
             {post.title_clean || post.title.rendered.replace(/<[^>]*>/g, "")}
           </h3>
           {!showVideoCards && post.author_name && post.date && (
-            <div className="flex items-center gap-2 text-[10px] text-white/40">
+            <div className="flex items-center gap-2 text-xs text-white/40">
               <span>{post.author_name}</span>
               <span>•</span>
               <span>{new Date(post.date).toLocaleDateString("pt-PT")}</span>
             </div>
           )}
           {showVideoCards && (
-            <p className="text-white/40 text-[10px] font-bold uppercase mt-2 tracking-widest">Ler Artigo →</p>
+            <p className="text-white/40 text-xs font-bold uppercase mt-2 tracking-widest">Ler Artigo →</p>
           )}
         </div>
       </Link>
@@ -174,6 +217,13 @@ export function InfiniteScrollPosts({
       <div className={`grid ${gridClass} gap-6`}>
         {posts.map(renderPost)}
       </div>
+
+      {/* Error message */}
+      {error && (
+        <div className="text-center py-4 px-4 bg-red-500/10 border border-red-500/20 rounded text-red-300 text-sm">
+          {error}
+        </div>
+      )}
 
       {/* Loading indicator */}
       {isLoading && <LoadingSpinner text="A carregar mais artigos..." />}

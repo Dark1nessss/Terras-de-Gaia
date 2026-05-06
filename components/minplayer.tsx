@@ -130,7 +130,7 @@ export default function LiveStreamPlayer() {
             <div className="flex items-center gap-5 pointer-events-auto">
               <button onClick={() => setIsPlaying(!isPlaying)} className="text-white cursor-pointer">{isPlaying ? <Pause size={20} fill="white" /> : <Play size={20} fill="white" />}</button>
               <button onClick={() => setIsMuted(!isMuted)} className="text-white cursor-pointer">{isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}</button>
-              <button onClick={() => { if (iframeRef.current) iframeRef.current.src = embedUrl; }} className="flex items-center gap-2 px-2 py-1 border border-red-600 rounded text-[10px] font-bold text-white uppercase italic cursor-pointer">
+              <button onClick={() => { if (iframeRef.current) iframeRef.current.src = embedUrl; }} className="flex items-center gap-2 px-2 py-1 border border-red-600 rounded text-xs font-bold text-white uppercase italic cursor-pointer">
                 <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse" /> Direto
               </button>
             </div>

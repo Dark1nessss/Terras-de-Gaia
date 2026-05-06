@@ -21,7 +21,7 @@ export default function Hero() {
         {/* Status Badge */}
         <div className="flex items-center mb-4 md:mb-6">
           <div className="flex items-center bg-black/40 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10">
-            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] shadow-sm">
+            <span className="text-xs md:text-xs font-black uppercase tracking-[0.2em] shadow-sm">
               Em direto
             </span>
           </div>
@@ -55,7 +55,7 @@ export default function Hero() {
             w-full md:w-auto relative h-(--h) px-4 md:px-8 flex items-center justify-center font-black transition-all group cursor-pointer isolate
             before:absolute before:-z-10 before:-inset-x-(--x) before:inset-y-0 before:-skew-x-8 hover:before:bg-white/10
           ">
-            <span className="text-white/60 group-hover:text-white uppercase italic tracking-tight md:tracking-widest text-[10px] md:text-[11px] transition-colors relative">
+            <span className="text-white/60 group-hover:text-white uppercase italic tracking-tight md:tracking-widest text-xs md:text-[11px] transition-colors relative">
               Programas
             </span>
           </button>
@@ -67,7 +67,7 @@ export default function Hero() {
               before:absolute before:-z-10 before:-inset-x-(--x) before:inset-y-0 before:-skew-x-8 before:bg-[#0055ff]
             ">
               <div className="flex items-center gap-2 md:gap-3">
-                <span className="text-white uppercase italic tracking-tight md:tracking-widest text-[10px] md:text-[11px] whitespace-nowrap">
+                <span className="text-white uppercase italic tracking-tight md:tracking-widest text-xs md:text-[11px] whitespace-nowrap">
                   Ver emissão em direto
                 </span>
                 <span className="relative flex size-1.5 md:size-2">

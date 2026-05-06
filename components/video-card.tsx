@@ -18,7 +18,7 @@ export function VideoCard({ post }: { post: any }) {
       </div>
       <h3 className="text-xl font-black uppercase italic tracking-tighter group-hover:text-[#00a6f0] transition-colors line-clamp-2"
           dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
-      <p className="text-white/40 text-[10px] font-bold uppercase mt-2 tracking-widest">Ver Reportagem →</p>
+      <p className="text-white/40 text-xs font-bold uppercase mt-2 tracking-widest">Ver Reportagem →</p>
     </Link>
   );
 }

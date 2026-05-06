@@ -47,16 +47,19 @@ export async function GET(request: Request) {
     
     const hasMore = (page * perPage) < totalPosts;
 
-    return Response.json({
-      posts,
-      hasMore,
-      total: totalPosts,
-      page,
-    });
+    return Response.json(
+      { posts, hasMore, total: totalPosts, page },
+      { 
+        headers: { 
+          'Cache-Control': 'public, max-age=180', // 180s cache
+          'Revalidate': '180'
+        }
+      }
+    );
   } catch (error) {
     console.error('Category API error:', error);
     return Response.json(
-      { error: 'Failed to fetch posts' },
+      { error: 'Failed to fetch posts', retry: true },
       { status: 500 }
     );
   }

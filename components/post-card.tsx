@@ -32,7 +32,7 @@ export function PostCard({ post }: PostCardProps) {
         <h4 className="font-black italic uppercase text-sm mb-2 group-hover:text-[#00a6f0] transition-colors line-clamp-2">
           {post.title.rendered.replace(/<[^>]*>/g, "")}
         </h4>
-        <div className="flex items-center gap-2 text-[10px] text-white/40">
+        <div className="flex items-center gap-2 text-xs text-white/40">
           <span>{post.author_name}</span>
           <span>•</span>
           <span>{new Date(post.date).toLocaleDateString("pt-PT")}</span>

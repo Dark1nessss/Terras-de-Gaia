@@ -77,7 +77,7 @@ export default async function SportsCategoryPage({ params }: { params: Promise<{
           <div className="lg:col-span-3 space-y-8 sticky top-32 self-start">
             <SidebarWidget title="Classificações" icon={<Trophy size={18} />}>
               <div className="space-y-3">
-                <div className="text-[10px] font-bold text-white/40 uppercase italic">
+                <div className="text-xs font-bold text-white/40 uppercase italic">
                   Brevemente: Live Scores
                 </div>
                 <div className="h-32 bg-gradient-to-b from-white/5 to-transparent rounded flex items-center justify-center">
@@ -92,7 +92,7 @@ export default async function SportsCategoryPage({ params }: { params: Promise<{
                   <div key={p.id} className="group border-b border-white/5 pb-3 last:border-0">
                     <div className="flex items-start gap-3 mb-2">
                       <div className="text-[#00a6f0] font-black text-lg leading-none">#{idx + 1}</div>
-                      <p className="text-[9px] text-[#00a6f0] font-black uppercase leading-tight">Destaque</p>
+                      <p className="text-xs text-[#00a6f0] font-black uppercase leading-tight">Destaque</p>
                     </div>
                     <p className="text-xs font-black uppercase italic group-hover:text-[#00a6f0] transition-colors leading-snug line-clamp-2">
                       {p.title.rendered.replace(/<[^>]*>/g, '')}
