@@ -15,7 +15,7 @@ export function TVGuideGrid() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section className="bg-[#0a0c10] pb-24 font-nurom border-t border-white/5 select-none">
+    <section className="bg-[#0a0c10] font-nurom border-t border-white/5 select-none">
       <div className="container mx-auto px-6 pt-12">
         <h2 className="text-3xl font-black uppercase italic tracking-tighter text-white mb-8">
           Guia TV
