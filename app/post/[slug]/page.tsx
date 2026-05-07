@@ -105,7 +105,7 @@ export default async function SinglePostPage({ params }: Props) {
             </header>
 
             {/* Featured Image */}
-            <div className="relative w-full aspect-video md:aspect-[21/9] rounded-sm overflow-hidden mb-12 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+            <div className="relative w-full aspect-video rounded-sm overflow-hidden mb-12 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
               <Image
                 src={featuredImage}
                 alt={post.title.rendered || "Imagem do Artigo"}

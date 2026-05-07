@@ -66,10 +66,10 @@ export async function getPostBySlug(slug: string) {
         console.log("Fetching related posts for category:", categorySlug);
         
         const relatedRes = await fetch(
-          `${API_URL}/posts?category_slug=${categorySlug}&_embed&per_page=10`,
+          `${API_URL}/posts?category_slug=${categorySlug}&_embed&per_page=6`,
           { 
             headers: getAuthHeaders(),
-            cache: 'no-store'
+            next: { revalidate: 180 } // Every 3 minutes to keep related posts fresh
           }
         );
         
@@ -123,7 +123,7 @@ export async function getPostsByCategory(categorySlug: string) {
   return await enrichPosts(posts);
 }
 
-export async function getPostsByCategoryPaginated(categorySlug: string, page: number = 1, perPage: number = 12) {
+export async function getPostsByCategoryPaginated(categorySlug: string, page: number = 1, perPage: number = 10) {
   console.log(`Fetching posts by category (${categorySlug}) - Page ${page}, Per Page: ${perPage}`);
   const res = await fetch(
     `${API_URL}/posts?category_slug=${categorySlug}&_embed&page=${page}&per_page=${perPage}`,

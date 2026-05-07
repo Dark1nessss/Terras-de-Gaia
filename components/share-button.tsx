@@ -82,7 +82,6 @@ export function ShareButton({ title }: ShareButtonProps) {
 
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <span className="text-xs font-black uppercase text-white/40 tracking-wider mr-1">Partilhar:</span>
       {shareLinks.map((link) => (
         <a
           key={link.name}
@@ -104,7 +103,7 @@ export function ShareButton({ title }: ShareButtonProps) {
         }`}
       >
         {copied ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
-        <span>{copied ? "Copiado!" : "Copiar"}</span>
+        <span className="font-bold hidden sm:block"> {copied ? "Copiado!" : "Copiar"}</span>
       </button>
     </div>
   );

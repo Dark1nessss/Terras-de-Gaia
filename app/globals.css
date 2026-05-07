@@ -301,7 +301,7 @@ iframe {
 /* Text formatting */
 .prose strong,
 .prose b {
-  @apply font-bold text-white/85;
+  @apply text-white font-extrabold;
 }
 
 .prose em,
