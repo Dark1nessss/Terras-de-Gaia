@@ -8,5 +8,6 @@ export const SOCIAL_LINKS = {
   facebook: "https://facebook.com",
   instagram: "https://instagram.com",
   twitter: "https://twitter.com",
+  whatsapp: "https://wa.me",
   youtube: "https://youtube.com",
 };

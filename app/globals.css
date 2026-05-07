@@ -146,3 +146,271 @@ iframe {
   height: 100% !important;
   margin-left: -100% !important;
 }
+
+/* Article content prose styling - COMPREHENSIVE */
+
+.prose {
+  --prose-spacing: 1rem;
+  --prose-line-height: 1.75;
+}
+
+/* Headings */
+.prose h1 {
+  @apply text-3xl font-black italic uppercase tracking-tighter leading-tight text-white/95 mt-8 mb-4;
+}
+
+.prose h2 {
+  @apply text-2xl font-bold italic uppercase tracking-wide leading-tight text-white/90 mt-8 mb-4;
+}
+
+.prose h3 {
+  @apply text-xl font-bold uppercase tracking-wide leading-tight text-white/85 mt-6 mb-3;
+}
+
+.prose h4 {
+  @apply text-lg font-semibold uppercase tracking-wide text-white/80 mt-6 mb-3;
+}
+
+.prose h5 {
+  @apply text-base font-semibold tracking-wide text-white/75 mt-5 mb-2;
+}
+
+.prose h6 {
+  @apply text-sm font-semibold tracking-wider text-white/70 mt-5 mb-2;
+}
+
+/* Paragraphs */
+.prose p {
+  @apply text-white/75 leading-relaxed mb-4 md:text-lg;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.prose p:first-child {
+  @apply text-lg text-white/80 font-medium;
+}
+
+/* Links */
+.prose a {
+  @apply text-[#00a6f0] hover:text-[#00ffff] font-semibold underline decoration-2 underline-offset-2 transition-all duration-200;
+  text-decoration-color: rgba(0, 212, 255, 0.3);
+}
+
+.prose a:hover {
+  text-decoration-color: rgba(0, 255, 255, 0.8);
+}
+
+.prose a[href^="http"]:not([href*="terras-de-gaia"])::after {
+  content: ' ↗';
+  @apply text-[#00a6f0] ml-1;
+}
+
+.prose a:visited {
+  @apply text-[#0099cc];
+}
+
+.prose a:focus-visible {
+  @apply outline-2 outline-offset-2 outline-[#00a6f0];
+}
+
+/* Lists */
+.prose ul {
+  @apply list-disc list-inside ml-4 space-y-2 mb-4;
+}
+
+.prose ol {
+  @apply list-decimal list-inside ml-4 space-y-2 mb-4;
+}
+
+.prose li {
+  @apply text-white/70;
+}
+
+.prose li::marker {
+  @apply text-white/40;
+}
+
+/* Nested lists */
+.prose ul ul,
+.prose ol ol,
+.prose ul ol,
+.prose ol ul {
+  @apply ml-6 mt-2 mb-2;
+}
+
+/* Definition lists */
+.prose dl {
+  @apply mb-4;
+}
+
+.prose dt {
+  @apply font-semibold text-white/85 mt-3 mb-1;
+}
+
+.prose dd {
+  @apply ml-6 text-white/70 mb-2;
+}
+
+/* Tables */
+.prose table {
+  @apply w-full border-collapse mb-4;
+}
+
+.prose thead {
+  @apply bg-white/5;
+}
+
+.prose th {
+  @apply border border-white/10 bg-white/10 px-4 py-3 font-semibold text-white/85 text-left;
+}
+
+.prose td {
+  @apply border border-white/10 px-4 py-3 text-white/70;
+}
+
+.prose tbody tr:nth-child(even) {
+  @apply bg-white/[0.02];
+}
+
+.prose tbody tr:hover {
+  @apply bg-white/5;
+}
+
+/* Blockquotes */
+.prose blockquote {
+  @apply border-l-4 border-[#00a6f0] pl-4 py-2 italic text-white/60 bg-white/5 rounded-r mb-4;
+}
+
+.prose blockquote p {
+  @apply mb-0;
+}
+
+/* Code */
+.prose code {
+  @apply bg-white/5 px-2 py-1 rounded text-xs font-mono text-[#00d4ff];
+}
+
+.prose pre {
+  @apply bg-white/10 border border-white/10 p-4 rounded overflow-x-auto mb-4;
+}
+
+.prose pre code {
+  @apply bg-transparent px-0 py-0 text-sm;
+}
+
+/* Text formatting */
+.prose strong,
+.prose b {
+  @apply font-bold text-white/85;
+}
+
+.prose em,
+.prose i {
+  @apply italic text-white/75;
+}
+
+.prose mark {
+  @apply bg-yellow-500/20 text-yellow-300 px-1 rounded;
+}
+
+.prose del,
+.prose s {
+  @apply line-through text-white/50;
+}
+
+.prose ins {
+  @apply underline decoration-green-500 text-green-400 no-underline;
+}
+
+/* Images */
+.prose img {
+  @apply rounded-lg border border-white/10 shadow-lg w-full h-auto mb-4;
+}
+
+.prose figure {
+  @apply mb-4;
+}
+
+.prose figcaption {
+  @apply text-xs text-white/50 italic text-center mt-2;
+}
+
+/* Horizontal rule */
+.prose hr {
+  @apply border-0 border-t-2 border-white/10 my-8;
+}
+
+/* Abbreviation */
+.prose abbr {
+  @apply cursor-help border-b border-dotted border-white/40;
+}
+
+/* Small text */
+.prose small {
+  @apply text-sm text-white/60;
+}
+
+/* Subscript & Superscript */
+.prose sub,
+.prose sup {
+  @apply text-xs;
+}
+
+.prose sub {
+  @apply relative -bottom-1;
+}
+
+.prose sup {
+  @apply relative -top-1;
+}
+
+/* Details/Summary (collapsible content) */
+.prose details {
+  @apply border border-white/10 rounded p-3 mb-4 cursor-pointer;
+}
+
+.prose details summary {
+  @apply font-semibold text-white/80 hover:text-[#00a6f0] transition-colors;
+}
+
+.prose details[open] summary {
+  @apply mb-3;
+}
+
+/* Embedded media */
+.prose iframe {
+  @apply w-full rounded-lg border border-white/10 mb-4;
+}
+
+.prose video {
+  @apply w-full rounded-lg border border-white/10 mb-4;
+}
+
+.prose audio {
+  @apply w-full mb-4;
+}
+
+/* Forms (if present) */
+.prose input,
+.prose textarea,
+.prose select {
+  @apply bg-white/5 border border-white/10 rounded px-3 py-2 text-white/80 focus:border-[#00a6f0] focus:outline-none;
+}
+
+.prose button {
+  @apply bg-[#00a6f0] hover:bg-[#00d4ff] text-black font-semibold px-4 py-2 rounded transition-colors cursor-pointer;
+}
+
+/* Containers/Divs with text */
+.prose > div {
+  @apply mb-4;
+}
+
+/* Center alignment helper */
+.prose p.align-center {
+  @apply text-center;
+}
+
+.prose img.align-center {
+  @apply mx-auto;
+}

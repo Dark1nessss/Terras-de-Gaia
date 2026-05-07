@@ -58,6 +58,27 @@ export async function getPostBySlug(slug: string) {
       
       post.author_name = await extractAuthorName(post);
       post.category = extractCategory(post);
+      
+      // Fetch related posts from same category
+      const categories = extractCategories(post);
+      if (categories.length > 0) {
+        const categorySlug = categories[0].slug;
+        console.log("Fetching related posts for category:", categorySlug);
+        
+        const relatedRes = await fetch(
+          `${API_URL}/posts?category_slug=${categorySlug}&_embed&per_page=10`,
+          { 
+            headers: getAuthHeaders(),
+            cache: 'no-store'
+          }
+        );
+        
+        if (relatedRes.ok) {
+          const relatedPostsData = await relatedRes.json();
+          post.relatedPosts = await enrichPosts(relatedPostsData);
+          console.log("Related posts fetched:", post.relatedPosts.length);
+        }
+      }
     }
 
     return post ? (await enrichPosts([post]))[0] : null;
@@ -154,6 +175,15 @@ export function extractCategory(post: any) {
     name: categoryTerm?.name || "Futebol",
     slug: categoryTerm?.slug || "futebol"
   };
+}
+
+export function extractCategories(post: any): Array<{ name: string; slug: string }> {
+  const categoryTerms = post._embedded?.['wp:term']?.[0] || [];
+  
+  return categoryTerms.map((cat: any) => ({
+    name: cat.name || "Categoria",
+    slug: cat.slug || "categoria"
+  }));
 }
 
 async function getUserById(userId: number): Promise<string> {

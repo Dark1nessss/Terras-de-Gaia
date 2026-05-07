@@ -28,7 +28,8 @@ export function decodeHtml(html: string): string {
 }
 
 export function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
 export function cleanText(text: string): string {

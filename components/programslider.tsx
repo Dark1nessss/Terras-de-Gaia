@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useRef, useState } from 'react';
-import { ChevronRight, ChevronLeft, Clock, Play } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Clock } from 'lucide-react';
+import Image from 'next/image';
 
 const programs = [
   { id: 1, title: "Tá na Mesa", time: "11:30 - 12:25", color: "#f1b333", image: "/programs/tanamesa.jpg" },
@@ -19,6 +20,9 @@ export function ProgramSlider() {
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  
+  // Track image errors by ID
+  const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!scrollRef.current) return;
@@ -35,7 +39,7 @@ export function ProgramSlider() {
     if (!isDragging || !scrollRef.current) return;
     e.preventDefault();
     const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 2; // Multiplier adjusts scroll speed
+    const walk = (x - startX) * 2;
     scrollRef.current.scrollLeft = scrollLeft - walk;
   };
 
@@ -56,16 +60,10 @@ export function ProgramSlider() {
           </h2>
           
           <div className="flex gap-3">
-            <button 
-              onClick={() => scroll('left')}
-              className="p-3 bg-white/5 hover:bg-white/10 active:scale-95 rounded-full text-white transition-all border border-white/5"
-            >
+            <button onClick={() => scroll('left')} className="p-3 bg-white/5 hover:bg-white/10 active:scale-95 rounded-full text-white transition-all border border-white/5">
               <ChevronLeft size={20} />
             </button>
-            <button 
-              onClick={() => scroll('right')}
-              className="p-3 bg-white/5 hover:bg-white/10 active:scale-95 rounded-full text-white transition-all border border-white/5"
-            >
+            <button onClick={() => scroll('right')} className="p-3 bg-white/5 hover:bg-white/10 active:scale-95 rounded-full text-white transition-all border border-white/5">
               <ChevronRight size={20} />
             </button>
           </div>
@@ -82,37 +80,46 @@ export function ProgramSlider() {
           style={{ WebkitOverflowScrolling: 'touch' }} // Smooth momentum on iOS
         >
           {programs.map((prog) => (
-            <div 
-              key={prog.id} 
-              className={`min-w-[85%] sm:min-w-[45%] lg:min-w-[320px] group snap-start ${
-                isDragging ? 'pointer-events-none' : 'cursor-pointer'
-              }`}
-            >
-              <div className="relative aspect-video overflow-hidden rounded-xl mb-4 bg-[#161b22] border border-white/5">
-                <div 
-                  className="absolute inset-0 z-10 transition-opacity duration-500 group-hover:opacity-40" 
-                  style={{ backgroundColor: prog.color, opacity: 0.85 }}
-                />
+            <div key={prog.id} className="shrink-0 snap-start">
+              <div className="bg-[#12161f] text-white border border-white/10 overflow-hidden rounded-2xl w-87.5 flex flex-col transition-all duration-300 hover:border-white/30 h-full">
                 
-                <div className="absolute inset-0 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
-                  <div className="bg-[#00a6f0] p-4 rounded-full shadow-[0_0_20px_rgba(0,166,240,0.4)]">
-                    <Play fill="white" className="text-white ml-1" size={24} />
+                {/* Image Section with Fallback Logic */}
+                <div className="h-37.5 w-full relative overflow-hidden bg-zinc-900">
+                  {imageErrors[prog.id] ? (
+                    /* Fallback UI: Centered text with background color */
+                    <div 
+                      className="absolute inset-0 flex items-center justify-center p-6 text-center transition-all"
+                      style={{ backgroundColor: prog.color }}
+                    >
+                      <span className="text-black font-black uppercase italic text-xl leading-tight drop-shadow-sm">
+                        {prog.title}
+                      </span>
+                    </div>
+                  ) : (
+                    /* Main Image */
+                    <Image
+                      src={prog.image}
+                      alt={prog.title}
+                      fill
+                      className="object-cover"
+                      onError={() => setImageErrors(prev => ({ ...prev, [prog.id]: true }))}
+                    />
+                  )}
+                </div>
+
+                {/* Content Section */}
+                <div className="p-3 flex flex-col flex-1 justify-between gap-6">
+                  <h3 className="text-white font-bold text-md leading-tight line-clamp-2">
+                    {prog.title}
+                  </h3>
+                  
+                  <div className="flex flex-row items-center gap-1.5 text-white/60">
+                    <Clock size={14} />
+                    <span className="text-sm font-bold tracking-tight">
+                      {prog.time}
+                    </span>
                   </div>
                 </div>
-
-                <div className="absolute inset-0 flex items-center justify-center p-6 z-15 group-hover:scale-110 transition-transform duration-500">
-                   <span className="text-black font-black uppercase italic text-center text-2xl leading-tight drop-shadow-sm">
-                     {prog.title}
-                   </span>
-                </div>
-              </div>
-
-              <h3 className="text-white font-black uppercase italic text-base group-hover:text-[#00a6f0] transition-colors">
-                {prog.title}
-              </h3>
-              <div className="flex items-center gap-2 text-white/40 text-[11px] mt-1 font-bold uppercase tracking-widest">
-                <Clock size={12} className="text-[#00a6f0]" />
-                {prog.time}
               </div>
             </div>
           ))}

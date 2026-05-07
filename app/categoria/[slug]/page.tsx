@@ -27,7 +27,7 @@ export default async function CategoryPage({
 
   return (
     <main className="min-h-screen bg-[#0a0c10] text-white pt-24 pb-12 font-nurom">
-      <div className="container mx-auto px-6 max-w-7xl">
+      <div className="container mx-auto px-6 max-w-8xl">
         <Breadcrumb 
           items={[{ label: "Inicial", href: "/" }]} 
           current={categoryName}
