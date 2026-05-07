@@ -1,77 +1,76 @@
-'use client';
+import React from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { MoveRight } from "lucide-react";
+import { decodeHtml } from "@/lib/decode-html";
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { decodeHtml } from '@/lib/decode-html';
-import { ArrowRight } from 'lucide-react';
-
-interface Post {
-  id: number;
-  slug: string;
-  title: { rendered: string };
-  date: string;
-  _embedded?: {
-    "wp:featuredmedia"?: Array<{ source_url: string }>;
-  };
+interface RelatedPostsProps {
+  posts: any[];
+  currentPostId?: number;
 }
 
-interface RelatedPostsSidebarProps {
-  posts: Post[];
-  currentPostId: number;
-}
+export function RelatedPosts({ posts, currentPostId }: RelatedPostsProps) {
+  const filteredPosts = posts
+    .filter((post) => post.id !== currentPostId)
+    .slice(0, 3);
 
-export function RelatedPosts({ posts, currentPostId }: RelatedPostsSidebarProps) {
-  const related = posts.filter(p => p.id !== currentPostId).slice(0, 5);
-
-  if (related.length === 0) return null;
+  if (filteredPosts.length === 0) return null;
 
   return (
-    <div className="sticky top-4 space-y-3">
-      {related.map((post) => {
-        const image = post._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
-        
-        return (
-          <Link
-            key={post.id}
-            href={`/post/${post.slug}`}
-            className="group block border border-white/5 rounded-lg overflow-hidden hover:border-[#00a6f0]/40 transition-all duration-300 bg-white/[0.02] hover:bg-white/[0.04]"
-          >
-            {/* Image Container */}
-            {image ? (
-              <div className="relative h-40 overflow-hidden bg-white/2">
-                <Image
-                  src={image}
-                  alt={post.title.rendered}
-                  fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-300"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0c10] via-transparent to-transparent" />
-              </div>
-            ) : (
-              <div className="h-40 bg-gradient-to-br from-[#00a6f0]/10 to-transparent flex items-center justify-center">
-                <span className="text-white/20 text-sm">Sem imagem</span>
-              </div>
-            )}
+    <div className="w-full mt-20 pt-12 border-t-2 border-white/10">
+      {/* Header with Gazette Aesthetic */}
+      <div className="flex items-end justify-between mb-10">
+        <div className="space-y-1">
+          <span className="text-[#00a6f0] text-xs font-bold uppercase tracking-[0.3em]">Continuar a Ler</span>
+          <h3 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter text-white">
+            Artigos <span className="text-white/20">Relacionados</span>
+          </h3>
+        </div>
+        <Link href="/" className="hidden md:flex items-center gap-2 text-white/40 hover:text-[#00a6f0] transition-colors text-xs font-bold uppercase tracking-widest pb-2">
+          Ver Tudo <MoveRight size={16} />
+        </Link>
+      </div>
 
-            {/* Content */}
-            <div className="p-4 space-y-3">
-              <h4 className="text-xs font-black uppercase italic text-white/80 group-hover:text-[#00a6f0] transition-colors line-clamp-2 leading-tight">
-                {decodeHtml(post.title.rendered).replace(/<[^>]*>/g, '')}
-              </h4>
-              
-              <div className="flex items-center justify-between pt-1">
-                <span className="text-xs text-white/40 font-medium">
-                  {new Date(post.date).toLocaleDateString('pt-PT', {
-                    day: 'numeric',
-                    month: 'short'
-                  })}
+      {/* Grid: 1 col on mobile, 3 on desktop */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-0.5 bg-white/5 border border-white/5">
+        {filteredPosts.map((post, index) => {
+          const image = post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || "/placeholder.jpg";
+          
+          return (
+            <Link 
+              key={post.id} 
+              href={`/post/${post.slug}`}
+              className="group relative bg-[#0a0c10] p-6 md:p-8 hover:bg-[#00a6f0] transition-all duration-500 flex flex-col min-h-[300px]"
+            >
+              {/* Index Number Background */}
+              <span className="absolute top-4 right-6 text-6xl font-black italic text-white/[0.03] group-hover:text-white/10 transition-colors">
+                0{index + 1}
+              </span>
+
+              <div className="relative z-10 flex flex-col h-full">
+                {/* Minimal Category Tag */}
+                <span className="text-[#00a6f0] group-hover:text-white text-[10px] font-black uppercase tracking-widest mb-4 transition-colors">
+                  {post.category?.name || "Gazeta"}
                 </span>
-                <ArrowRight size={14} className="text-white/30 group-hover:text-[#00a6f0] transition-colors" />
+
+                <h4 className="text-xl md:text-2xl font-black uppercase italic leading-[1.1] text-white group-hover:text-white transition-colors mb-6 line-clamp-3">
+                  {decodeHtml(post.title.rendered)}
+                </h4>
+
+                {/* Reveal Image on Hover for Desktop */}
+                <div className="mt-auto relative w-full h-32 opacity-40 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500 rounded overflow-hidden">
+                   <Image 
+                    src={image} 
+                    alt="Related" 
+                    fill 
+                    className="object-cover scale-110 group-hover:scale-100 transition-transform duration-700"
+                   />
+                </div>
               </div>
-            </div>
-          </Link>
-        );
-      })}
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 }
