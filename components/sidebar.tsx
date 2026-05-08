@@ -49,7 +49,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     { label: "Agenda", icon: <Calendar size={24} />, hasSub: false, path: "/institucional/agenda" },
     { label: "Revista", icon: <BookOpen size={24} />, hasSub: false, path: "/institucional/revista" },
     { label: "Sobre Nós", icon: <Shield size={24} />, hasSub: false, path: "/institucional/historia" },
-    { label: "Contactos", icon: <Phone size={24} />, hasSub: false, path: "/institucional/contactos" },
+    { label: "Contactos", icon: <Phone size={24} />, hasSub: false, path: "/contacto" },
   ];
 
   const handleClose = () => {

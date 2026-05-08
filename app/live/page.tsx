@@ -123,7 +123,7 @@ export default function LivePage() {
                <p className="text-xs text-white/50 leading-relaxed italic">
                  Dificuldades com a emissão? Contacte o nosso suporte técnico.
                </p>
-               <Link href="/contactos" className="inline-block text-center py-3 px-4 border border-white/10 text-xs font-black uppercase hover:bg-white hover:text-black transition-all">
+               <Link href="/contacto" className="inline-block text-center py-3 px-4 border border-white/10 text-xs font-black uppercase hover:bg-white hover:text-black transition-all">
                   Pedir Ajuda
                </Link>
             </div>

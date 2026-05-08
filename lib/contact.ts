@@ -11,3 +11,9 @@ export const SOCIAL_LINKS = {
   whatsapp: "https://wa.me",
   youtube: "https://youtube.com",
 };
+
+export const OFFICIAL_PROFILES = {
+  instagram: "https://www.instagram.com/terrasdegaia_tv?igsh=MXNrejBiZnRvYzFocA==",
+  facebook: "https://www.facebook.com/share/1ELpYuj6sL/",
+  youtube: "https://youtube.com/@terrasdegaia?si=kR7Lngis56dNF9Dn",
+}

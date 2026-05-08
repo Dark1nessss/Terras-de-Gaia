@@ -74,14 +74,12 @@ export default function Navbar() {
 
       {/* Right Section - Improved Visuals */}
       <div className="flex items-center gap-2 md:gap-4">
-        <button className="hidden xl:flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white text-[11px] font-bold py-2.5 px-5 rounded-sm border border-white/10 transition-all">
-          <MessageCircle size={14} className="text-blue-300" />
-          DÚVIDAS? CANAL DE SUPORTE
-        </button>
-        <button className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white text-[11px] font-bold py-2.5 px-5 rounded-sm border border-white/10 transition-all">
-          <Phone size={14} className="text-blue-300" />
-          CONTACTOS
-        </button>
+        <Link href="/contacto">
+          <button className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white text-xs font-bold py-2.5 px-5 rounded-sm border border-white/10 transition-all cursor-pointer">
+            <Phone size={14} className="text-blue-300" />
+            <span className="top-[2px] relative">CONTACTOS</span>
+          </button>
+        </Link>
         <button className="text-white/50 hover:text-white p-1">
           <MoreVertical size={20} />
         </button>

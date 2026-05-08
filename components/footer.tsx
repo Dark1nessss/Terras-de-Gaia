@@ -57,7 +57,7 @@ export default function Footer() {
               <Link href="/arquivo" className="text-sm text-white/60 hover:text-[#00a6f0] transition-all duration-300">
                 Arquivo de Vídeos
               </Link>
-              <Link href="/contactos" className="text-sm text-white/60 hover:text-[#00a6f0] transition-all duration-300">
+              <Link href="/contacto" className="text-sm text-white/60 hover:text-[#00a6f0] transition-all duration-300">
                 Contactos
               </Link>
             </nav>
