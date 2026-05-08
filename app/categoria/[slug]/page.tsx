@@ -1,4 +1,4 @@
-import { getPostsByCategoryPaginated } from "@/lib/wp";
+import { getPostsByCategoryPaginated, getCategoryBySlug } from "@/lib/wp";
 import { FeaturedPostSection } from "@/components/featured-post-section";
 import { InfiniteScrollPosts } from "@/components/infinite-scroll";
 import { Breadcrumb } from "@/components/breadcrumb";
@@ -9,21 +9,26 @@ export default async function CategoryPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const { posts, totalPosts } = await getPostsByCategoryPaginated(slug, 1, 12);
+  const [category, { posts, totalPosts }] = await Promise.all([
+    getCategoryBySlug(slug),
+    getPostsByCategoryPaginated(slug, 1, 12)
+  ]);
   
   if (!posts?.length) {
     return (
       <div className="min-h-screen bg-[#0a0c10] flex items-center justify-center text-white/20 uppercase font-black italic">
-        Sem conteúdos de {slug} disponíveis
+        Sem conteúdos disponíveis
       </div>
     );
   }
 
   const [mainPost, ...otherPosts] = posts;
-  const categoryName = slug
+  // Use category title from WordPress if available, fallback to slug
+  const categoryName = category?.name || slug
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
+  const categoryDescription = category?.description || '';
 
   return (
     <main className="min-h-screen bg-[#0a0c10] text-white pt-24 pb-12 font-nurom">
@@ -40,7 +45,12 @@ export default async function CategoryPage({
               {categoryName}
             </h1>
           </div>
-          <p className="text-white/40 text-sm uppercase tracking-widest font-bold">
+          {categoryDescription && (
+            <p className="text-white/60 text-sm leading-relaxed mt-4 max-w-2xl">
+              {categoryDescription.replace(/<[^>]*>/g, '')}
+            </p>
+          )}
+          <p className="text-white/40 text-sm uppercase tracking-widest font-bold mt-4">
             {totalPosts} {totalPosts === 1 ? 'artigo' : 'artigos'}
           </p>
         </div>

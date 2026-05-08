@@ -7,14 +7,20 @@ import { decodeHtml } from "@/lib/decode-html";
 interface RelatedPostsProps {
   posts: any[];
   currentPostId?: number;
+  categorySlug: string;
+  categoryName: string;
 }
 
-export function RelatedPosts({ posts, currentPostId }: RelatedPostsProps) {
+export function RelatedPosts({ posts, currentPostId, categorySlug, categoryName }: RelatedPostsProps) {
   const filteredPosts = posts
     .filter((post) => post.id !== currentPostId)
     .slice(0, 3);
 
   if (filteredPosts.length === 0) return null;
+
+  const viewAllHref = categoryName === "Desporto" 
+    ? `/desporto/${categorySlug}` 
+    : `/categoria/${categorySlug}`;
 
   return (
     <div className="w-full mt-20 pt-12 border-t-2 border-white/10">
@@ -26,7 +32,9 @@ export function RelatedPosts({ posts, currentPostId }: RelatedPostsProps) {
             Artigos <span className="text-white/20">Relacionados</span>
           </h3>
         </div>
-        <Link href="/" className="hidden md:flex items-center gap-2 text-white/40 hover:text-[#00a6f0] transition-colors text-xs font-bold uppercase tracking-widest pb-2">
+        {/* Link must be from category */}
+
+        <Link href={viewAllHref} className="hidden md:flex items-center gap-2 text-white/40 hover:text-[#00a6f0] transition-colors text-xs font-bold uppercase tracking-widest pb-2">
           Ver Tudo <MoveRight size={16} />
         </Link>
       </div>
@@ -43,13 +51,13 @@ export function RelatedPosts({ posts, currentPostId }: RelatedPostsProps) {
               className="group relative bg-[#0a0c10] p-6 md:p-8 hover:bg-[#00a6f0] transition-all duration-500 flex flex-col min-h-[300px]"
             >
               {/* Index Number Background */}
-              <span className="absolute top-4 right-6 text-6xl font-black italic text-white/[0.03] group-hover:text-white/10 transition-colors">
+              <span className="absolute top-4 right-6 text-6xl font-black italic text-white/[0.03] group-hover:text-white/50 transition-colors">
                 0{index + 1}
               </span>
 
               <div className="relative z-10 flex flex-col h-full">
                 {/* Minimal Category Tag */}
-                <span className="text-[#00a6f0] group-hover:text-white text-[10px] font-black uppercase tracking-widest mb-4 transition-colors">
+                <span className="text-[#00a6f0] group-hover:text-[#0a0c10] text-xs font-black uppercase tracking-widest mb-4 transition-colors">
                   {post.category?.name || "Gazeta"}
                 </span>
 

@@ -1,4 +1,4 @@
-import { getPostsByCategory } from "@/lib/wp";
+import { getPostsByCategory, getCategoryBySlug } from "@/lib/wp";
 import { SportsHero } from "@/components/sports-hero";
 import { InfiniteScrollPosts } from "@/components/infinite-scroll";
 import { SidebarWidget } from "@/components/sidebar-widget";
@@ -7,18 +7,22 @@ import { Breadcrumb } from "@/components/breadcrumb";
 
 export default async function SportsCategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const posts = await getPostsByCategory(slug);
+  const [category, posts] = await Promise.all([
+    getCategoryBySlug(slug),
+    getPostsByCategory(slug)
+  ]);
   
   if (!posts || posts.length === 0) {
     return (
       <div className="min-h-screen bg-[#0a0c10] flex items-center justify-center text-white/20 uppercase font-black italic">
-        Sem conteúdos de {slug} disponíveis
+        Sem conteúdos disponíveis
       </div>
     );
   }
 
   const [mainStory, ...secondaryNews] = posts;
-  const sportName = slug
+  // Use category title from WordPress if available, fallback to slug manipulation
+  const categoryName = category?.name || slug
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
@@ -33,7 +37,7 @@ export default async function SportsCategoryPage({ params }: { params: Promise<{
             { label: "Inicial", href: "/" },
             ...(slug !== "desporto" ? [{ label: "Desporto", href: "/desporto" }] : [])
           ]} 
-          current={slug !== "desporto" ? sportName : "Desporto"}
+          current={slug !== "desporto" ? categoryName : "Desporto"}
         />
 
         {/* Section Header */}
@@ -42,12 +46,17 @@ export default async function SportsCategoryPage({ params }: { params: Promise<{
             <h1 className="text-5xl md:text-6xl font-black uppercase italic tracking-tighter">
               {slug === "desporto" ? "Desporto" : (
                 <>
-                  <span>Desporto</span> <span className="text-[#00a6f0]">{sportName}</span>
+                  <span>Desporto</span> <span className="text-[#00a6f0]">{categoryName}</span>
                 </>
               )}
             </h1>
           </div>
-          <p className="text-white/40 text-sm uppercase tracking-widest font-bold">
+          {category?.description && (
+            <p className="text-white/60 text-sm leading-relaxed mt-4 max-w-2xl">
+              {category.description.replace(/<[^>]*>/g, '')}
+            </p>
+          )}
+          <p className="text-white/40 text-sm uppercase tracking-widest font-bold mt-4">
             {posts.length} {posts.length === 1 ? 'artigo' : 'artigos'}
           </p>
         </div>
@@ -105,7 +114,7 @@ export default async function SportsCategoryPage({ params }: { params: Promise<{
             <SidebarWidget title="Informação" icon={<PlayCircle size={18} />}>
               <div className="space-y-3 text-[11px] text-white/50 leading-relaxed">
                 <p>
-                  Acompanhe toda a cobertura de <strong className="text-white">{sportName}</strong> em tempo real.
+                  Acompanhe toda a cobertura de <strong className="text-white">{categoryName}</strong> em tempo real.
                 </p>
                 <p>
                   Notícias, análises e estatísticas sobre as principais competições e eventos da modalidade.

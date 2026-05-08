@@ -132,7 +132,7 @@ export default async function SinglePostPage({ params }: Props) {
 
             {/* Related Posts Section */}
             {relatedPosts.length > 0 && (
-              <RelatedPosts posts={relatedPosts} currentPostId={post.id} />
+              <RelatedPosts posts={relatedPosts} currentPostId={post.id} categorySlug={categorySlug} categoryName={categoryName} />
             )}
 
           </article>

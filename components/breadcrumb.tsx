@@ -54,7 +54,7 @@ export function Breadcrumb({ items, current }: BreadcrumbProps) {
       {current && (
         <>
           <ChevronRight size={12} className="text-white/20" />
-          <span className="text-white/70 font-semibold whitespace-nowrap">{cleanText(current)}</span>
+          <span className="text-white/70 font-semibold whitespace-nowrap line-clamp-1">{cleanText(current)}</span>
         </>
       )}
     </nav>

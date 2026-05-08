@@ -186,6 +186,63 @@ export function extractCategories(post: any): Array<{ name: string; slug: string
   }));
 }
 
+// Category mapping cache to avoid repeated API calls
+const categoryCache = new Map<string, string>();
+
+export async function getCategoryTitleBySlug(slug: string): Promise<string> {
+  // Check cache first
+  if (categoryCache.has(slug)) {
+    return categoryCache.get(slug)!;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/categories?slug=${slug}`, {
+      headers: getAuthHeaders(),
+      next: { revalidate: 86400 } // Cache for 24 hours
+    });
+
+    if (!res.ok) {
+      categoryCache.set(slug, slug); // Cache the slug as fallback
+      return slug;
+    }
+
+    const categories = await res.json();
+    const title = categories[0]?.name || slug;
+    
+    categoryCache.set(slug, title);
+    return title;
+  } catch (error) {
+    console.error("Error fetching category title:", error);
+    categoryCache.set(slug, slug); // Cache the slug as fallback
+    return slug;
+  }
+}
+
+// Fetch category info including title and description by slug
+export async function getCategoryBySlug(slug: string): Promise<{ name: string; slug: string; description: string } | null> {
+  try {
+    const res = await fetch(`${API_URL}/categories?slug=${slug}`, {
+      headers: getAuthHeaders(),
+      next: { revalidate: 86400 } // Cache for 24 hours
+    });
+
+    if (!res.ok) return null;
+
+    const categories = await res.json();
+    if (categories.length === 0) return null;
+
+    const cat = categories[0];
+    return {
+      name: cat.name || "",
+      slug: cat.slug || slug,
+      description: cat.description || ""
+    };
+  } catch (error) {
+    console.error("Error fetching category:", error);
+    return null;
+  }
+}
+
 async function getUserById(userId: number): Promise<string> {
   try {
     const res = await fetch(`${API_URL}/users/${userId}`, {
