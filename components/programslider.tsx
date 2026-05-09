@@ -4,15 +4,11 @@ import React, { useRef, useState } from 'react';
 import { ChevronRight, ChevronLeft, Clock } from 'lucide-react';
 import Image from 'next/image';
 
-const programs = [
-  { id: 1, title: "Tá na Mesa", time: "11:30 - 12:25", color: "#f1b333", image: "/programs/tanamesa.jpg" },
-  { id: 2, title: "Cara ou Coroa", time: "12:30 - 13:10", color: "#4f67b0", image: "/programs/cara.jpg" },
-  { id: 3, title: "Nagenda", time: "13:15 - 13:25", color: "#e43c8c", image: "/programs/nagenda.jpg" },
-  { id: 4, title: "Finanças em Dia", time: "13:30 - 13:55", color: "#ea6e4b", image: "/programs/financas.jpg" },
-  { id: 5, title: "Ordem do Dia", time: "14:00 - 14:55", color: "#ffffff", image: "/programs/ordem.jpg" },
-];
+interface ProgramSliderProps {
+  initialPrograms?: any[];
+}
 
-export function ProgramSlider() {
+export function ProgramSlider({ initialPrograms = [] }: ProgramSliderProps) {
   // Reference to the scrollable container for manual button control
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -51,6 +47,8 @@ export function ProgramSlider() {
     }
   };
 
+  if (!initialPrograms.length) return null;
+
   return (
     <section className="bg-[#0a0c10] py-12 font-nurom overflow-hidden select-none">
       <div className="container mx-auto px-6">
@@ -79,7 +77,7 @@ export function ProgramSlider() {
           }`}
           style={{ WebkitOverflowScrolling: 'touch' }} // Smooth momentum on iOS
         >
-          {programs.map((prog) => (
+          {initialPrograms.map((prog) => (
             <div key={prog.id} className="shrink-0 snap-start">
               <div className="bg-[#12161f] text-white border border-white/10 overflow-hidden rounded-2xl w-87.5 flex flex-col transition-all duration-300 hover:border-white/30 h-full">
                 

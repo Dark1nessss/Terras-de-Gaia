@@ -3,6 +3,7 @@ import { ProgramSlider } from "./programslider";
 import { TVGuideGrid } from "./tvguidegrid";
 import { News } from "./news"
 import { ProgramsPortal } from "./program-portal";
+import { GaiaWaves } from "./test";
 import { getTVGuide } from '@/lib/wp';
 
 export default async function ContentHub() {
@@ -21,6 +22,9 @@ export default async function ContentHub() {
 
       {/* 4. COMPONENT: PROGRAMA EM DESTAQUE */}
       <ProgramsPortal />
+
+      {/* 5. COMPONENT: VOZ DE GAIA */}
+      <GaiaWaves />
     </div>
   );
 }

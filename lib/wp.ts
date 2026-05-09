@@ -31,7 +31,7 @@ export async function getPosts() {
   const posts = await res.json();
   
   // Log a sample of the embedded author data for inspection
-  console.log("getPosts - Embedded author data (first post):", posts[0]?._embedded?.['author']);
+  // console.log("getPosts - Embedded author data (first post):", posts[0]?._embedded?.['author']);
 
   return enrichPosts(posts);
 }
@@ -278,6 +278,93 @@ export async function getPrograms() {
     return programs;
   } catch (error) {
     console.error("Error fetching programs:", error);
+    return [];
+  }
+}
+
+function formatACFDate(rawDate: string): string {
+  if (!rawDate || rawDate === "Sem data") return "Sem data";
+
+  let day, month, year;
+
+  try {
+    // Caso 1: Formato dos teus logs (YYYYMMDD) -> "20260509"
+    if (rawDate.length === 8 && !rawDate.includes('/')) {
+      year = parseInt(rawDate.substring(0, 4));
+      month = parseInt(rawDate.substring(4, 6)) - 1;
+      day = parseInt(rawDate.substring(6, 8));
+    } 
+    // Caso 2: Formato do teu print ACF (j/m/Y) -> "9/5/2026"
+    else if (rawDate.includes('/')) {
+      const parts = rawDate.split('/');
+      day = parseInt(parts[0]);
+      month = parseInt(parts[1]) - 1;
+      year = parseInt(parts[2]);
+    } 
+    else {
+      return rawDate;
+    }
+
+    const dateObj = new Date(year, month, day);
+    const diasSemana = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+    
+    const nomeDia = diasSemana[dateObj.getDay()];
+    const diaMes = `${day.toString().padStart(2, '0')}/${(month + 1).toString().padStart(2, '0')}`;
+
+    return `${nomeDia}, ${diaMes}`;
+  } catch (e) {
+    console.error("Erro ao processar data:", rawDate);
+    return rawDate;
+  }
+}
+
+export async function getTVGuide() {
+  const cb = new Date().getTime();
+  const url = `${API_URL}/programas-tv?_embed&per_page=100&cb=${cb}`;
+  const now = new Date()
+  
+  console.log("Fetching TV Guide from:", url);
+
+  try {
+    const res = await fetch(url, {
+      headers: getAuthHeaders(),
+      cache: 'no-store'
+    });
+
+    if (!res.ok) throw new Error('Falha ao carregar Guia TV');
+
+    const data = await res.json();
+
+    return data.map((fullProgram: any) => {
+      // Extração de campos ACF com fallback
+      const hora_inicio = (fullProgram.acf?.hora_inicio || "00:00").substring(0, 5);
+      const hora_fim = (fullProgram.acf?.hora_fim || "00:00").substring(0, 5);
+      const raw_dia = fullProgram.acf?.dia_da_semana || "Sem data";
+
+      console.log(`Dados: ${fullProgram.title.rendered} - Hora: ${hora_inicio} às ${hora_fim}, Dia: ${raw_dia}, Dia Fomatado: ${formatACFDate(raw_dia)}`);
+
+      return {
+        id: fullProgram.id,
+        title: fullProgram.title.rendered,
+        description: fullProgram.content.rendered,
+        time: `${hora_inicio} - ${hora_fim}`,
+        hora_inicio: hora_inicio,
+        hora_fim: hora_fim,
+        data_completa: formatACFDate(raw_dia),
+        color: fullProgram.acf?.cor_tematica || "#00a6f0",
+        image: fullProgram._embedded?.['wp:featuredmedia']?.[0]?.source_url || "/mesa-posta.jpg",
+        slug: fullProgram.slug
+      };
+    }).filter((prog: any) => {
+      const [day, month] = prog.data_completa.split(', ')[1].split('/');
+      const [hour, min] = prog.hora_fim.split(':');
+
+      const programEndTime = new Date(now.getFullYear(), parseInt(month) - 1, parseInt(day), parseInt(hour), parseInt(min));
+
+      return programEndTime > now;
+    }).sort((a: any, b: any) => a.hora_inicio.localeCompare(b.hora_inicio));
+  } catch (error) {
+    console.error("Erro em getTVGuide:", error);
     return [];
   }
 }
