@@ -13,7 +13,7 @@ export async function News() {
   });
 
   return (
-    <section className="py-20 bg-[#0a0c10] font-nurom">
+    <section className="py-10 bg-[#0a0c10] font-nurom">
       <div className="container mx-auto px-6">
         
         {/* Header */}

@@ -2,6 +2,7 @@
 
 import React, { useRef, useState } from 'react';
 import { ChevronRight, ChevronLeft, Clock } from 'lucide-react';
+import { TVSidebarInfo } from "./tv-sidebar-info";
 import Image from 'next/image';
 
 interface ProgramSliderProps {
@@ -11,6 +12,7 @@ interface ProgramSliderProps {
 export function ProgramSlider({ initialPrograms = [] }: ProgramSliderProps) {
   // Reference to the scrollable container for manual button control
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [selectedProgram, setSelectedProgram] = useState<any | null>(null);
 
   // Dragging state
   const [isDragging, setIsDragging] = useState(false);
@@ -78,7 +80,7 @@ export function ProgramSlider({ initialPrograms = [] }: ProgramSliderProps) {
           style={{ WebkitOverflowScrolling: 'touch' }} // Smooth momentum on iOS
         >
           {initialPrograms.map((prog) => (
-            <div key={prog.id} className="shrink-0 snap-start">
+            <div key={prog.id} onClick={() => setSelectedProgram(prog)} className="shrink-0 snap-start">
               <div className="bg-[#12161f] text-white border border-white/10 overflow-hidden rounded-2xl w-87.5 flex flex-col transition-all duration-300 hover:border-white/30 h-full">
                 
                 {/* Image Section with Fallback Logic */}
@@ -125,6 +127,11 @@ export function ProgramSlider({ initialPrograms = [] }: ProgramSliderProps) {
           <div className="min-w-6 h-1" />
         </div>
       </div>
+      {/* Renderiza a Sidebar quando houver um programa selecionado */}
+      <TVSidebarInfo 
+        program={selectedProgram} 
+        onClose={() => setSelectedProgram(null)} 
+      />
     </section>
   );
 }
