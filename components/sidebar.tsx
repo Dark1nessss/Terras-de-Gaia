@@ -96,7 +96,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         <div className="sticky top-0 z-10 flex items-center justify-between p-4 border-none bg-[#2c272f]">
           <div className="flex items-center gap-3">
             {activeSubmenu ? (
-              <button onClick={() => setActiveSubmenu(null)} className="p-2 -ml-2 text-white/60 hover:text-white transition-colors">
+              <button onClick={() => setActiveSubmenu(null)} className="p-2 -ml-2 text-white/60 hover:text-white transition-colors cursor-pointer">
                 <ArrowLeft size={24} strokeWidth={2} />
               </button>
             ) : (
@@ -104,7 +104,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 <Image src="/logo-tg.png" alt="Logo" width={48} height={48} className="object-contain h-auto" />
               </Link>
             )}
-            <span className="font-bold uppercase text-sm tracking-wide">{activeSubmenu || "Terras de Gaia"}</span>
+            <span className="font-bold uppercase text-sm tracking-wide mt-[4px]">{activeSubmenu || "Terras de Gaia"}</span>
           </div>
           <button onClick={handleClose} className="p-2 text-white/40 hover:text-white transition-colors cursor-pointer">
             <X size={28} strokeWidth={1.5} />

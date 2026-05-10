@@ -49,7 +49,7 @@ export default function Hero() {
       {/* 3. Glued Buttons Area - Responsive Layout */}
       <div className="w-full bg-[#1a181e]/80 backdrop-blur-xl relative z-50 border-t border-white/5 overflow-hidden">
         <div className="container mx-auto px-0 md:px-6 flex flex-row items-center md:justify-start">
-        <Link href="/programas" className="flex-[0.4] md:flex-none md:order-2">
+        <Link href="/gaia-play" className="flex-[0.4] md:flex-none md:order-2">
           <button className="
             [--h:50px] md:[--h:40px] [--x:calc(var(--h)/2/7.115)] 
             w-full md:w-auto relative h-(--h) px-4 md:px-8 flex items-center justify-center font-black transition-all group cursor-pointer isolate

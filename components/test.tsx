@@ -51,7 +51,7 @@ export function GaiaWaves() {
                 <button
                   key={pod.id}
                   onClick={() => setCurrentTrack(pod)}
-                  className={`w-full flex items-center justify-between p-4 rounded-xl transition-all border ${
+                  className={`w-full flex items-center justify-between p-4 rounded-xl transition-all border cursor-pointer ${
                     currentTrack.id === pod.id 
                     ? 'bg-[#00a6f0]/10 border-[#00a6f0]/30 text-white' 
                     : 'bg-white/5 border-transparent text-white/40 hover:bg-white/10'
@@ -115,24 +115,24 @@ export function GaiaWaves() {
 
                 {/* Controlos do Player */}
                 <div className="flex items-center gap-8 pt-4">
-                  <button className="text-white/20 hover:text-white transition-colors">
+                  <button className="text-white/20 hover:text-white transition-colors cursor-pointer">
                     <SkipForward size={24} className="rotate-180" />
                   </button>
 
                   <button 
                     onClick={() => setIsPlaying(!isPlaying)}
-                    className="size-24 rounded-full bg-white text-black flex items-center justify-center hover:scale-110 transition-transform shadow-[0_0_50px_rgba(255,255,255,0.15)]"
+                    className="size-24 rounded-full bg-white text-black flex items-center justify-center hover:scale-110 transition-transform shadow-[0_0_50px_rgba(255,255,255,0.15)] cursor-pointer"
                   >
                     {isPlaying ? <Pause size={32} fill="currentColor" /> : <Play size={32} fill="currentColor" className="ml-2" />}
                   </button>
 
-                  <button className="text-white/20 hover:text-white transition-colors">
+                  <button className="text-white/20 hover:text-white transition-colors cursor-pointer">
                     <SkipForward size={24} />
                   </button>
                 </div>
 
                 {/* Barra de Progresso Subtil */}
-                <div className="w-full space-y-2">
+                <div className="w-full space-y-2 cursor-pointer">
                   <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
                     <motion.div 
                       initial={{ width: "0%" }}

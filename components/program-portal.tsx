@@ -70,8 +70,8 @@ export function ProgramsPortal() {
               Explore os nossos programas originais, reportagens e teasers exclusivos.
             </p>
 
-            <Link href="/programas">
-              <button className="group bg-[#00a6f0] text-white px-10 py-5 font-black uppercase italic tracking-widest text-sm flex items-center gap-4 hover:bg-white hover:text-black transition-all shadow-[0_10px_30px_rgba(0,166,240,0.3)]">
+            <Link href="/gaia-play">
+              <button className="group bg-[#00a6f0] text-white px-10 py-5 font-black uppercase italic tracking-widest text-sm flex items-center gap-4 hover:bg-white hover:text-black transition-all shadow-[0_10px_30px_rgba(0,166,240,0.3)] cursor-pointer">
                 Ver Todo o Catálogo <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </button>
             </Link>
@@ -122,7 +122,7 @@ export function ProgramsPortal() {
                     </div>
 
                     {/* Botão Play Dinâmico */}
-                    <Link href={`/programas/${activeProg.slug}`}>
+                    <Link href={`/gaia-play/${activeProg.slug}`}>
                       <div className="size-16 rounded-full bg-[#00a6f0] flex items-center justify-center shadow-[0_0_30px_rgba(0,166,240,0.5)] hover:scale-110 transition-transform cursor-pointer">
                         <Play fill="white" className="text-white ml-1 size-7" />
                       </div>

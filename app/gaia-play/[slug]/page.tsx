@@ -67,7 +67,7 @@ export default function ProgramSlugPage() {
         {/* NAVEGAÇÃO & ACTIONS */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-8">
           <div className="space-y-4">
-            <Link href="/programas" className="group flex items-center gap-2 text-white/40 hover:text-[#00a6f0] transition-colors">
+            <Link href="/gaia-play" className="group flex items-center gap-2 text-white/40 hover:text-[#00a6f0] transition-colors">
               <ArrowLeft size={16} />
               <span className="text-xs font-black uppercase tracking-[0.3em] pt-[2px]">Explorar Programas</span>
             </Link>

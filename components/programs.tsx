@@ -20,11 +20,12 @@ export default async function ContentHub() {
       {/* 3. COMPONENT: ÚLTIMAS NOTÍCIAS */}
       <News />
 
-      {/* 4. COMPONENT: PROGRAMA EM DESTAQUE */}
+      {/* 4. COMPONENT: VOZ DE GAIA */}
+      <GaiaWaves />
+
+      {/* 5. COMPONENT: PROGRAMA EM DESTAQUE */}
       <ProgramsPortal />
 
-      {/* 5. COMPONENT: VOZ DE GAIA */}
-      <GaiaWaves />
     </div>
   );
 }
