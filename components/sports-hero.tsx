@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export function SportsHero({ post }: { post: any }) {
   return (
-    <Link href={`/post/${post.slug}`} className="group relative block aspect-21/9 overflow-hidden bg-zinc-900 border border-white/5">
+    <Link href={`/post/${post.slug}`} className="group relative block aspect-video overflow-hidden bg-zinc-900 border border-white/5">
       <Image 
         src={post._embedded?.['wp:featuredmedia']?.[0]?.source_url} 
         alt="Hero" fill className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-60"

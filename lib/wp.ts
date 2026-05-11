@@ -108,44 +108,53 @@ export async function getLeagueTable() {
 }
 
 export async function getPostsByCategory(categorySlug: string) {
-  console.log("Fetching posts by category:", `${API_URL}/posts?category_slug=${categorySlug}&_embed`);
-  const res = await fetch(`${API_URL}/posts?category_slug=${categorySlug}&_embed`, {
-    headers: getAuthHeaders(),
-    next: { revalidate: 180 }
-  });
-  
-  if (!res.ok) throw new Error('Failed to fetch category posts');
-
-  const posts = await res.json();
-  
-  console.log("getPostsByCategory - Embedded author data (first post):", posts[0]?._embedded?.['author']);
-
-  return await enrichPosts(posts);
+  const { posts } = await getPostsByCategoryPaginated(categorySlug, 1, 12);
+  return posts;
 }
 
-export async function getPostsByCategoryPaginated(categorySlug: string, page: number = 1, perPage: number = 10) {
-  console.log(`Fetching posts by category (${categorySlug}) - Page ${page}, Per Page: ${perPage}`);
-  const res = await fetch(
-    `${API_URL}/posts?category_slug=${categorySlug}&_embed&page=${page}&per_page=${perPage}`,
-    {
-      headers: getAuthHeaders(),
-      next: { revalidate: 180 }
+export async function getPostsByCategoryPaginated(categorySlug: string, page = 1, perPage = 12) {
+  try {
+    let categoryIds: number[] = [];
+
+    if (categorySlug === 'desporto') {
+      const catRes = await fetch(`${API_URL}/categories?slug=${SPORTS_SLUGS.join(',')}&_embed`, {
+        headers: getAuthHeaders()
+      });
+      const categories = await catRes.json();
+      categoryIds = categories.map((cat: any) => cat.id);
+      console.log("🏀 DESPORTO - IDs encontradas:", categoryIds);
+    } else {
+      const catRes = await fetch(`${API_URL}/categories?slug=${categorySlug}`, {
+        headers: getAuthHeaders()
+      });
+      const categories = await catRes.json();
+      if (!categories || categories.length === 0) return { posts: [], totalPosts: 0 };
+      categoryIds = [categories[0].id];
     }
-  );
-  
-  if (!res.ok) throw new Error('Failed to fetch category posts');
 
-  const posts = await res.json();
-  const totalPosts = parseInt(res.headers.get('x-wp-total') || '0', 10);
-  const totalPages = parseInt(res.headers.get('x-wp-totalpages') || '1', 10);
-  const enrichedPosts = await enrichPosts(posts);
+    const categoryParam = categoryIds.join(',');
 
-  return {
-    posts: enrichedPosts,
-    totalPages,
-    totalPosts,
-    currentPage: page
-  };
+    const res = await fetch(
+      `${API_URL}/posts?categories=${categoryParam}&_embed&per_page=${perPage}&page=${page}&orderby=date&order=desc`,
+      { 
+        headers: getAuthHeaders(),
+        next: { revalidate: 180 } 
+      }
+    );
+
+    if (!res.ok) return { posts: [], totalPosts: 0 };
+    
+    const totalPosts = parseInt(res.headers.get('X-WP-Total') || '0');
+    const posts = await res.json();
+    const enriched = await enrichPosts(posts);
+
+    console.log(`📊 ${categorySlug} - Página ${page}: ${posts.length} posts | Total: ${totalPosts}`);
+
+    return { posts: enriched, totalPosts };
+  } catch (error) {
+    console.error("Erro no fetch paginado:", error);
+    return { posts: [], totalPosts: 0 };
+  }
 }
 
 export async function extractAuthorName(post: any): Promise<string> {
@@ -169,25 +178,47 @@ export async function extractAuthorName(post: any): Promise<string> {
 }
 
 export function extractCategory(post: any) {
-  const categoryTerm = post._embedded?.['wp:term']?.[0]?.[0];
+  const categories = extractCategories(post);
+  if (categories.length === 0) return { name: "Notícias", href: "/categoria/noticias" };
   
-  return {
-    name: categoryTerm?.name || "Futebol",
-    slug: categoryTerm?.slug || "futebol"
-  };
-}
-
-export function extractCategories(post: any): Array<{ name: string; slug: string }> {
-  const categoryTerms = post._embedded?.['wp:term']?.[0] || [];
-  
-  return categoryTerms.map((cat: any) => ({
-    name: cat.name || "Categoria",
-    slug: cat.slug || "categoria"
-  }));
+  // Prioridade: se houver uma categoria de desporto, escolhemos essa como principal
+  const sportCat = categories.find(c => SPORTS_SLUGS.includes(c.slug.toLowerCase()));
+  return sportCat || categories[0];
 }
 
 // Category mapping cache to avoid repeated API calls
 const categoryCache = new Map<string, string>();
+
+export const SPORTS_SLUGS = [
+  'futebol', 'basquetebol', 'voleibol', 'hoquei', 
+  'natacao', 'desporto', 'modalidades', 'trail', 'atletismo'
+];
+
+export function getCategoryLink(slug: string): string {
+  if (slug === 'desporto') {
+    return '/desporto';
+  }
+
+  // Verifica se o slug pertence às modalidades de desporto
+  const isSport = SPORTS_SLUGS.includes(slug);
+  
+  if (isSport) {
+    return `/desporto/${slug}`;
+  }
+
+  // Para todas as outras categorias (ex: Opinião, Atualidade)
+  return `/categoria/${slug}`;
+}
+
+export function extractCategories(post: any) {
+  if (!post._embedded?.['wp:term']) return [];
+  return post._embedded['wp:term'][0].map((cat: any) => ({
+    id: cat.id,
+    name: cat.name,
+    slug: cat.slug,
+    href: getCategoryLink(cat.slug)
+  }));
+}
 
 export async function getCategoryTitleBySlug(slug: string): Promise<string> {
   // Check cache first
@@ -219,28 +250,10 @@ export async function getCategoryTitleBySlug(slug: string): Promise<string> {
 }
 
 // Fetch category info including title and description by slug
-export async function getCategoryBySlug(slug: string): Promise<{ name: string; slug: string; description: string } | null> {
-  try {
-    const res = await fetch(`${API_URL}/categories?slug=${slug}`, {
-      headers: getAuthHeaders(),
-      next: { revalidate: 86400 } // Cache for 24 hours
-    });
-
-    if (!res.ok) return null;
-
-    const categories = await res.json();
-    if (categories.length === 0) return null;
-
-    const cat = categories[0];
-    return {
-      name: cat.name || "",
-      slug: cat.slug || slug,
-      description: cat.description || ""
-    };
-  } catch (error) {
-    console.error("Error fetching category:", error);
-    return null;
-  }
+export async function getCategoryBySlug(slug: string) {
+  const res = await fetch(`${API_URL}/categories?slug=${slug}`);
+  const data = await res.json();
+  return data[0] || null;
 }
 
 async function getUserById(userId: number): Promise<string> {
@@ -339,7 +352,7 @@ export async function getTVGuide() {
       // Extração de campos ACF com fallback
       const hora_inicio = (fullProgram.acf?.hora_inicio || "00:00").substring(0, 5);
       const hora_fim = (fullProgram.acf?.hora_fim || "00:00").substring(0, 5);
-      const raw_dia = fullProgram.acf?.dia_da_semana || "Sem data";
+      const raw_dia = fullProgram.acf?.dia_da_semana || "00000000";
 
       console.log(`Dados: ${fullProgram.title.rendered} - Hora: ${hora_inicio} às ${hora_fim}, Dia: ${raw_dia}, Dia Fomatado: ${formatACFDate(raw_dia)}`);
 
@@ -350,19 +363,28 @@ export async function getTVGuide() {
         time: `${hora_inicio} - ${hora_fim}`,
         hora_inicio: hora_inicio,
         hora_fim: hora_fim,
+        sort_date: raw_dia,
         data_completa: formatACFDate(raw_dia),
         color: fullProgram.acf?.cor_tematica || "#00a6f0",
         image: fullProgram._embedded?.['wp:featuredmedia']?.[0]?.source_url || "/mesa-posta.jpg",
         slug: fullProgram.slug
       };
-    }).filter((prog: any) => {
+    })
+    .filter((prog: any) => {
+      // Filtering out past programs using your existing logic
       const [day, month] = prog.data_completa.split(', ')[1].split('/');
       const [hour, min] = prog.hora_fim.split(':');
-
       const programEndTime = new Date(now.getFullYear(), parseInt(month) - 1, parseInt(day), parseInt(hour), parseInt(min));
-
       return programEndTime > now;
-    }).sort((a: any, b: any) => a.hora_inicio.localeCompare(b.hora_inicio));
+    })
+    .sort((a: any, b: any) => {
+      // 1. Sort by Date first (e.g., 20260513 comes before 20260528)
+      if (a.sort_date !== b.sort_date) {
+        return a.sort_date.localeCompare(b.sort_date);
+      }
+      // 2. If same day, sort by Start Time
+      return a.hora_inicio.localeCompare(b.hora_inicio);
+    });
   } catch (error) {
     console.error("Erro em getTVGuide:", error);
     return [];

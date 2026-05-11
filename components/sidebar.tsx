@@ -71,11 +71,16 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     return item?.subItems || [];
   };
 
-  const getSubLink = (activeSubmenu: string, subItem: string) => {
-    if (activeSubmenu === "Informação") {
-      return `/categoria/${subItem.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-')}`;
+  const getSubLink = (menu: string, sub: string) => {
+    const slug = sub.toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, '-');
+
+    if (menu === "Desporto") {
+      return `/desporto/${slug}`;
     }
-    return `/desporto/${subItem.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-')}`;
+    
+    return `/categoria/${slug}`;
   };
 
   return (

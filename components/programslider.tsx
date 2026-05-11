@@ -84,7 +84,8 @@ export function ProgramSlider({ initialPrograms = [] }: ProgramSliderProps) {
               <div className="bg-[#12161f] text-white border border-white/10 overflow-hidden rounded-2xl w-87.5 flex flex-col transition-all duration-300 hover:border-white/30 h-full">
                 
                 {/* Image Section with Fallback Logic */}
-                <div className="h-37.5 w-full relative overflow-hidden bg-zinc-900">
+                {/* aspect ratio 16-9 */}
+                <div className="w-full relative overflow-hidden bg-zinc-900 aspect-video">
                   {imageErrors[prog.id] ? (
                     /* Fallback UI: Centered text with background color */
                     <div 

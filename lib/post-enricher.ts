@@ -1,15 +1,25 @@
-import { extractAuthorName, extractCategory, extractCategories } from "@/lib/wp";
+import { extractAuthorName, extractCategory, extractCategories, SPORTS_SLUGS } from "@/lib/wp";
 import { decodeHtml, stripHtml } from "@/lib/decode-html";
 
 export async function enrichPosts(posts: any[]): Promise<any[]> {
-  return Promise.all(posts.map(async (post) => ({
+  return Promise.all(posts.map(async (post) => {
+    const categories = extractCategories(post);
+    
+    // Verifica se alguma das categorias do post pertence à lista de desporto
+    const isSportContent = categories.some(cat => 
+      SPORTS_SLUGS.includes(cat.slug.toLowerCase())
+    );
+
+    return {
     ...post,
     author_name: await extractAuthorName(post),
-    category: extractCategory(post),           // First category (for breadcrumb)
-    categories: extractCategories(post),       // All categories (for badges)
+    category: extractCategory(post),
+    categories: categories,
+    isSportContent: isSportContent,
     title_clean: decodeHtml(stripHtml(post.title?.rendered || "")),
     excerpt_clean: decodeHtml(stripHtml(post.excerpt?.rendered || "")),
     hasVideo: post._embedded?.['wp:featuredmedia']?.[0]?.media_type === 'video',
     hasFeaturedMedia: !!post._embedded?.['wp:featuredmedia']?.[0]?.source_url
-  })));
+    };
+  }));
 }

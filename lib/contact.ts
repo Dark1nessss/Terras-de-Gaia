@@ -1,7 +1,8 @@
 export const CONTACT_INFO = {
-  email: "geral@diretogaia.pt",
-  phone: "+351 220 000 000",
-  location: "Vila Nova de Gaia, Portugal",
+  email: "geral@terrasdegaia.pt",
+  email_comercial: "comercial@terrasdegaia.pt",
+  phone: "+351 918 583 889",
+  location: "Avintes, Vila Nova de Gaia, Portugal",
 };
 
 export const SOCIAL_LINKS = {
