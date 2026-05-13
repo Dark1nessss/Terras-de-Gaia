@@ -103,7 +103,7 @@ export function ShareButton({ title }: ShareButtonProps) {
         }`}
       >
         {copied ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
-        <span className="font-bold hidden sm:block"> {copied ? "Copiado!" : "Copiar"}</span>
+        <span className="font-bold hidden sm:block cursor-pointer"> {copied ? "Copiado!" : "Copiar"}</span>
       </button>
     </div>
   );
