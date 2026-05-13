@@ -152,20 +152,3 @@ export async function getAdsByPosition(
     return [];
   }
 }
-
-/**
- * Track ad click for analytics
- * Call this when user clicks an ad
- */
-export async function trackAdClick(adId: number, position: 'sidebar' | 'featured' | 'inline') {
-  try {
-    await fetch('/api/ads/click', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ adId, position }),
-    });
-  } catch (error) {
-    // Silently fail - don't disrupt user experience
-    console.debug('Failed to track ad click:', error);
-  }
-}

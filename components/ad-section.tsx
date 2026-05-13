@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Advertisement, trackAdClick } from '@/lib/ads';
+import { Advertisement } from '@/lib/ads';
 import { X } from 'lucide-react';
 
 interface AdSectionProps {
@@ -71,7 +71,6 @@ export function AdSection({
                 target={currentAd.acf?.clickthrough_url ? '_blank' : undefined}
                 rel={currentAd.acf?.clickthrough_url ? 'noopener noreferrer' : undefined}
                 className="block w-full h-full"
-                onClick={() => trackAdClick(currentAd.id, position)}
               >
                 <Image
                   src={currentAd.featured_image_url}
