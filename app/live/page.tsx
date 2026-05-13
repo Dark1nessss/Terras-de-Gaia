@@ -37,10 +37,10 @@ export default function LivePage() {
         </div>
 
         {/* Main Theater Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
           {/* LEFT: Video Player */}
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-8 flex flex-col">
             <div className="relative aspect-video bg-black shadow-2xl border border-white/5 overflow-hidden group">
               <iframe
                 src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=1&modestbranding=1`}
@@ -55,28 +55,29 @@ export default function LivePage() {
                  </div>
               </div>
             </div>
-
-            <AdPlaceholder 
-              position="inline"
-            />
             
             {/* Live Description Block */}
-            <div className="mt-8 p-6 md:p-8 bg-white/2 border border-white/5 rounded-sm">
+            <div className="mt-6 p-6 md:p-8 bg-white/2 border border-white/5 rounded-sm flex-1">
               <h2 className="text-xl md:text-2xl font-black uppercase italic mb-4">Jornal Diário — Edição da Tarde</h2>
-              <p className="text-white/60 leading-relaxed text-sm md:text-base max-w-3xl">
+              <p className="text-white/60 leading-relaxed text-sm md:text-base max-w-3xl mb-6">
                 Acompanhe as principais notícias que marcam a atualidade de Vila Nova de Gaia e da região. 
                 Entrevistas em estúdio, reportagens locais e a análise desportiva diária.
               </p>
-              <div className="mt-6">
-                <ShareButton 
-                  title="Jornal Diario - Edição da Tarde"
-                />
-              </div>
+              <ShareButton 
+                title="Jornal Diario - Edição da Tarde"
+              />
+            </div>
+
+            {/* Ad Inline - Below description with margin */}
+            <div className="mt-6">
+              <AdPlaceholder 
+                position="inline"
+              />
             </div>
           </div>
 
           {/* RIGHT: Schedule Sidebar */}
-          <div className="lg:col-span-4 flex flex-col gap-6">
+          <div className="lg:col-span-4 flex flex-col gap-0 h-fit lg:sticky lg:top-24">
             
             {/* Header */}
             <div className="bg-[#00a6f0] p-4 md:p-5 flex items-center justify-between">
@@ -87,35 +88,36 @@ export default function LivePage() {
               <span className="text-xs font-bold opacity-80 uppercase">Hoje</span>
             </div>
 
-            {/* Schedule: Horizontal Scrollable on Mobile, Vertical on Desktop */}
-            <div className="lg:space-y-1 flex lg:flex-col gap-4 overflow-x-auto pb-2 lg:pb-0 lg:overflow-x-visible scrollbar-hide">
+            {/* Schedule: Scrollable Container */}
+            <div className="bg-black/20 border border-white/5 border-t-0 overflow-y-auto max-h-96 lg:max-h-[calc(100vh-10rem)] scrollbar-thin">
               {DAILY_SCHEDULE.map((item, idx) => (
                 <div 
                   key={idx}
-                  className={`flex-shrink-0 w-72 lg:w-full group p-4 md:p-5 flex flex-col lg:flex-row lg:items-center lg:justify-between border-b border-white/5 lg:border-b transition-all duration-300 hover:bg-white/3 ${
-                    item.active ? 'bg-white/5 border-l-4 border-l-[#00a6f0]' : ''
+                  className={`group px-4 md:px-5 py-4 md:py-5 border-b border-white/5 transition-all duration-300 hover:bg-white/3 ${
+                    item.active ? 'bg-white/5 border-l-4 border-l-[#00a6f0] pl-3 md:pl-4' : ''
                   }`}
                 >
-                  <div className="flex items-start lg:items-center gap-3 lg:gap-5">
-                    <span className={`text-xs font-black italic shrink-0 ${item.active ? 'text-[#00a6f0]' : 'text-white/30'}`}>
+                  {/* Time Row */}
+                  <div className="flex items-center gap-3 mb-2 lg:mb-0">
+                    <span className={`text-xs font-black italic whitespace-nowrap ${item.active ? 'text-[#00a6f0]' : 'text-white/30'}`}>
                       {item.time}
                     </span>
-                    <div>
-                      <p className={`text-sm font-black uppercase tracking-tight italic line-clamp-2 ${
-                        item.active ? 'text-white' : 'text-white/60 group-hover:text-white'
-                      }`}>
-                        {item.title}
-                      </p>
-                      <p className="text-xs font-bold text-[#00a6f0] uppercase tracking-widest mt-1">
-                        {item.category}
-                      </p>
-                    </div>
+                    <p className={`text-sm font-black uppercase tracking-tight italic line-clamp-1 flex-1 ${
+                      item.active ? 'text-white' : 'text-white/60 group-hover:text-white'
+                    }`}>
+                      {item.title}
+                    </p>
+                    {item.active && (
+                      <span className="text-xs font-black uppercase text-[#00a6f0] animate-pulse whitespace-nowrap flex-shrink-0 ml-2">
+                        Agora
+                      </span>
+                    )}
                   </div>
-                  {item.active && (
-                    <span className="text-xs font-black uppercase text-[#00a6f0] animate-pulse mt-2 lg:mt-0">
-                      Agora
-                    </span>
-                  )}
+
+                  {/* Category Row */}
+                  <p className="text-[10px] font-bold text-[#00a6f0] uppercase tracking-widest pl-0">
+                    {item.category}
+                  </p>
                 </div>
               ))}
             </div>
