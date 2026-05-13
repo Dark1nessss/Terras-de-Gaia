@@ -23,9 +23,9 @@ export default function LivePage() {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 border-b border-white/10 pb-6 gap-4">
           <div>
-            <div className="flex items-center gap-3 mb-2">
+            <div className="flex items-center gap-1 mb-2">
+              <span className="text-[#00a6f0] text-xs font-black uppercase tracking-widest mt-0.5 ml-2 lg:ml-3">Em Direto</span>
               <span className="flex h-2 w-2 rounded-full bg-red-600 animate-pulse" />
-              <span className="text-[#00a6f0] text-xs font-black uppercase tracking-widest">Em Direto</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter leading-none">
               Terras de Gaia <span className="text-[#00a6f0]">TV</span>
