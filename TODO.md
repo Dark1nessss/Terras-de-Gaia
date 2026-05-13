@@ -1,96 +1,230 @@
 # Terras de Gaia - TODO List
 
-## 1. Improve Slug Pages (Categories & Sports)
+## PRIORITY: CRITICAL - Security & Infrastructure
 
-### 1.1 Enhance Category/Sports Detail Pages
-- [ ] Add rich metadata display (post count, last updated date)
-- [ ] Improve header section with category description/banner
-- [ ] Add category-specific styling/colors
-- [ ] Display category statistics (views, articles this month)
-- [ ] Implement category filters (by date, popularity, etc.)
+### 1. Fix WordPress Security & Implement Proper Caching
+**Goal**: Prevent unauthorized database access, secure authentication
 
-### 1.2 Add Page Details
-- [ ] Show featured/sticky posts at top
-- [ ] Add "Most Read" section per category
-- [ ] Display trending posts in category
-- [ ] Add category feed refresh indicator
-- [ ] Show last update timestamp
+#### 1.1 Authentication & API Protection
+- [ ] Verify WP_USER + WP_APP_PASSWORD in .env.local
+- [ ] Audit all API calls in /lib/wp.ts - ensure auth headers used everywhere
+- [ ] Remove any direct WordPress URLs from frontend components
+- [ ] Create API route handlers that wrap WordPress calls (/app/api/*)
+- [ ] Ensure no hardcoded credentials anywhere
 
-### 1.3 Sidebar: Similar News Section
-- [ ] Create "Artigos Relacionados" widget on left sidebar
-- [ ] Pull posts from same category (exclude current)
-- [ ] Show 3-5 recent related posts
-- [ ] Add thumbnail + title + date for each
-- [ ] Link each related post to its page
-- [ ] Use post enricher to get clean data
-- [ ] Cache related posts for 1 hour
+#### 1.2 Implement ISR Caching Strategy
+- [ ] Set revalidate: 180 (3 min) for posts endpoints
+- [ ] Set revalidate: 180 (3 min) for programs endpoints
+- [ ] Set revalidate: 180 (3 min) for categories endpoints
+- [ ] Add Cache-Control headers to API responses
+- [ ] Implement stale-while-revalidate strategy
 
-## 2. Programs Page & WordPress Integration
+#### 1.3 Rate Limiting
+- [ ] Create /lib/rate-limiter.ts utility
+- [ ] Implement 10 requests/minute limit on all public API routes
+- [ ] Add IP-based tracking for rate limiting
+- [ ] Return 429 status for exceeded limits
 
-### 2.1 Create Programs Page
-- [ ] Add `/programas` or `/programs` route
-- [ ] Create `app/programas/page.tsx`
-- [ ] Add breadcrumb navigation
-- [ ] Display program grid/list layout
-- [ ] Add program filters (by category, time, etc.)
-
-### 2.2 WordPress Programs Section
-- [ ] Fetch programs from WordPress REST API
-- [ ] Create post enricher for programs
-- [ ] Display program videos (if available)
-- [ ] Add program schedule/times
-- [ ] Link to program details page
-- [ ] Cache programs for 1 hour (180s)
-
-### 2.3 Programs Videos Integration
-- [ ] Add video player component if videos exist
-- [ ] Handle featured media as video embeds
-- [ ] Add video download/sharing options
-- [ ] Create `app/programas/[slug]/page.tsx` for program details
-- [ ] Display episode list for each program
-- [ ] Add comments/discussion section
-
-## 3. Code Quality & Optimization
-
-### 3.1 Reusable Components
-- [ ] Extract sidebar widget pattern as component
-- [ ] Create RelatedPosts component for reuse
-- [ ] Create PostGrid component variant for programs
-- [ ] Standardize breadcrumb usage across pages
-
-### 3.2 API Routes
-- [ ] Create `/api/programs` endpoint with rate limiting
-- [ ] Create `/api/programs/[slug]` for details
-- [ ] Add program caching at API level
-- [ ] Add error handling & retries
-
-### 3.3 Testing
-- [ ] Test category pages on mobile
-- [ ] Test programs page responsiveness
-- [ ] Test sidebar widgets on small screens
-- [ ] Verify infinite scroll works with new components
-
-## 4. Performance & UX
-
-- [ ] Optimize images for programs section
-- [ ] Add loading states for program videos
-- [ ] Implement lazy loading for related posts
-- [ ] Monitor page load times
-- [ ] Test with slow network speeds
+#### 1.4 API Routes to Create/Secure
+- [ ] /app/api/posts/route.ts (with caching + rate limiting)
+- [ ] /app/api/programs/route.ts (with caching + rate limiting)
+- [ ] /app/api/categories/route.ts (with caching + rate limiting)
+- [ ] /app/api/trending/route.ts (with caching + rate limiting)
+- [ ] /app/api/ads/route.ts (with caching + rate limiting)
 
 ---
 
-## Priority Order
-1. **High**: Similar news sidebar (adds user engagement)
-2. **High**: Programs page + WordPress integration
-3. **Medium**: Enhance category page details
-4. **Medium**: Code organization & reusable components
-5. **Low**: Performance optimizations & testing
+## PRIORITY: HIGH - Feature Development
 
-## Notes
-- Keep using existing infinite scroll pattern for programs
-- Reuse LoadingSpinner component
-- Use post enricher pattern for programs data
-- Apply rate limiting to all new API endpoints (10 req/min for programs)
-- Client-side cache: 5min TTL
-- Server-side cache: disabled (force-dynamic pages)
+### 2. Create Trending News Section (WordPress ACF)
+**Goal**: Display editor-selected trending articles with ACF integration
+
+#### 2.1 WordPress Setup
+- [ ] Add ACF field to posts: "Mark as Trending" (checkbox)
+- [ ] Configure to limit 5 trending articles at a time
+- [ ] Add expiration rule (auto-untrend after 7 days)
+
+#### 2.2 Frontend Implementation
+- [ ] Create /lib/trending.ts to fetch trending posts
+- [ ] Create /app/api/trending/route.ts endpoint
+- [ ] Create components/trending-news.tsx component
+- [ ] Add trending section to /app/page.tsx (homepage)
+- [ ] Add trending section to /app/noticias/page.tsx (news page)
+- [ ] Add "Trending" badge to articles marked as trending
+
+### 3. Add Publicity/Ads to Multiple Pages
+**Goal**: Implement advertising sections across all main pages
+
+#### 3.1 WordPress Ads Setup
+- [ ] Create WordPress custom post type: 'advertisement'
+- [ ] Add ACF fields: position, category, start_date, end_date
+- [ ] Add featured image for ad creative
+
+#### 3.2 Frontend Ad Components
+- [ ] Create /lib/ads.ts to fetch advertisements
+- [ ] Create components/ad-section.tsx (supports sidebar/featured/inline)
+- [ ] Create /app/api/ads/route.ts endpoint
+
+#### 3.3 Ad Placement Across Pages
+- [ ] Add to homepage (between hero and news feed)
+- [ ] Add to /categoria/[slug] (sidebar)
+- [ ] Add to /desporto/[slug] (sidebar)
+- [ ] Add to /programas/ (sidebar)
+- [ ] Add to /gaia-play/ (sidebar)
+
+### 4. Create Fixed Programs System for GaiaPlay
+**Goal**: Separate scheduled programs from fixed programs (on-demand episodes)
+
+#### 4.1 WordPress Custom Post Type
+- [ ] Create 'fixed_program' custom post type in WordPress
+- [ ] Add ACF fields: series, episode_number, video_url, description
+- [ ] Add featured image (thumbnail)
+
+#### 4.2 Frontend Components
+- [ ] Create /lib/fixed-programs.ts fetch function
+- [ ] Create components/fixed-programs-grid.tsx (list view)
+- [ ] Create components/fixed-program-card.tsx (card component)
+- [ ] Create components/fixed-program-player.tsx (video player with episodes)
+
+#### 4.3 Routes & Pages
+- [ ] Create /app/fixed-programs/page.tsx (list all episodes)
+- [ ] Create /app/fixed-programs/[slug]/page.tsx (episode details + player)
+- [ ] Integrate into existing GaiaPlay section
+- [ ] Create /app/api/fixed-programs/route.ts endpoint
+
+---
+
+## PRIORITY: MEDIUM - Content & UX
+
+### 5. Create "Vira Parceiro" Business Contact Page
+**Goal**: Professional business partnership page with company details
+
+#### 5.1 Page Structure
+- [ ] Create /app/vira-parceiro/page.tsx
+- [ ] Hero section - Become a Partner tagline
+- [ ] Benefits grid - Why partner with Terras de Gaia
+- [ ] Contact form - Company name, email, phone, message
+- [ ] Business details section - Location, phone, email, hours
+- [ ] FAQ section - Partnership questions
+
+#### 5.2 Features
+- [ ] Responsive form with validation
+- [ ] Email notification on submission (to admin)
+- [ ] Optional: Map showing location
+- [ ] Social links (LinkedIn, etc.)
+- [ ] Professional styling following newspaper design
+
+### 6. Improve Newspaper Category & Slug Pages
+**Goal**: Make category pages and slug pages more distinctive and valuable
+
+#### 6.1 Category Pages (/categoria/[slug])
+- [ ] Create category-hero.tsx component (header with description + stats)
+- [ ] Add category description from WordPress
+- [ ] Display post count and last updated date
+- [ ] Show featured/sticky posts at top
+- [ ] Create category-filters.tsx for date/popularity filtering
+- [ ] Add "Most Read" sidebar widget
+- [ ] Display related categories
+
+#### 6.2 Sports Pages (/desporto/[slug])
+- [ ] Enhance team/league header section
+- [ ] Add latest scores/standings if available
+- [ ] Create most-read-widget.tsx for sidebar
+- [ ] Show upcoming events/schedule
+- [ ] Add team stats sidebar
+
+#### 6.3 Shared Improvements
+- [ ] Create "Artigos Relacionados" widget (3-5 related posts)
+- [ ] Add category-specific styling/colors
+- [ ] Implement category statistics display
+- [ ] Add pagination or infinite scroll
+- [ ] Cache related posts for 1 hour
+
+---
+
+## PRIORITY: MEDIUM-LOW - Advanced Features
+
+### 7. Digital Newspaper Plugin (PDF to Web)
+**Goal**: Convert PDF newspapers into interactive digital format
+
+#### 7.1 WordPress Setup
+- [ ] Create 'newspaper' custom post type
+- [ ] Add ACF field for PDF upload
+- [ ] Add publication date field
+
+#### 7.2 PDF Processing (Choose Implementation)
+- [ ] Option A: Use react-pdf library for browser rendering
+- [ ] Option B: Server-side conversion (PDF to images via ImageMagick)
+- [ ] Option C: Embed PDF viewer (simpler)
+
+#### 7.3 Frontend Components
+- [ ] Create components/digital-newspaper.tsx component
+- [ ] Add page navigation (prev/next page)
+- [ ] Add thumbnail preview panel
+- [ ] Add fullscreen option
+- [ ] Add download functionality
+
+#### 7.4 Routes
+- [ ] Create /app/jornais/ (list newspapers by date)
+- [ ] Create /app/jornais/[slug] (view newspaper with PDF viewer)
+- [ ] Create /app/api/newspapers/route.ts endpoint
+
+---
+
+## PRIORITY: LOW - Code Quality & Optimization
+
+### 8. Code Quality & Refactoring
+
+#### 8.1 Reusable Components
+- [ ] Extract sidebar widget pattern as reusable component
+- [ ] Create RelatedPosts component
+- [ ] Create PostGrid component variants
+- [ ] Standardize breadcrumb usage across pages
+
+#### 8.2 API Organization
+- [ ] Document all API endpoints in /lib/api.ts
+- [ ] Add error handling & retry logic
+- [ ] Implement consistent response format
+- [ ] Add request/response logging for debugging
+
+#### 8.3 Testing & Validation
+- [ ] Test all pages on mobile viewport
+- [ ] Test category pages responsiveness
+- [ ] Test sidebar widgets on small screens
+- [ ] Verify infinite scroll works with new components
+- [ ] Test with slow network (3G simulation)
+
+### 9. Performance Optimizations
+
+- [ ] Optimize all images (use next/image component)
+- [ ] Add loading states for async content
+- [ ] Implement lazy loading for below-the-fold sections
+- [ ] Monitor bundle size and Core Web Vitals
+- [ ] Set up performance monitoring/alerts
+
+---
+
+## Implementation Timeline Recommendation
+
+**Week 1**: Security & Caching (Task 1) - CRITICAL
+**Week 2**: Trending News (Task 2) - Quick win for engagement
+**Week 3**: Fixed Programs (Task 4) - Core feature for GaiaPlay
+**Week 4**: Publicity/Ads (Task 3) - Revenue feature
+**Week 5**: Category Page Improvements (Task 6) - Better UX
+**Week 6**: Vira Parceiro (Task 5) - Business page
+**Week 7+**: Digital Newspaper (Task 7) - Complex feature
+
+---
+
+## Notes & Conventions
+
+- All new components follow existing patterns (news.tsx, programs.tsx, test.tsx)
+- Use Tailwind CSS + Framer Motion for animations
+- Always use TypeScript with strict mode
+- WordPress API calls must use getAuthHeaders()
+- Apply DRY principle - extract reusable utilities to /lib
+- Keep components under 300 lines
+- Use ISR caching strategy (revalidate: 180)
+- Maintain dark theme (#0a0c10 bg, #00a6f0 accent)
+- Document all breaking changes
+- Test responsiveness on mobile, tablet, desktop
