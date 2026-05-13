@@ -55,6 +55,10 @@ export default function LivePage() {
                  </div>
               </div>
             </div>
+
+            <AdPlaceholder 
+              position="inline"
+            />
             
             {/* Live Description Block */}
             <div className="mt-8 p-6 md:p-8 bg-white/2 border border-white/5 rounded-sm">
@@ -73,10 +77,6 @@ export default function LivePage() {
 
           {/* RIGHT: Schedule Sidebar */}
           <div className="lg:col-span-4 flex flex-col gap-6">
-            {/* SIDEBAR AD - Above Schedule */}
-            <AdPlaceholder 
-              position="sidebar" 
-            />
             
             {/* Header */}
             <div className="bg-[#00a6f0] p-4 md:p-5 flex items-center justify-between">
@@ -118,20 +118,6 @@ export default function LivePage() {
                   )}
                 </div>
               ))}
-            </div>
-
-            {/* Support/Interaction Box */}
-            <div className="mt-auto p-4 md:p-6 border border-dashed border-white/20 flex flex-col gap-4">
-               <div className="flex items-center gap-3 text-white/40">
-                  <Info size={16} />
-                  <span className="text-xs font-bold uppercase tracking-widest">Informações</span>
-               </div>
-               <p className="text-xs text-white/50 leading-relaxed italic">
-                 Dificuldades com a emissão? Contacte o nosso suporte técnico.
-               </p>
-               <Link href="/contacto" className="inline-block text-center py-3 px-4 border border-white/10 text-xs font-black uppercase hover:bg-white hover:text-black transition-all">
-                  Pedir Ajuda
-               </Link>
             </div>
           </div>
 

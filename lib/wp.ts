@@ -1,91 +1,83 @@
 import { enrichPosts } from "./post-enricher";
+import { getSecureHeaders } from "./auth";
+import { getOrSetCached, createCacheKey } from "./memory-cache";
 
 const API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || process.env.WORDPRESS_API_URL;
-const WP_USER = process.env.WP_USER;
-const WP_APP_PASSWORD = process.env.WP_APP_PASSWORD;
-
-function getAuthHeaders() {
-  if (WP_USER && WP_APP_PASSWORD) {
-    const credentials = `${WP_USER}:${WP_APP_PASSWORD}`;
-    const base64Credentials = Buffer.from(credentials).toString('base64');
-    return {
-      'Authorization': `Basic ${base64Credentials}`,
-    };
-  }
-  return {};
-}
 
 export async function getPosts() {
-  console.log("Fetching posts from:", `${API_URL}/posts?_embed`);
+  const cacheKey = createCacheKey('wp-posts');
   
-  const res = await fetch(`${API_URL}/posts?_embed`, {
-    headers: getAuthHeaders(),
-    next: { revalidate: 180 } // Revalidate the data every 180 seconds/3 minutes
-  });
+  return getOrSetCached(cacheKey, async () => {
+    console.log("Fetching posts from:", `${API_URL}/posts?_embed`);
+    
+    const res = await fetch(`${API_URL}/posts?_embed`, {
+      headers: getSecureHeaders(),
+      next: { revalidate: 180 } // ISR: Revalidate every 180 seconds (3 minutes)
+    });
 
-  console.log("getPosts Response Status:", res.status);
+    console.log("getPosts Response Status:", res.status);
 
-  if (!res.ok) {
-    throw new Error('Failed to fetch posts');
-  }
-  const posts = await res.json();
-  
-  // Log a sample of the embedded author data for inspection
-  // console.log("getPosts - Embedded author data (first post):", posts[0]?._embedded?.['author']);
-
-  return enrichPosts(posts);
+    if (!res.ok) {
+      throw new Error('Failed to fetch posts');
+    }
+    
+    const posts = await res.json();
+    return enrichPosts(posts);
+  }, 30000); // Memory cache: 30 seconds (prevent thundering herd)
 }
 
 export async function getPostBySlug(slug: string) {
-  try {
-    console.log("Fetching post by slug:", `${API_URL}/posts?slug=${slug}&_embed`);
-    const res = await fetch(`${API_URL}/posts?slug=${slug}&_embed`, {
-      headers: getAuthHeaders(),
-      next: { revalidate: 180 } 
-    });
+  const cacheKey = createCacheKey('wp-post', { slug });
 
-    console.log("getPostBySlug Response Status:", res.status);
+  return getOrSetCached(cacheKey, async () => {
+    try {
+      console.log("Fetching post by slug:", `${API_URL}/posts?slug=${slug}&_embed`);
+      const res = await fetch(`${API_URL}/posts?slug=${slug}&_embed`, {
+        headers: getSecureHeaders(),
+        next: { revalidate: 180 } 
+      });
 
-    if (!res.ok) {
-      throw new Error("Falha ao obter o artigo.");
-    }
+      console.log("getPostBySlug Response Status:", res.status);
 
-    const posts = await res.json();
-    const post = posts[0] || null;
+      if (!res.ok) {
+        throw new Error("Falha ao obter o artigo.");
+      }
 
-    if (post) {
-      console.log("Post _embedded object:", post._embedded);
-      
-      post.author_name = await extractAuthorName(post);
-      post.category = extractCategory(post);
-      
-      // Fetch related posts from same category
-      const categories = extractCategories(post);
-      if (categories.length > 0) {
-        const categorySlug = categories[0].slug;
-        console.log("Fetching related posts for category:", categorySlug);
+      const posts = await res.json();
+      const post = posts[0] || null;
+
+      if (post) {
+        post.author_name = await extractAuthorName(post);
+        post.category = extractCategory(post);
         
-        const relatedRes = await fetch(
-          `${API_URL}/posts?category_slug=${categorySlug}&_embed&per_page=6`,
-          { 
-            headers: getAuthHeaders(),
-            next: { revalidate: 180 } // Every 3 minutes to keep related posts fresh
+        // Fetch related posts from same category
+        const categories = extractCategories(post);
+        if (categories.length > 0) {
+          const categorySlug = categories[0].slug;
+          console.log("Fetching related posts for category:", categorySlug);
+          
+          const relatedRes = await fetch(
+            `${API_URL}/posts?category_slug=${categorySlug}&_embed&per_page=6`,
+            { 
+              headers: getSecureHeaders(),
+              next: { revalidate: 180 } // Every 3 minutes to keep related posts fresh
+            }
+          );
+          
+          if (relatedRes.ok) {
+            const relatedPostsData = await relatedRes.json();
+            post.relatedPosts = await enrichPosts(relatedPostsData);
+            console.log("Related posts fetched:", post.relatedPosts.length);
           }
-        );
-        
-        if (relatedRes.ok) {
-          const relatedPostsData = await relatedRes.json();
-          post.relatedPosts = await enrichPosts(relatedPostsData);
-          console.log("Related posts fetched:", post.relatedPosts.length);
         }
       }
-    }
 
-    return post ? (await enrichPosts([post]))[0] : null;
-  } catch (error) {
-    console.error("Erro ao obter o post:", error);
-    return null;
-  }
+      return post ? (await enrichPosts([post]))[0] : null;
+    } catch (error) {
+      console.error("Erro ao obter o post:", error);
+      return null;
+    }
+  }, 30000); // Memory cache: 30 seconds
 }
 
 export async function getLeagueTable() {
@@ -112,46 +104,50 @@ export async function getPostsByCategory(categorySlug: string) {
   return posts;
 }
 
-export async function getPostsByCategoryPaginated(categorySlug: string, page = 1, perPage = 12) {
-  try {
-    let categoryIds: number[] = [];
+export async function getPostsByCategoryPaginated(categorySlug: string, page: number, perPage: number) {
+  const cacheKey = createCacheKey('wp-posts-category', { categorySlug, page, perPage });
 
-    if (categorySlug === 'desporto') {
-      const catRes = await fetch(`${API_URL}/categories?slug=${SPORTS_SLUGS.join(',')}&_embed`, {
-        headers: getAuthHeaders()
-      });
-      const categories = await catRes.json();
-      categoryIds = categories.map((cat: any) => cat.id);
-    } else {
-      const catRes = await fetch(`${API_URL}/categories?slug=${categorySlug}`, {
-        headers: getAuthHeaders()
-      });
-      const categories = await catRes.json();
-      if (!categories || categories.length === 0) return { posts: [], totalPosts: 0 };
-      categoryIds = [categories[0].id];
-    }
+  return getOrSetCached(cacheKey, async () => {
+    try {
+      let categoryIds: number[] = [];
 
-    const categoryParam = categoryIds.join(',');
-
-    const res = await fetch(
-      `${API_URL}/posts?categories=${categoryParam}&_embed&per_page=${perPage}&page=${page}&orderby=date&order=desc`,
-      { 
-        headers: getAuthHeaders(),
-        next: { revalidate: 180 } 
+      if (categorySlug === 'desporto') {
+        const catRes = await fetch(`${API_URL}/categories?slug=${SPORTS_SLUGS.join(',')}&_embed`, {
+          headers: getSecureHeaders()
+        });
+        const categories = await catRes.json();
+        categoryIds = categories.map((cat: any) => cat.id);
+      } else {
+        const catRes = await fetch(`${API_URL}/categories?slug=${categorySlug}`, {
+          headers: getSecureHeaders()
+        });
+        const categories = await catRes.json();
+        if (!categories || categories.length === 0) return { posts: [], totalPosts: 0 };
+        categoryIds = [categories[0].id];
       }
-    );
 
-    if (!res.ok) return { posts: [], totalPosts: 0 };
-    
-    const totalPosts = parseInt(res.headers.get('X-WP-Total') || '0');
-    const posts = await res.json();
-    const enriched = await enrichPosts(posts);
+      const categoryParam = categoryIds.join(',');
 
-    return { posts: enriched, totalPosts };
-  } catch (error) {
-    console.error("Erro no fetch paginado:", error);
-    return { posts: [], totalPosts: 0 };
-  }
+      const res = await fetch(
+        `${API_URL}/posts?categories=${categoryParam}&_embed&per_page=${perPage}&page=${page}&orderby=date&order=desc`,
+        { 
+          headers: getSecureHeaders(),
+          next: { revalidate: 180 } 
+        }
+      );
+
+      if (!res.ok) return { posts: [], totalPosts: 0 };
+      
+      const totalPosts = parseInt(res.headers.get('X-WP-Total') || '0');
+      const posts = await res.json();
+      const enriched = await enrichPosts(posts);
+
+      return { posts: enriched, totalPosts };
+    } catch (error) {
+      console.error("Erro no fetch paginado:", error);
+      return { posts: [], totalPosts: 0 };
+    }
+  }, 30000); // Memory cache: 30 seconds
 }
 
 export async function extractAuthorName(post: any): Promise<string> {
@@ -225,7 +221,7 @@ export async function getCategoryTitleBySlug(slug: string): Promise<string> {
 
   try {
     const res = await fetch(`${API_URL}/categories?slug=${slug}`, {
-      headers: getAuthHeaders(),
+      headers: getSecureHeaders(),
       next: { revalidate: 86400 } // Cache for 24 hours
     });
 
@@ -248,48 +244,63 @@ export async function getCategoryTitleBySlug(slug: string): Promise<string> {
 
 // Fetch category info including title and description by slug
 export async function getCategoryBySlug(slug: string) {
-  const res = await fetch(`${API_URL}/categories?slug=${slug}`);
-  const data = await res.json();
-  return data[0] || null;
+  const cacheKey = createCacheKey('wp-category', { slug });
+
+  return getOrSetCached(cacheKey, async () => {
+    const res = await fetch(`${API_URL}/categories?slug=${slug}`, {
+      headers: getSecureHeaders(),
+      next: { revalidate: 3600 }
+    });
+    const data = await res.json();
+    return data[0] || null;
+  }, 30000);
 }
 
 async function getUserById(userId: number): Promise<string> {
-  try {
-    const res = await fetch(`${API_URL}/users/${userId}`, {
-      headers: getAuthHeaders(),
-      next: { revalidate: 3600 }
-    });
+  const cacheKey = createCacheKey('wp-user', { userId });
 
-    if (!res.ok) return "Redação";
+  return getOrSetCached(cacheKey, async () => {
+    try {
+      const res = await fetch(`${API_URL}/users/${userId}`, {
+        headers: getSecureHeaders(),
+        next: { revalidate: 3600 }
+      });
 
-    const user = await res.json();
-    return user.name || "Redação";
-  } catch (error) {
-    console.error("Erro ao obter usuário:", error);
-    return "Redação";
-  }
+      if (!res.ok) return "Redação";
+
+      const user = await res.json();
+      return user.name || "Redação";
+    } catch (error) {
+      console.error("Erro ao obter usuário:", error);
+      return "Redação";
+    }
+  }, 3600000); // Memory cache: 1 hour for user data
 }
 
 export async function getPrograms() {
-  console.log("Fetching programs from:", `${API_URL}/programs?_embed`);
-  try {
-    const res = await fetch(`${API_URL}/programs?_embed`, {
-      headers: getAuthHeaders(),
-      next: { revalidate: 180 }
-    });
+  const cacheKey = createCacheKey('wp-programs');
 
-    if (!res.ok) {
-      console.warn("Programs endpoint not found. Status:", res.status);
+  return getOrSetCached(cacheKey, async () => {
+    console.log("Fetching programs from:", `${API_URL}/programs?_embed`);
+    try {
+      const res = await fetch(`${API_URL}/programs?_embed`, {
+        headers: getSecureHeaders(),
+        next: { revalidate: 180 }
+      });
+
+      if (!res.ok) {
+        console.warn("Programs endpoint not found. Status:", res.status);
+        return [];
+      }
+
+      const programs = await res.json();
+      console.log("Programs fetched:", programs.length);
+      return programs;
+    } catch (error) {
+      console.error("Error fetching programs:", error);
       return [];
     }
-
-    const programs = await res.json();
-    console.log("Programs fetched:", programs.length);
-    return programs;
-  } catch (error) {
-    console.error("Error fetching programs:", error);
-    return [];
-  }
+  }, 30000); // Memory cache: 30 seconds
 }
 
 function formatACFDate(rawDate: string): string {
@@ -329,23 +340,26 @@ function formatACFDate(rawDate: string): string {
 }
 
 export async function getTVGuide() {
-  const cb = new Date().getTime();
-  const url = `${API_URL}/programas-tv?_embed&per_page=100&cb=${cb}`;
-  const now = new Date()
-  
-  console.log("Fetching TV Guide from:", url);
+  const cacheKey = createCacheKey('wp-tv-guide');
 
-  try {
-    const res = await fetch(url, {
-      headers: getAuthHeaders(),
-      cache: 'no-store'
-    });
+  return getOrSetCached(cacheKey, async () => {
+    const cb = new Date().getTime();
+    const url = `${API_URL}/programas-tv?_embed&per_page=100&cb=${cb}`;
+    const now = new Date()
+    
+    console.log("Fetching TV Guide from:", url);
 
-    if (!res.ok) throw new Error('Falha ao carregar Guia TV');
+    try {
+      const res = await fetch(url, {
+        headers: getSecureHeaders(),
+        next: { revalidate: 3600 } // ISR cache for 1 hour
+      });
 
-    const data = await res.json();
+      if (!res.ok) throw new Error('Falha ao carregar Guia TV');
 
-    return data.map((fullProgram: any) => {
+      const data = await res.json();
+
+      return data.map((fullProgram: any) => {
       // Extração de campos ACF com fallback
       const hora_inicio = (fullProgram.acf?.hora_inicio || "00:00").substring(0, 5);
       const hora_fim = (fullProgram.acf?.hora_fim || "00:00").substring(0, 5);
@@ -382,8 +396,9 @@ export async function getTVGuide() {
       // 2. If same day, sort by Start Time
       return a.hora_inicio.localeCompare(b.hora_inicio);
     });
-  } catch (error) {
-    console.error("Erro em getTVGuide:", error);
-    return [];
-  }
+    } catch (error) {
+      console.error("Erro em getTVGuide:", error);
+      return [];
+    }
+  }, 30000); // Memory cache: 30 seconds
 }

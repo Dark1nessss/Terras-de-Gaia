@@ -1,19 +1,7 @@
 import { enrichPosts } from "./post-enricher";
+import { getSecureHeaders } from "./auth";
 
 const API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || process.env.WORDPRESS_API_URL;
-const WP_USER = process.env.WP_USER;
-const WP_APP_PASSWORD = process.env.WP_APP_PASSWORD;
-
-function getAuthHeaders() {
-  if (WP_USER && WP_APP_PASSWORD) {
-    const credentials = `${WP_USER}:${WP_APP_PASSWORD}`;
-    const base64Credentials = Buffer.from(credentials).toString('base64');
-    return {
-      'Authorization': `Basic ${base64Credentials}`,
-    };
-  }
-  return {};
-}
 
 export interface Advertisement {
   id: number;
@@ -60,7 +48,7 @@ export async function getAds(position?: string) {
     console.log(`Fetching advertisements from: ${API_URL}/advertisement?${query}`);
 
     const res = await fetch(`${API_URL}/advertisement?${query}`, {
-      headers: getAuthHeaders(),
+      headers: getSecureHeaders(),
       next: { revalidate: 3600 } // Cache for 1 hour
     });
 
@@ -100,7 +88,7 @@ export async function getAds(position?: string) {
 export async function getAdBySlug(slug: string): Promise<Advertisement | null> {
   try {
     const res = await fetch(`${API_URL}/advertisement?slug=${slug}&_embed`, {
-      headers: getAuthHeaders(),
+      headers: getSecureHeaders(),
       next: { revalidate: 3600 }
     });
 
