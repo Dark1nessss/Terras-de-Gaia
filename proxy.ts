@@ -14,7 +14,7 @@ const INTERNAL_ROUTES = [
   '/api/internal/',
 ];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const method = request.method;
 
