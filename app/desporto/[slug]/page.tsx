@@ -4,6 +4,7 @@ import { InfiniteScrollPosts } from "@/components/infinite-scroll";
 import { SidebarWidget } from "@/components/sidebar-widget";
 import { Trophy, PlayCircle, TrendingUp } from "lucide-react";
 import { Breadcrumb } from "@/components/breadcrumb";
+import { AdPlaceholder } from "@/components/ad-placeholder";
 
 export default async function SportsCategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -84,6 +85,9 @@ export default async function SportsCategoryPage({ params }: { params: Promise<{
 
           {/* Sidebar */}
           <div className="lg:col-span-3 space-y-8 sticky top-32 self-start">
+            {/* Ad Space */}
+            <AdPlaceholder position="sidebar" />
+            
             <SidebarWidget title="Classificações" icon={<Trophy size={18} />}>
               <div className="space-y-3">
                 <div className="text-xs font-bold text-white/40 uppercase italic">

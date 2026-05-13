@@ -1,5 +1,6 @@
 import { Breadcrumb } from "@/components/breadcrumb";
 import { SectionHeader } from "@/components/section-header";
+import { AdPlaceholder } from "@/components/ad-placeholder";
 import Link from "next/link";
 import { Newspaper, Trophy, BookOpen, Palette } from "lucide-react";
 

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AdPlaceholder } from '@/components/ad-placeholder';
 import { Play, Plus, Info, ChevronRight, MonitorPlay, Star, Calendar } from 'lucide-react';
 
 // MOCK DATA - Estrutura preparada para expansão

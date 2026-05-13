@@ -123,7 +123,7 @@ export function GaiaWaves() {
                     onClick={() => setIsPlaying(!isPlaying)}
                     className="size-24 rounded-full bg-white text-black flex items-center justify-center hover:scale-110 transition-transform shadow-[0_0_50px_rgba(255,255,255,0.15)] cursor-pointer"
                   >
-                    {isPlaying ? <Pause size={32} fill="currentColor" /> : <Play size={32} fill="currentColor" className="ml-2" />}
+                    {isPlaying ? <Pause size={32} fill="currentColor" /> : <Play size={32} fill="currentColor"/>}
                   </button>
 
                   <button className="text-white/20 hover:text-white transition-colors cursor-pointer">

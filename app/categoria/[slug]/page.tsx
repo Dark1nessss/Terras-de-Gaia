@@ -2,6 +2,7 @@ import { getPostsByCategoryPaginated, getCategoryBySlug } from "@/lib/wp";
 import { FeaturedPostSection } from "@/components/featured-post-section";
 import { InfiniteScrollPosts } from "@/components/infinite-scroll";
 import { Breadcrumb } from "@/components/breadcrumb";
+import { AdPlaceholder } from "@/components/ad-placeholder";
 
 export default async function CategoryPage({ 
   params,
@@ -32,7 +33,7 @@ export default async function CategoryPage({
 
   return (
     <main className="min-h-screen bg-[#0a0c10] text-white pt-24 pb-12 font-nurom">
-      <div className="container mx-auto px-6 max-w-8xl">
+      <div className="container mx-auto px-6">
         <Breadcrumb 
           items={[{ label: "Inicial", href: "/" }]} 
           current={categoryName}
@@ -55,19 +56,30 @@ export default async function CategoryPage({
           </p>
         </div>
 
-        {/* Featured Post */}
-        <FeaturedPostSection post={mainPost} />
+        {/* Main Grid Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-9 space-y-12">
+            {/* Featured Post */}
+            <FeaturedPostSection post={mainPost} />
 
-        {/* Posts Grid */}
-        {otherPosts.length > 0 && (
-          <div className="mt-16">
-            <div className="mb-8 flex items-center gap-4">
-              <h2 className="text-2xl font-black uppercase italic tracking-tighter">Mais Artigos</h2>
-              <div className="h-0.5 flex-1 bg-white/10" />
-            </div>
-            <InfiniteScrollPosts slug={slug} initialPosts={otherPosts} />
+            {/* Posts Grid */}
+            {otherPosts.length > 0 && (
+              <div>
+                <div className="mb-8 flex items-center gap-4">
+                  <h2 className="text-2xl font-black uppercase italic tracking-tighter">Mais Artigos</h2>
+                  <div className="h-0.5 flex-1 bg-white/10" />
+                </div>
+                <InfiniteScrollPosts slug={slug} initialPosts={otherPosts} />
+              </div>
+            )}
           </div>
-        )}
+
+          {/* Sidebar */}
+          <div className="lg:col-span-3 space-y-8 sticky top-32 self-start">
+            <AdPlaceholder position="sidebar" />
+          </div>
+        </div>
       </div>
     </main>
   );

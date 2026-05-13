@@ -122,7 +122,6 @@ export async function getPostsByCategoryPaginated(categorySlug: string, page = 1
       });
       const categories = await catRes.json();
       categoryIds = categories.map((cat: any) => cat.id);
-      console.log("🏀 DESPORTO - IDs encontradas:", categoryIds);
     } else {
       const catRes = await fetch(`${API_URL}/categories?slug=${categorySlug}`, {
         headers: getAuthHeaders()
@@ -147,8 +146,6 @@ export async function getPostsByCategoryPaginated(categorySlug: string, page = 1
     const totalPosts = parseInt(res.headers.get('X-WP-Total') || '0');
     const posts = await res.json();
     const enriched = await enrichPosts(posts);
-
-    console.log(`📊 ${categorySlug} - Página ${page}: ${posts.length} posts | Total: ${totalPosts}`);
 
     return { posts: enriched, totalPosts };
   } catch (error) {

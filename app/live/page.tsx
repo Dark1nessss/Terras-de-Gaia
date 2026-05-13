@@ -1,6 +1,7 @@
 import { Tv, Info, Calendar } from "lucide-react";
 import Link from "next/link";
 import { ShareButton } from "@/components/share-button";
+import { AdPlaceholder } from "@/components/ad-placeholder";
 import { formatDate } from "@/lib/date";
 
 // Mock Data for DRYness - later fetch from WP or API
@@ -72,6 +73,11 @@ export default function LivePage() {
 
           {/* RIGHT: Schedule Sidebar */}
           <div className="lg:col-span-4 flex flex-col gap-6">
+            {/* SIDEBAR AD - Above Schedule */}
+            <AdPlaceholder 
+              position="sidebar" 
+            />
+            
             {/* Header */}
             <div className="bg-[#00a6f0] p-4 md:p-5 flex items-center justify-between">
               <div className="flex items-center gap-3">

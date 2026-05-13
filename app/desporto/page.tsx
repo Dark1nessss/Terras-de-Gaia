@@ -2,6 +2,7 @@ import { getPostsByCategory, getCategoryBySlug } from "@/lib/wp";
 import { SportsHero } from "@/components/sports-hero";
 import { InfiniteScrollPosts } from "@/components/infinite-scroll";
 import { Breadcrumb } from "@/components/breadcrumb";
+import { AdPlaceholder } from "@/components/ad-placeholder";
 import { Trophy, Timer, Star, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
@@ -94,6 +95,11 @@ export default async function SportsMainPage() {
 
           {/* SIDEBAR DESPORTIVA (Widgetized) */}
           <aside className="lg:col-span-4 space-y-10">
+            
+            {/* PUBLICIDADE - Sidebar Small Ad */}
+            <AdPlaceholder 
+              position="sidebar" 
+            />
             
             {/* WIDGET: PRÓXIMOS EVENTOS */}
             <div className="bg-[#111] border-l-4 border-[#00a6f0] p-6">

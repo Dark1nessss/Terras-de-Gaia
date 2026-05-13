@@ -9,6 +9,7 @@ import { CategoryBadges } from "@/components/category-badges";
 import { RelatedPosts } from "@/components/related-posts";
 import { Metadata } from "next";
 import { Breadcrumb } from "@/components/breadcrumb";
+import { AdPlaceholder } from "@/components/ad-placeholder";
 import { decodeHtml, truncateBreadcrumbTitle } from "@/lib/decode-html";
 import { formatDate } from "@/lib/date";
 
@@ -140,9 +141,9 @@ export default async function SinglePostPage({ params }: Props) {
           {/* Sidebar Area */}
           <aside className="hidden lg:block lg:col-span-1">
             <div className="sticky top-32 space-y-8">
-              <div className="h-64 bg-white/5 border border-white/10 flex items-center justify-center italic text-white/20 rounded-lg">
-                Publicidade
-              </div>
+              <AdPlaceholder 
+                position="sidebar" 
+              />
             </div>
           </aside>
         </div>
