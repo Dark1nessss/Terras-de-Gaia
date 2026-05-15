@@ -1,71 +1,32 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AdPlaceholder } from '@/components/ad-placeholder';
+import type { Program } from '@/lib/programas';
 import { Play, Plus, Info, ChevronRight, MonitorPlay, Star, Calendar } from 'lucide-react';
 
-// MOCK DATA - Estrutura preparada para expansão
-const PROGRAMS_DATA = [
-  {
-    id: 1,
-    title: "Mesa Posta",
-    category: "Gastronomia",
-    slug: "mesa-posta",
-    thumb: "/thumbs/mesa.jpg",
-    description: "Uma viagem imersiva pelos sabores e histórias das gentes de Gaia.",
-    isOriginal: true,
-    rating: "4.9",
-    duration: "12 Eps"
-  },
-  {
-    id: 2,
-    title: "Grande Angular",
-    category: "Informação",
-    slug: "grande-angular",
-    thumb: "/thumbs/angular.jpg",
-    description: "Análise profunda aos temas que marcam a atualidade da nossa região.",
-    isOriginal: true,
-    rating: "4.7",
-    duration: "8 Eps"
-  },
-  {
-    id: 3,
-    title: "No Relvado",
-    category: "Desporto",
-    slug: "no-relvado",
-    thumb: "/thumbs/relvado.jpg",
-    description: "O pulsar do desporto gaiense, do futebol de formação às grandes elites.",
-    isOriginal: true,
-    rating: "4.8",
-    duration: "24 Eps"
-  },
-  {
-    id: 4,
-    title: "Vozes de Gaia",
-    category: "Sociedade",
-    slug: "vozes-de-gaia",
-    thumb: "/thumbs/vozes.jpg",
-    description: "As figuras que moldam o futuro da cidade em conversas exclusivas.",
-    isOriginal: false,
-    duration: "10 Eps"
-  },
-  {
-    id: 5,
-    title: "Agenda Viva",
-    category: "Cultura",
-    slug: "agenda-viva",
-    thumb: "/thumbs/agenda.jpg",
-    description: "O roteiro essencial para tudo o que acontece no concelho.",
-    isOriginal: false,
-    duration: "15 Eps"
-  }
-];
-
 export default function ProgramsPage() {
+  const [programs, setPrograms] = useState<Program[]>([]);
   const [hoveredId, setHoveredId] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadPrograms = async () => {
+      try {
+        const response = await fetch('/api/programs?featured=true');
+        const data = await response.json();
+        setPrograms(data);
+      } catch (error) {
+        console.error('Error fetching programs:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadPrograms();
+  }, []);
 
   return (
     <main className="bg-[#0a0c10] min-h-screen font-nurom text-white selection:bg-[#00a6f0]">
@@ -130,24 +91,28 @@ export default function ProgramsPage() {
 
         {/* O Carrossel de Expansão */}
         <div className="flex w-full h-[450px] md:h-[550px] overflow-x-auto no-scrollbar px-6 md:px-[5%] gap-2 group/list">
-          {PROGRAMS_DATA.map((prog) => (
+          {programs.map((prog) => (
             <motion.div
               key={prog.id}
               layout
               whileHover={{ 
-                width: "650px", // Expande a largura no hover
+                width: "650px",
                 transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } 
               }}
               className="relative min-w-[280px] md:min-w-[320px] h-full flex-shrink-0 cursor-pointer overflow-hidden border-x border-white/5"
             >
               <Link href={`/gaia-play/${prog.slug}`} className="block size-full relative">
                 {/* Thumb Background */}
-                <Image 
-                  src={prog.thumb} 
-                  alt={prog.title} 
-                  fill 
-                  className="object-cover opacity-40 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
-                />
+                {prog.featured_image_url ? (
+                  <Image 
+                    src={prog.featured_image_url} 
+                    alt={prog.title.rendered} 
+                    fill 
+                    className="object-cover opacity-40 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#00a6f0]/20 to-transparent opacity-40 group-hover:opacity-100 transition-all duration-700 grayscale group-hover:grayscale-0" />
+                )}
 
                 {/* Overlays */}
                 <div className="absolute inset-0 bg-linear-to-t from-[#0a0c10] via-[#0a0c10]/20 to-transparent" />
@@ -165,18 +130,18 @@ export default function ProgramsPage() {
                   </div>
 
                   <div className="space-y-4">
-                    <div className="overflow-hidden">
+                    <div>
                        <motion.p 
                         initial={{ y: "100%" }}
                         whileHover={{ y: 0 }}
                         className="text-[#00a6f0] text-[10px] font-black uppercase tracking-[0.3em] mb-2"
                        >
-                         {prog.category}
+                         {prog.acf?.categoria_programa || "Sem Categoria"}
                        </motion.p>
                     </div>
                     
                     <h3 className="text-3xl md:text-5xl font-black uppercase italic leading-none tracking-tighter whitespace-nowrap">
-                      {prog.title}
+                      {prog.title.rendered}
                     </h3>
 
                     <div className="h-0.5 w-0 group-hover:w-full bg-[#00a6f0] transition-all duration-700" />

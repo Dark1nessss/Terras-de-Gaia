@@ -7,9 +7,11 @@ import { SOCIAL_LINKS } from "@/lib/contact";
 
 interface ShareButtonProps {
   title: string;
+  season?: number;
+  episode?: number;
 }
 
-export function ShareButton({ title }: ShareButtonProps) {
+export function ShareButton({ title, season, episode }: ShareButtonProps) {
   const [copied, setCopied] = useState(false);
   const [currentUrl, setCurrentUrl] = useState("");
   const pathname = usePathname();
@@ -22,6 +24,10 @@ export function ShareButton({ title }: ShareButtonProps) {
       setCurrentUrl(fullPath);
     }
   }, [pathname]);
+
+  const shareTitle = season && episode 
+    ? `${title} - S${season.toString().padStart(2, '0')}E${episode.toString().padStart(2, '0')}`
+    : title;
 
   const copyToClipboard = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -48,7 +54,7 @@ export function ShareButton({ title }: ShareButtonProps) {
     },
     {
       name: "X / Twitter",
-      href: SOCIAL_LINKS.twitter + `?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(title)}`,
+      href: SOCIAL_LINKS.twitter + `?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(shareTitle)}`,
       color: "hover:text-white hover:bg-white/10 hover:border-white/20",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
@@ -58,7 +64,7 @@ export function ShareButton({ title }: ShareButtonProps) {
     },
     {
       name: "WhatsApp",
-      href: SOCIAL_LINKS.whatsapp + `?text=${encodeURIComponent(`${title} - ${currentUrl}`)}`,
+      href: SOCIAL_LINKS.whatsapp + `?text=${encodeURIComponent(`${shareTitle} - ${currentUrl}`)}`,
       color: "hover:text-[#25D366] hover:bg-[#25D366]/10 hover:border-[#25D366]/20",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">

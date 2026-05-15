@@ -402,3 +402,85 @@ export async function getTVGuide() {
     }
   }, 30000); // Memory cache: 30 seconds
 }
+
+// Helper function to parse temporadas JSON
+function parseTemporadas(jsonString: string | undefined) {
+  if (!jsonString) return [];
+  try {
+    return JSON.parse(jsonString);
+  } catch (error) {
+    console.error('Error parsing temporadas JSON:', error);
+    return [];
+  }
+}
+
+// Programas CPT (Gaia Play)
+export async function getProgramas() {
+  const cacheKey = createCacheKey('wp-programas');
+
+  return getOrSetCached(cacheKey, async () => {
+    console.log("Fetching programas from:", `${API_URL}/programas?_embed&per_page=100`);
+    try {
+      const res = await fetch(`${API_URL}/programas?_embed&per_page=100`, {
+        headers: getSecureHeaders(),
+        next: { revalidate: 3600 } // Cache 1 hour
+      });
+
+      if (!res.ok) {
+        console.warn("Programas endpoint not found. Status:", res.status);
+        return [];
+      }
+
+      const programas = await res.json();
+      
+      // Parse temporadas JSON and extract featured images
+      return programas.map((prog: any) => ({
+        ...prog,
+        featured_image_url: prog._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
+        temporadas: parseTemporadas(prog.acf?.temporadas), // Changed from temporadas_json
+      }));
+    } catch (error) {
+      console.error("Error fetching programas:", error);
+      return [];
+    }
+  }, 30000); // Memory cache: 30 seconds
+}
+
+export async function getProgramaBySlug(slug: string) {
+  const cacheKey = createCacheKey('wp-programa', { slug });
+
+  return getOrSetCached(cacheKey, async () => {
+    try {
+      console.log("Fetching programa by slug:", `${API_URL}/programas?slug=${slug}&_embed`);
+      const res = await fetch(`${API_URL}/programas?slug=${slug}&_embed`, {
+        headers: getSecureHeaders(),
+        next: { revalidate: 3600 }
+      });
+
+      if (!res.ok) {
+        throw new Error("Falha ao obter o programa.");
+      }
+
+      const programas = await res.json();
+      const programa = programas[0] || null;
+
+      if (programa) {
+        return {
+          ...programa,
+          featured_image_url: programa._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
+          temporadas: parseTemporadas(programa.acf?.temporadas_json),
+        };
+      }
+
+      return null;
+    } catch (error) {
+      console.error("Erro ao obter o programa:", error);
+      return null;
+    }
+  }, 30000); // Memory cache: 30 seconds
+}
+
+export async function getFeaturedProgramas() {
+  const programas = await getProgramas();
+  return programas.filter((p: any) => p.acf?.destaque_gaia_play === true);
+}

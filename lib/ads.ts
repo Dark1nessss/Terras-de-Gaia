@@ -1,142 +1,96 @@
-import { enrichPosts } from "./post-enricher";
-import { getSecureHeaders } from "./auth";
+import { getSecureHeaders } from './auth';
 
-const API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || process.env.WORDPRESS_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || process.env.WORDPRESS_API_URL || 'http://localhost:8000/wp-json/wp/v2';
 
 export interface Advertisement {
   id: number;
-  title: string;
-  rendered?: string;
-  slug: string;
-  featured_image_url?: string;
-  acf?: {
-    position?: 'sidebar' | 'featured' | 'inline';
-    category?: string;
-    start_date?: string;
-    end_date?: string;
-    clickthrough_url?: string;
-  };
-  _embedded?: {
-    'wp:featuredmedia': Array<{
-      source_url: string;
-      alt_text?: string;
-      media_details?: {
-        width: number;
-        height: number;
-      };
-    }>;
+  title: { rendered: string };
+  image_ad?: string;
+  acf: {
+    posicao_anuncio: string; // Position + Format combined (e.g., 'sidebar_square', 'featured_wide')
+    image_ad?: string; // Image URL from ACF
+    tipo_de_midia: 'image' | 'gif' | 'muted_video';
+    data_inicio?: string; // Start date
+    data_fim?: string; // End date
+    url_clickthrough?: string; // Click destination
+    ativo: boolean; // Active status
   };
 }
 
 /**
- * Fetch all active advertisements
- * Filters by date range if available in ACF
+ * Get all active advertisements
  */
-export async function getAds(position?: string) {
+export async function getAds(): Promise<Advertisement[]> {
   try {
-    const query = new URLSearchParams({
-      per_page: '100',
-      _embed: 'true',
-    });
-
-    if (position) {
-      // If your WordPress has ACF filtering capability
-      query.append('meta_query[0][key]', 'position');
-      query.append('meta_query[0][value]', position);
-    }
-
-    console.log(`Fetching advertisements from: ${API_URL}/advertisement?${query}`);
-
-    const res = await fetch(`${API_URL}/advertisement?${query}`, {
+    const res = await fetch(`${API_URL}/advertisement?per_page=100`, {
       headers: getSecureHeaders(),
-      next: { revalidate: 3600 } // Cache for 1 hour
+      next: { revalidate: 1800 }, // Cache 30 minutes
     });
-
-    console.log('getAds Response Status:', res.status);
 
     if (!res.ok) {
-      console.error('Failed to fetch advertisements:', res.statusText);
+      console.error('Failed to fetch ads:', res.statusText);
       return [];
     }
 
     const ads = await res.json();
-    
-    // Filter by date range if ACF data available
     const now = new Date();
-    const activeAds = ads.filter((ad: Advertisement) => {
-      if (!ad.acf) return true;
-      
-      const startDate = ad.acf.start_date ? new Date(ad.acf.start_date) : null;
-      const endDate = ad.acf.end_date ? new Date(ad.acf.end_date) : null;
-      
+
+    // Filter: active + within date range
+    return ads.filter((ad: Advertisement) => {
+      if (!ad.acf?.ativo) return false;
+
+      const startDate = ad.acf.data_inicio ? new Date(ad.acf.data_inicio) : null;
+      const endDate = ad.acf.data_fim ? new Date(ad.acf.data_fim) : null;
+
       if (startDate && now < startDate) return false;
       if (endDate && now > endDate) return false;
-      
+
       return true;
     });
-
-    return enrichAds(activeAds);
   } catch (error) {
-    console.error('Error fetching advertisements:', error);
+    console.error('Error fetching ads:', error);
     return [];
   }
 }
 
 /**
- * Fetch a single advertisement by slug
+ * Get ads by position (e.g., 'sidebar_square', 'featured_wide')
  */
-export async function getAdBySlug(slug: string): Promise<Advertisement | null> {
+export async function getAdsByPosition(position: string): Promise<Advertisement[]> {
+  const allAds = await getAds();
+  return allAds.filter((ad) => ad.acf?.posicao_anuncio === position);
+}
+
+/**
+ * Get single ad by ID
+ */
+export async function getAdById(id: number): Promise<Advertisement | null> {
   try {
-    const res = await fetch(`${API_URL}/advertisement?slug=${slug}&_embed`, {
+    const res = await fetch(`${API_URL}/advertisement/${id}`, {
       headers: getSecureHeaders(),
-      next: { revalidate: 3600 }
+      next: { revalidate: 1800 },
     });
 
     if (!res.ok) return null;
-
-    const ads = await res.json();
-    return enrichAds(ads)[0] ?? null;
+    return await res.json();
   } catch (error) {
-    console.error('Error fetching advertisement:', error);
+    console.error('Error fetching ad:', error);
     return null;
   }
 }
 
 /**
- * Enrich advertisement data with featured image
+ * Get ads grouped by position for rotating galleries
  */
-function enrichAds(ads: Advertisement[]): Advertisement[] {
-  return ads.map((ad) => ({
-    ...ad,
-    featured_image_url: ad._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
-  }));
-}
-
-/**
- * Get advertisements for a specific position and category
- */
-export async function getAdsByPosition(
-  position: 'sidebar' | 'featured' | 'inline',
-  category?: string
-): Promise<Advertisement[]> {
-  try {
-    const ads = await getAds();
-    
-    return ads.filter((ad) => {
-      // Filter by position
-      if (ad.acf?.position && ad.acf.position !== position) {
-        return false;
-      }
-      
-      // Filter by category if specified
-      if (category && ad.acf?.category && ad.acf.category !== category) {
-        return false;
-      }
-      
-      return true;
-    });
-  } catch (error) {
-    console.error('Error filtering advertisements:', error);
-    return [];
-  }
+export async function getAdsByPositionGrouped(): Promise<Record<string, Advertisement[]>> {
+  const allAds = await getAds();
+  return allAds.reduce(
+    (acc, ad) => {
+      const pos = ad.acf?.posicao_anuncio || 'unknown';
+      if (!acc[pos]) acc[pos] = [];
+      acc[pos].push(ad);
+      return acc;
+    },
+    {} as Record<string, Advertisement[]>
+  );
 }
