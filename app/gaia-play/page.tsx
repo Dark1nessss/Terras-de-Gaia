@@ -194,7 +194,7 @@ export default function ProgramsPage() {
           ))}
           
           {/* Card Final de "Explorar Mais" */}
-          <div className="min-w-[300px] h-full flex items-center justify-center bg-white/5 border border-dashed border-white/10 hover:bg-[#00a6f0]/10 transition-colors">
+          <div className="min-w-[300px] h-full flex items-center justify-center bg-white/5 border border-dashed border-white/10 hover:bg-[#00a6f0]/10 transition-colors cursor-pointer">
              <div className="text-center space-y-4">
                 <MonitorPlay className="mx-auto text-white/20" size={40} />
                 <span className="text-[10px] font-black uppercase tracking-[0.4em] block text-white/40">Ver Tudo</span>
