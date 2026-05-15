@@ -14,6 +14,17 @@ images: {
         hostname: '**.terrasdegaia.pt',
         pathname: '**',
       },
+      // YouTube thumbnail images
+      {
+        protocol: 'https',
+        hostname: 'i.ytimg.com',
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.ytimg.com',
+        pathname: '**',
+      },
     ],
   },
 };
