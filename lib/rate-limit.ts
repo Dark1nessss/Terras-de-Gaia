@@ -12,9 +12,9 @@ interface RateLimitEntry {
 const rateLimitMap = new Map<string, RateLimitEntry>();
 
 const LIMITS = {
-  api_public: { requests: 10, window: 60000 }, // 10 req/min for public API
+  api_public: { requests: 50, window: 60000 }, // 50 req/min for public API
   api_auth: { requests: 100, window: 60000 }, // 100 req/min for authenticated
-  wordpress: { requests: 50, window: 60000 }, // 50 req/min for WordPress calls
+  wordpress: { requests: 100, window: 60000 }, // 100 req/min for WordPress calls
 };
 
 export type LimitType = keyof typeof LIMITS;

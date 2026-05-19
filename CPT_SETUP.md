@@ -57,14 +57,14 @@ Paste this into the `temporadas_json` field:
         "numero": 1,
         "titulo": "Episódio Inicial",
         "data": "2024-01-15",
-        "link_youtube": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "link": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
         "duracao": 45
       },
       {
         "numero": 2,
         "titulo": "Segundo Episódio",
         "data": "2024-01-22",
-        "link_youtube": "https://www.youtube.com/watch?v=jNQXAC9IVRw",
+        "link": "https://www.youtube.com/watch?v=jNQXAC9IVRw",
         "duracao": 42
       }
     ]
@@ -173,7 +173,7 @@ export interface Episode {
   numero: number;
   titulo: string;
   data: string;
-  link_youtube: string;
+  link: string;
   duracao: number;
 }
 
@@ -514,7 +514,7 @@ What components do you want to create next?
         "numero": 1,
         "titulo": "Episode 1",
         "data": "2024-01-15",
-        "link_youtube": "https://youtu.be/...",
+        "link": "https://youtu.be/...",
         "duracao": 52
       } // mais episodios?
       {
@@ -522,7 +522,7 @@ What components do you want to create next?
         "numero": 2,
         "titulo": "Episode 2",
         "data": "2024-01-22",
-        "link_youtube": "https://youtu.be/...",
+        "link": "https://youtu.be/...",
         "duracao": 48
       }
     ]
@@ -536,14 +536,14 @@ What components do you want to create next?
         "numero": 1,
         "titulo": "Episode 1",
         "data": "2024-06-01",
-        "link_youtube": "https://youtu.be/...",
+        "link": "https://youtu.be/...",
         "duracao": 50
       }
       {
         "numero": 2,
         "titulo": "Episode 2",
         "data": "2024-06-08",
-        "link_youtube": "https://youtu.be/...",
+        "link": "https://youtu.be/...",
         "duracao": 45
       }
     ]

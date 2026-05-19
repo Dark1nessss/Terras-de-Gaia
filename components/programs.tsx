@@ -4,7 +4,7 @@ import { TVGuideGrid } from "./tvguidegrid";
 import { News } from "./news"
 import { ProgramsPortal } from "./program-portal";
 import { GaiaWaves } from "./test";
-import { AdPlaceholder } from "@/components/ad-placeholder";
+import { AdPlaceholder } from "./ad-placeholder";
 import { getTVGuide } from '@/lib/wp';
 
 export default async function ContentHub() {
@@ -19,14 +19,11 @@ export default async function ContentHub() {
       <TVGuideGrid initialPrograms={programs} />
 
       {/* 3. COMPONENT: ÚLTIMAS NOTÍCIAS */}
-      <AdPlaceholder 
-        position="inline" 
-        label="Content Hub Featured Ad - Editorial Partnership"
-      />
+      <AdPlaceholder position="inline" />
       <News />
 
-      {/* 4. COMPONENT: VOZ DE GAIA */}
-      <GaiaWaves />
+      {/* 4. COMPONENT: VOZ DE GAIA CURRENTLY NOT AVAILABLE*/}
+      {/* <GaiaWaves /> */}
 
       {/* 5. COMPONENT: PROGRAMA EM DESTAQUE */}
       <ProgramsPortal />

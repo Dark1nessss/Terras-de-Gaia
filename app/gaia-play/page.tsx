@@ -7,11 +7,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AdPlaceholder } from '@/components/ad-placeholder';
 import type { Program } from '@/lib/programas';
 import { Play, Plus, Info, ChevronRight, MonitorPlay, Star, Calendar } from 'lucide-react';
+import { WeatherWidgetTile } from '@/components/weather-widget';
 
 export default function ProgramsPage() {
   const [programs, setPrograms] = useState<Program[]>([]);
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentFeaturedIndex, setCurrentFeaturedIndex] = useState(0);
 
   useEffect(() => {
     const loadPrograms = async () => {
@@ -27,6 +29,19 @@ export default function ProgramsPage() {
     };
     loadPrograms();
   }, []);
+
+  // Auto-rotate featured program
+  useEffect(() => {
+    if (programs.length === 0) return;
+
+    const timer = setInterval(() => {
+      setCurrentFeaturedIndex((prev) => (prev + 1) % programs.length);
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, [programs.length]);
+
+  const featuredProgram = programs[currentFeaturedIndex];
 
   return (
     <main className="bg-[#0a0c10] min-h-screen font-nurom text-white selection:bg-[#00a6f0]">
@@ -46,35 +61,52 @@ export default function ProgramsPage() {
         </div>
 
         <div className="container mx-auto px-6 relative z-20">
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }} 
-            animate={{ opacity: 1, x: 0 }}
-            className="max-w-4xl space-y-8"
-          >
-            <div className="flex items-center gap-4">
-              <span className="bg-[#00a6f0] text-white text-[10px] font-black px-3 py-1 uppercase tracking-[0.3em] rounded-sm">
-                <p className="pt-[2px]">Destaque da Semana</p>
-              </span>
-              <span className="text-white/40 text-xs font-bold uppercase tracking-widest italic pt-[2px]">Streaming em 4K</span>
-            </div>
+          <AnimatePresence mode="wait">
+            {featuredProgram && (
+              <motion.div 
+                key={`featured-${currentFeaturedIndex}`}
+                initial={{ opacity: 0, x: -30 }} 
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 30 }}
+                transition={{ duration: 0.6 }}
+                className="max-w-4xl space-y-8"
+              >
+                <div className="flex items-center gap-4">
+                  <span className="bg-[#00a6f0] text-white text-[10px] font-black px-3 py-1 uppercase tracking-[0.3em] rounded-sm">
+                    <p className="pt-[2px]">Destaque da Semana</p>
+                  </span>
+                  <span className="text-white/40 text-xs font-bold uppercase tracking-widest italic pt-[2px]">Streaming em 4K</span>
+                </div>
 
-            <h1 className="text-7xl md:text-[11rem] font-black uppercase italic leading-[0.75] tracking-tighter">
-              MESA <br />
-              <span className="text-transparent outline-text-vibrant">POSTA</span>
-            </h1>
+                <h1 className="text-7xl md:text-[11rem] font-black uppercase italic leading-[0.75] tracking-tighter">
+                  {featuredProgram.title.rendered.length > 20 ? (
+                    <>
+                      {featuredProgram.title.rendered.split(' ').slice(0, -1).join(' ')} <br />
+                      <span className="text-transparent outline-text-vibrant">
+                        {featuredProgram.title.rendered.split(' ').slice(-1).join(' ')}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-transparent outline-text-vibrant">
+                      {featuredProgram.title.rendered}
+                    </span>
+                  )}
+                </h1>
 
-            <p className="text-xl md:text-2xl text-white/60 font-medium italic max-w-2xl leading-relaxed border-l-2 border-[#00a6f0] pl-8">
-              Aceda aos episódios exclusivos da série que está a dar que falar. O segredo está em Gaia
-            </p>
+                <p className="text-xl md:text-2xl text-white/60 font-medium italic max-w-2xl leading-relaxed border-l-2 border-[#00a6f0] pl-8">
+                  {featuredProgram.excerpt.rendered.replace(/<[^>]*>/g, '').slice(0, 120)}...
+                </p>
 
-            <div className="flex flex-wrap gap-6 pt-4">
-              <Link href="/gaia-play/mesa-posta">
-                <button className="bg-white text-black px-12 py-5 font-black uppercase italic tracking-widest text-xs flex items-center gap-4 hover:bg-[#00a6f0] hover:text-white transition-all transform hover:scale-105 active:scale-95 shadow-2xl cursor-pointer">
-                  <Play size={20} fill="currentColor" /> Ver Agora
-                </button>
-              </Link>
-            </div>
-          </motion.div>
+                <div className="flex flex-wrap gap-6 pt-4">
+                  <Link href={`/gaia-play/${featuredProgram.slug}`}>
+                    <button className="bg-white text-black px-12 py-5 font-black uppercase italic tracking-widest text-xs flex items-center gap-4 hover:bg-[#00a6f0] hover:text-white transition-all transform hover:scale-105 active:scale-95 shadow-2xl cursor-pointer">
+                      <Play size={20} fill="currentColor" /> Ver Agora
+                    </button>
+                  </Link>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </section>
 
@@ -243,11 +275,7 @@ export default function ProgramsPage() {
 
             {/* Tile 6: Local weather/vibe */}
             <div className="col-span-2 row-span-1 bg-zinc-900/50 border border-white/10 p-6 flex items-center gap-6">
-               <div className="text-4xl font-black italic text-[#00a6f0]">18°C</div>
-               <div className="h-8 w-px bg-white/10" />
-               <div className="text-[9px] font-black uppercase tracking-widest text-white/40 leading-tight">
-                  Céu Limpo em <br /> Vila Nova de Gaia
-               </div>
+               <WeatherWidgetTile />
             </div>
 
           </div>

@@ -8,14 +8,10 @@ export async function getPosts() {
   const cacheKey = createCacheKey('wp-posts');
   
   return getOrSetCached(cacheKey, async () => {
-    console.log("Fetching posts from:", `${API_URL}/posts?_embed`);
-    
     const res = await fetch(`${API_URL}/posts?_embed`, {
       headers: getSecureHeaders(),
       next: { revalidate: 180 } // ISR: Revalidate every 180 seconds (3 minutes)
     });
-
-    console.log("getPosts Response Status:", res.status);
 
     if (!res.ok) {
       throw new Error('Failed to fetch posts');
@@ -31,13 +27,10 @@ export async function getPostBySlug(slug: string) {
 
   return getOrSetCached(cacheKey, async () => {
     try {
-      console.log("Fetching post by slug:", `${API_URL}/posts?slug=${slug}&_embed`);
       const res = await fetch(`${API_URL}/posts?slug=${slug}&_embed`, {
         headers: getSecureHeaders(),
         next: { revalidate: 180 } 
       });
-
-      console.log("getPostBySlug Response Status:", res.status);
 
       if (!res.ok) {
         throw new Error("Falha ao obter o artigo.");
@@ -82,7 +75,6 @@ export async function getPostBySlug(slug: string) {
 
 export async function getLeagueTable() {
   try {
-    console.log("Fetching league table from:", `${API_URL}/leagues?_embed`);
     const res = await fetch(`${API_URL}/leagues?_embed`, {
       next: { revalidate: 180 }
     });
@@ -347,12 +339,12 @@ export async function getTVGuide() {
     const url = `${API_URL}/programas-tv?_embed&per_page=100&cb=${cb}`;
     const now = new Date()
     
-    console.log("Fetching TV Guide from:", url);
+    // console.log("Fetching TV Guide from:", url);
 
     try {
       const res = await fetch(url, {
         headers: getSecureHeaders(),
-        next: { revalidate: 3600 } // ISR cache for 1 hour
+        next: { revalidate: 300 } // ISR cache for 5 minutes
       });
 
       if (!res.ok) throw new Error('Falha ao carregar Guia TV');
@@ -365,7 +357,7 @@ export async function getTVGuide() {
       const hora_fim = (fullProgram.acf?.hora_fim || "00:00").substring(0, 5);
       const raw_dia = fullProgram.acf?.dia_da_semana || "00000000";
 
-      console.log(`Dados: ${fullProgram.title.rendered} - Hora: ${hora_inicio} às ${hora_fim}, Dia: ${raw_dia}, Dia Fomatado: ${formatACFDate(raw_dia)}`);
+      // console.log(`Dados: ${fullProgram.title.rendered} - Hora: ${hora_inicio} às ${hora_fim}, Dia: ${raw_dia}, Dia Fomatado: ${formatACFDate(raw_dia)}`);
 
       return {
         id: fullProgram.id,
@@ -409,7 +401,7 @@ function parseTemporadas(jsonString: string | undefined) {
   try {
     return JSON.parse(jsonString);
   } catch (error) {
-    console.error('Error parsing temporadas JSON:', error);
+    console.error('[parseTemporadas] Error parsing temporadas JSON:', error);
     return [];
   }
 }
@@ -423,7 +415,7 @@ export async function getProgramas() {
     try {
       const res = await fetch(`${API_URL}/programas?_embed&per_page=100`, {
         headers: getSecureHeaders(),
-        next: { revalidate: 3600 } // Cache 1 hour
+        next: { revalidate: 300 } // Cache 5 minutes
       });
 
       if (!res.ok) {
@@ -437,7 +429,7 @@ export async function getProgramas() {
       return programas.map((prog: any) => ({
         ...prog,
         featured_image_url: prog._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
-        temporadas: parseTemporadas(prog.acf?.temporadas), // Changed from temporadas_json
+        temporadas: parseTemporadas(prog.acf?.temporadas),
       }));
     } catch (error) {
       console.error("Error fetching programas:", error);
@@ -454,7 +446,7 @@ export async function getProgramaBySlug(slug: string) {
       console.log("Fetching programa by slug:", `${API_URL}/programas?slug=${slug}&_embed`);
       const res = await fetch(`${API_URL}/programas?slug=${slug}&_embed`, {
         headers: getSecureHeaders(),
-        next: { revalidate: 3600 }
+        next: { revalidate: 300 } // Cache 5 minutes
       });
 
       if (!res.ok) {
@@ -468,7 +460,7 @@ export async function getProgramaBySlug(slug: string) {
         return {
           ...programa,
           featured_image_url: programa._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
-          temporadas: parseTemporadas(programa.acf?.temporadas_json),
+          temporadas: parseTemporadas(programa.acf?.temporadas),
         };
       }
 
@@ -483,4 +475,36 @@ export async function getProgramaBySlug(slug: string) {
 export async function getFeaturedProgramas() {
   const programas = await getProgramas();
   return programas.filter((p: any) => p.acf?.destaque_gaia_play === true);
+}
+
+/**
+ * Get all advertisements from WordPress with featured images
+ * - Uses ISR (Incremental Static Regeneration) for 30 min CDN cache
+ * - Uses memory cache for 30 sec to prevent thundering herd
+ * - Extracts featured images from _embed
+ */
+export async function getAdvertisements() {
+  const cacheKey = createCacheKey('wp-advertisements');
+
+  return getOrSetCached(cacheKey, async () => {
+    try {
+      const res = await fetch(`${API_URL}/advertisement?_embed&per_page=100`, {
+        headers: getSecureHeaders(),
+        next: { revalidate: 1800 } // ISR: 30 minutes
+      });
+
+      if (!res.ok) return [];
+
+      const ads = await res.json();
+      
+      // Extract featured images - same pattern as posts and programs
+      return ads.map((ad: any) => ({
+        ...ad,
+        featured_image_url: ad._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
+      }));
+    } catch (error) {
+      console.error('[WP] Error fetching advertisements:', error);
+      return [];
+    }
+  }, 30000); // Memory cache: 30 seconds
 }

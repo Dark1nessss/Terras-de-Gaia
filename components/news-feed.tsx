@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Clock, ArrowUpRight } from "lucide-react";
+import { Clock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { WeatherWidgetSidebar } from "./weather-widget";
 
 export function NewsFeed({ initialPosts }: { initialPosts: any[] }) {
   const [activePost, setActivePost] = useState(initialPosts[0]);
@@ -82,18 +83,7 @@ export function NewsFeed({ initialPosts }: { initialPosts: any[] }) {
 
           {/* Weather Widget */}
           <div className="mt-auto shrink-0">
-            <div className="p-5 border border-dashed border-white/20 rounded-sm bg-white/2 hover:border-white/40 transition-colors cursor-default">
-              <div className="flex items-center justify-between text-white/40 mb-2">
-                <span className="text-xs font-black uppercase tracking-widest">Gaia Agora</span>
-                <ArrowUpRight size={14} className="text-[#00a6f0]" />
-              </div>
-              <div className="flex items-end gap-4">
-                <div className="text-4xl text-white font-black italic leading-none">18°C</div>
-                <div className="text-xs text-white/50 leading-tight uppercase font-bold pb-1">
-                  Céu Limpo<br/>Vila Nova de Gaia
-                </div>
-              </div>
-            </div>
+            <WeatherWidgetSidebar />
           </div>
         </div>
       </div>

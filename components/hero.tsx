@@ -17,15 +17,6 @@ export default function Hero() {
 
       {/* 1. Main Content Container */}
       <div className="container mx-auto px-6 relative z-30 text-white mb-6 md:mb-10">
-        
-        {/* Status Badge */}
-        <div className="flex items-center mb-4 md:mb-6">
-          <div className="flex items-center bg-black/40 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10">
-            <span className="text-xs md:text-xs font-black uppercase tracking-[0.2em] shadow-sm">
-              Em direto
-            </span>
-          </div>
-        </div>
 
         {/* Headlines: Adjusting size for Mobile */}
         <div className="max-w-4xl select-none">

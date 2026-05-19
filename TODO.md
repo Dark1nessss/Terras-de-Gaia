@@ -56,9 +56,9 @@
 **Goal**: Implement advertising sections across all main pages
 
 #### 3.1 WordPress Ads Setup
-- [ ] Create WordPress custom post type: 'advertisement'
-- [ ] Add ACF fields: position, category, start_date, end_date
-- [ ] Add featured image for ad creative
+- [x] Create WordPress custom post type: 'advertisement'
+- [x] Add ACF fields: position, category, start_date, end_date
+- [x] Add featured image for ad creative
 
 #### 3.2 Frontend Ad Components
 - [ ] Create /lib/ads.ts to fetch advertisements

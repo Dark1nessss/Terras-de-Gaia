@@ -97,9 +97,7 @@ export default async function SportsMainPage() {
           <aside className="lg:col-span-4 space-y-10">
             
             {/* PUBLICIDADE - Sidebar Small Ad */}
-            <AdPlaceholder 
-              position="sidebar" 
-            />
+            <AdPlaceholder position="sidebar" />
             
             {/* WIDGET: PRÓXIMOS EVENTOS */}
             <div className="bg-[#111] border-l-4 border-[#00a6f0] p-6">

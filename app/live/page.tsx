@@ -70,9 +70,7 @@ export default function LivePage() {
 
             {/* Ad Inline - Below description with margin */}
             <div className="mt-6">
-              <AdPlaceholder 
-                position="inline"
-              />
+              <AdPlaceholder position="inline" />
             </div>
           </div>
 

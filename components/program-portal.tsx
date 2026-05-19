@@ -5,45 +5,67 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Play, ArrowRight, MonitorPlay } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import type { Program } from '@/lib/programas';
 
-const PORTAL_PROGRAMS = [
-  {
-    id: "01",
-    title: "Mesa Posta",
-    category: "Gastronomia",
-    image: "/mesa-posta.jpg",
-    slug: "mesa-posta",
-    description: "Aceda ao arquivo completo da Terras de Gaia. Episódios exclusivos."
-  },
-  {
-    id: "02",
-    title: "Grande Angular",
-    category: "Informação",
-    image: "/grande-angular.jpg",
-    slug: "grande-angular",
-    description: "Análise profunda dos acontecimentos que moldam a nossa região."
-  },
-  {
-    id: "03",
-    title: "No Relvado",
-    category: "Desporto",
-    image: "/no-relvado.jpg",
-    slug: "no-relvado",
-    description: "Onde o desporto bate mais forte. Entrevistas e resumos exclusivos."
-  }
-];
+const CACHE_KEY = 'portal_programs_cache';
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 export function ProgramsPortal() {
+  const [programs, setPrograms] = useState<Program[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // Fetch featured programs with 1-day cache
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % PORTAL_PROGRAMS.length);
-    }, 5000);
-    return () => clearInterval(timer);
+    const fetchFeaturedPrograms = async () => {
+      try {
+        // Check cache first
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) {
+          const { data, timestamp } = JSON.parse(cached);
+          if (Date.now() - timestamp < CACHE_DURATION) {
+            console.log('[ProgramsPortal] Using cached featured programs');
+            setPrograms(data);
+            setIsLoading(false);
+            return;
+          }
+        }
+
+        // Fetch from API if cache expired or doesn't exist
+        console.log('[ProgramsPortal] Fetching featured programs from API');
+        const response = await fetch('/api/programs?featured=true');
+        if (!response.ok) throw new Error('Failed to fetch featured programs');
+        
+        const data = await response.json();
+        
+        // Cache the result
+        localStorage.setItem(CACHE_KEY, JSON.stringify({
+          data,
+          timestamp: Date.now()
+        }));
+        
+        setPrograms(data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('[ProgramsPortal] Error fetching programs:', error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchFeaturedPrograms();
   }, []);
 
-  const activeProg = PORTAL_PROGRAMS[currentIndex];
+  // Auto-rotate featured programs
+  useEffect(() => {
+    if (programs.length === 0) return;
+    
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % programs.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [programs.length]);
+
+  const activeProg = programs[currentIndex];
 
   return (
     <section className="relative bg-[#0a0c10] py-24 font-nurom overflow-hidden border-t border-white/10">
@@ -81,25 +103,37 @@ export function ProgramsPortal() {
           <div className="lg:col-span-6 relative">
             <div className="relative aspect-video w-full flex items-center justify-center">
               
+              {isLoading && (
+                <div className="absolute inset-0 bg-[#161b22] border border-white/20 rounded-xl flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-2 border-[#00a6f0] border-t-transparent" />
+                </div>
+              )}
+              
               <AnimatePresence mode="wait">
+                {activeProg && (
                 <motion.div 
                   key={activeProg.id}
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 1.05 }}
                   transition={{ duration: 0.6 }}
-                  className="relative w-full h-full bg-[#161b22] border border-white/20 rounded-xl shadow-[0_30px_80px_rgba(0,0,0,0.8)] z-20 group"
+                  className="relative w-full h-full bg-[#161b22] border border-white/20 rounded-xl shadow-[0_30px_80px_rgba(0,0,0,0.8)] z-20 group overflow-hidden"
                 >
-                  <Image 
-                    src={activeProg.image}
-                    alt={activeProg.title}
-                    fill
-                    className="object-cover opacity-60 transition-transform duration-700 group-hover:scale-105"
-                  />
+                  {/* Clickable overlay — whole card navigates to program page */}
+                  <Link href={`/gaia-play/${activeProg.slug}`} className="absolute inset-0 z-10" aria-label={activeProg.title.rendered} />
+                  {activeProg.featured_image_url && (
+                    <Image 
+                      src={activeProg.featured_image_url}
+                      alt={activeProg.title.rendered}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      className="object-cover opacity-60 transition-transform duration-700 group-hover:scale-105"
+                    />
+                  )}
                   
                   {/* Gradientes de Profundidade */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-linear-to-r from-black/40 via-transparent to-transparent" />
 
                   {/* INFO DO PROGRAMA (DINÂMICO) */}
                   <div className="absolute bottom-6 left-6 right-6 flex justify-between items-end">
@@ -109,7 +143,7 @@ export function ProgramsPortal() {
                         animate={{ opacity: 1, y: 0 }}
                         className="text-[#00a6f0] text-[10px] font-black uppercase tracking-widest bg-black/40 backdrop-blur-md px-2 py-1 rounded"
                       >
-                        {activeProg.category}
+                        {activeProg.acf?.categoria_programa || 'Programa'}
                       </motion.span>
                       <motion.h3 
                         initial={{ opacity: 0, y: 10 }}
@@ -117,12 +151,12 @@ export function ProgramsPortal() {
                         transition={{ delay: 0.1 }}
                         className="text-3xl md:text-4xl font-black uppercase italic text-white tracking-tighter"
                       >
-                        {activeProg.title}
+                        {activeProg.title.rendered}
                       </motion.h3>
                     </div>
 
                     {/* Botão Play Dinâmico */}
-                    <Link href={`/gaia-play/${activeProg.slug}`}>
+                    <Link href={`/gaia-play/${activeProg.slug}`} className="relative z-20">
                       <div className="size-16 rounded-full bg-[#00a6f0] flex items-center justify-center shadow-[0_0_30px_rgba(0,166,240,0.5)] hover:scale-110 transition-transform cursor-pointer">
                         <Play fill="white" className="text-white ml-1 size-7" />
                       </div>
@@ -139,13 +173,14 @@ export function ProgramsPortal() {
                     <MonitorPlay className="text-[#00a6f0]" size={24} />
                   </div>
                 </motion.div>
+                )}
               </AnimatePresence>
 
             </div>
 
             {/* Dots de Navegação Manual */}
             <div className="flex gap-2 justify-center mt-8">
-              {PORTAL_PROGRAMS.map((_, i) => (
+              {programs.map((_, i) => (
                 <button 
                   key={i}
                   onClick={() => setCurrentIndex(i)}

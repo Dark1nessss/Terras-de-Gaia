@@ -141,9 +141,7 @@ export default async function SinglePostPage({ params }: Props) {
           {/* Sidebar Area */}
           <aside className="hidden lg:block lg:col-span-1">
             <div className="sticky top-32 space-y-8">
-              <AdPlaceholder 
-                position="sidebar" 
-              />
+              <AdPlaceholder position="sidebar" />
             </div>
           </aside>
         </div>

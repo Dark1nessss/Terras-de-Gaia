@@ -54,9 +54,7 @@ interface AdProps {
   category?: string;
 }
 
-export function AdSection({ position, category }: AdProps) {
-  // Fetch from WordPress custom post type 'advertisement'
-}
+
 ```
 
 Data Source Options:

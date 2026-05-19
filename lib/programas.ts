@@ -27,7 +27,7 @@ export interface Program {
   acf: {
     categoria_programa: string; // Only ACF field for category
     destaque_gaia_play: boolean; // Only ACF field for featured
-    temporadas_json?: string; // JSON string that we'll parse
+    temporadas?: string; // JSON string that we'll parse
   };
   temporadas?: Season[]; // Parsed from JSON
 }
@@ -50,7 +50,7 @@ function parseTemporadas(jsonString?: string): Season[] {
  */
 export async function getPrograms(): Promise<Program[]> {
   try {
-    const response = await fetch(`${API_URL}/programas?per_page=100&_embed`, {
+    const response = await fetch(`${WP_API}/programas?per_page=100&_embed`, {
       headers: getSecureHeaders(),
       next: { revalidate: 3600 }, // Cache 1 hour
     });
@@ -66,7 +66,7 @@ export async function getPrograms(): Promise<Program[]> {
     return programs.map((program: any) => ({
       ...program,
       featured_image_url: program._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
-      temporadas: parseTemporadas(program.acf?.temporadas_json),
+      temporadas: parseTemporadas(program.acf?.temporadas),
     }));
   } catch (error) {
     console.error('Error fetching programs:', error);
@@ -80,7 +80,7 @@ export async function getPrograms(): Promise<Program[]> {
 export async function getProgramBySlug(slug: string): Promise<Program | null> {
   try {
     const response = await fetch(
-      `${API_URL}/programas?slug=${slug}&_embed`,
+      `${WP_API}/programas?slug=${slug}&_embed`,
       {
         headers: getSecureHeaders(),
         next: { revalidate: 3600 },
@@ -97,7 +97,7 @@ export async function getProgramBySlug(slug: string): Promise<Program | null> {
     return {
       ...program,
       featured_image_url: program._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
-      temporadas: parseTemporadas(program.acf?.temporadas_json),
+      temporadas: parseTemporadas(program.acf?.temporadas),
     };
   } catch (error) {
     console.error('Error fetching program:', error);

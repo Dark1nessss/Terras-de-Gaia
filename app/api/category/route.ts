@@ -1,5 +1,7 @@
 import { getPostsByCategoryPaginated } from "@/lib/wp";
 
+export const dynamic = 'force-dynamic';
+
 const requestCounts = new Map<string, { count: number; reset: number }>();
 
 function getRateLimit(ip: string) {

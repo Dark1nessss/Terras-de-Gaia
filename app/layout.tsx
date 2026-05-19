@@ -26,6 +26,8 @@ export default function RootLayout({
       lang="en"
       className={`${nuromFont.variable} h-full antialiased`}
     >
+      <head>
+      </head>
       <body>
         <Navbar />
           {children}

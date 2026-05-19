@@ -49,7 +49,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     { label: "Transmissões", icon: <Radio size={24} />, hasSub: false, path: "/live" },
     { label: "Gaia Play", icon: <Tv size={24} />, hasSub: false, path: "/gaia-play" },
     { label: "Agenda", icon: <Calendar size={24} />, hasSub: false, path: "/institucional/agenda" },
-    { label: "Revista", icon: <BookOpen size={24} />, hasSub: false, path: "/institucional/revista" },
+    { label: "Revista", icon: <BookOpen size={24} />, hasSub: false, path: "/revista" },
     { label: "Sobre Nós", icon: <Shield size={24} />, hasSub: false, path: "/institucional/historia" },
     { label: "Contactos", icon: <Phone size={24} />, hasSub: false, path: "/contacto" },
     { label: "Vira Parceiro", icon: <MessageSquare size={24} />, hasSub: false, path: "/vira-parceiro" },

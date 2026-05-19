@@ -203,7 +203,6 @@ export default function YouTubePlaylistArchive({
 
                       {/* Date */}
                       <div className="flex items-center gap-1">
-                        <div className="w-1 h-1 rounded-full bg-[#00a6f0]"></div>
                         <p className="text-[10px] text-white/50 font-bold">
                           {formatDate(video.publishedAt)}
                         </p>

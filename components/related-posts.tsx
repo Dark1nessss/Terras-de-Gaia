@@ -71,7 +71,7 @@ export function RelatedPosts({ posts, currentPostId, categorySlug, categoryName 
                     src={image} 
                     alt="Related" 
                     fill 
-                    className="object-cover scale-110 group-hover:scale-100 transition-transform duration-700"
+                    className="object-cover scale-110 group-hover:scale-100 transition-transform duration-700 aspect-video"
                    />
                 </div>
               </div>

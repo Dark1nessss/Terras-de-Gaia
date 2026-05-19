@@ -5,22 +5,30 @@ import { Clock, Plus, Minus } from "lucide-react";
 import { TVSidebarInfo } from "./tv-sidebar-info";
 import Image from 'next/image';
 
+const DIAS_SEMANA = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+
+function formatDay(date: Date): string {
+  const dayName = DIAS_SEMANA[date.getDay()];
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  return `${dayName}, ${day}/${month}`;
+}
+
+function generateNext7Days(): string[] {
+  const today = new Date();
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    return formatDay(d);
+  });
+}
+
 export function TVGuideGrid({ initialPrograms = [] }: { initialPrograms?: any[] }) {
-  const [activeDay, setActiveDay] = useState("Segunda");
+  const [activeDay, setActiveDay] = useState(() => formatDay(new Date()));
   const [selectedProgram, setSelectedProgram] = useState<any | null>(null);
   const [limit, setLimit] = useState(5);
 
-  const availableDays = useMemo(() => {
-    if (!Array.isArray(initialPrograms)) return [];
-    const days = initialPrograms.map(p => p.data_completa?.trim()).filter(Boolean);
-    return Array.from(new Set(days));
-  }, [initialPrograms]);
-
-  React.useEffect(() => {
-    if (availableDays.length > 0 && !availableDays.includes(activeDay)) {
-      setActiveDay(availableDays[0]);
-    }
-  }, [availableDays, activeDay]);
+  const availableDays = useMemo(() => generateNext7Days(), []);
 
   const dayPrograms = useMemo(() => {
     return initialPrograms
