@@ -241,7 +241,8 @@ export default function ProgramsPage() {
               <Image 
                 src="/backstage.jpg" 
                 alt="Backstage" 
-                fill 
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover opacity-50 group-hover:scale-110 group-hover:opacity-100 transition-all duration-1000 grayscale group-hover:grayscale-0" 
               />
               <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-transparent" />

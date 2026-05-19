@@ -4,6 +4,23 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { Maximize2, Minus, Tv, Play, Pause, Volume2, VolumeX, Radio } from "lucide-react";
 import Link from "next/link";
 
+const DEFAULT_VIDEO_ID = "jfKfPfyJRdk";
+const DIAS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+
+function todayLabel(): string {
+  const d = new Date();
+  const day = d.getDate().toString().padStart(2, '0');
+  const month = (d.getMonth() + 1).toString().padStart(2, '0');
+  return DIAS[d.getDay()] + ', ' + day + '/' + month;
+}
+
+function parseYouTubeId(link: string): string | null {
+  if (!link) return null;
+  if (/^[a-zA-Z0-9_-]{11}$/.test(link)) return link;
+  const m = link.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
 export default function LiveStreamPlayer() {
   const [viewState, setViewState] = useState<"hidden" | "pip" | "loading">("loading");
   const [isFullscreen, setIsFullscreen] = useState(false); // Track FS state explicitly
@@ -11,13 +28,15 @@ export default function LiveStreamPlayer() {
   const [isMuted, setIsMuted] = useState(true);
   const [isLive, setIsLive] = useState(true);
   const [hasStream, setHasStream] = useState(true);
+  const [currentProgram, setCurrentProgram] = useState<string | null>(null);
+  const [streamVideoId, setStreamVideoId] = useState(DEFAULT_VIDEO_ID);
 
   const playerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const clickTimer = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const videoId = "jfKfPfyJRdk";
-  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&enablejsapi=1`;
+  const embedUrl = 'https://www.youtube.com/embed/' + streamVideoId + '?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&enablejsapi=1';
 
   // Sync with localStorage and Fullscreen events
   useEffect(() => {
@@ -27,6 +46,48 @@ export default function LiveStreamPlayer() {
     const handleFsChange = () => setIsFullscreen(!!document.fullscreenElement);
     document.addEventListener("fullscreenchange", handleFsChange);
     return () => document.removeEventListener("fullscreenchange", handleFsChange);
+  }, []);
+
+  // Fetch current on-air program and manage auto-switch
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    function applyPrograms(programs: any[]) {
+      const now = new Date();
+      const ct = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+      const today = todayLabel();
+      const live = programs.find(
+        (p) =>
+          p.data_completa?.trim() === today &&
+          p.hora_inicio && p.hora_fim &&
+          p.hora_inicio <= ct && p.hora_fim > ct
+      );
+      if (live?.title) setCurrentProgram(live.title);
+      const id = (live?.link && parseYouTubeId(live.link)) || DEFAULT_VIDEO_ID;
+      setStreamVideoId(id);
+      // Schedule auto-switch when program ends
+      if (live?.hora_fim) {
+        const parts = (live.hora_fim as string).split(':').map(Number);
+        const end = new Date();
+        end.setHours(parts[0], parts[1], 5, 0);
+        const ms = end.getTime() - Date.now();
+        if (ms > 0) {
+          if (timerRef.current) clearTimeout(timerRef.current);
+          timerRef.current = setTimeout(() => {
+            fetch('/api/tv-guide')
+              .then(r => r.json())
+              .then(applyPrograms)
+              .catch(() => null);
+          }, ms);
+        }
+      }
+    }
+
+    fetch('/api/tv-guide')
+      .then(r => r.json())
+      .then(applyPrograms)
+      .catch(() => null);
+
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
   }, []);
 
   // Listen to isPlaying state changes and send postMessage to YouTube IFrame API
@@ -125,16 +186,21 @@ export default function LiveStreamPlayer() {
           <div className="absolute inset-0 z-40" onClick={handleInteraction} />
 
           {/* Bottom Bar */}
-          <div className={`absolute bottom-0 inset-x-0 h-14 z-50 bg-linear-to-t from-black flex items-center px-5 justify-between transition-all 
+          <div className={`absolute bottom-0 inset-x-0 h-14 z-50 bg-linear-to-t from-black flex items-center px-5 justify-between gap-3 transition-all 
             ${isFullscreen ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100'}`}>
-            <div className="flex items-center gap-5 pointer-events-auto">
+            <div className="flex items-center gap-5 pointer-events-auto shrink-0">
               <button onClick={() => setIsPlaying(!isPlaying)} className="text-white cursor-pointer">{isPlaying ? <Pause size={20} fill="white" /> : <Play size={20} fill="white" />}</button>
               <button onClick={() => setIsMuted(!isMuted)} className="text-white cursor-pointer">{isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}</button>
               <button onClick={() => { if (iframeRef.current) iframeRef.current.src = embedUrl; }} className="flex items-center gap-2 px-2 py-1 border border-red-600 rounded text-xs font-bold text-white uppercase italic cursor-pointer">
                 <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse" /> Direto
               </button>
             </div>
-            <button onClick={toggleFullscreen} className="text-white/60 hover:text-white pointer-events-auto cursor-pointer"><Maximize2 size={18} /></button>
+            {currentProgram && (
+              <span className="text-white/50 text-[9px] font-black uppercase italic tracking-wide truncate flex-1 text-center hidden sm:block">
+                {currentProgram}
+              </span>
+            )}
+            <button onClick={toggleFullscreen} className="text-white/60 hover:text-white pointer-events-auto cursor-pointer shrink-0"><Maximize2 size={18} /></button>
           </div>
         </div>
       )}

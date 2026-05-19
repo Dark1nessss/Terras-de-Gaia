@@ -90,7 +90,7 @@ export default async function ProgramacaoPage() {
       </section>
 
       {/* ── TV GUIDE GRID ────────────────────────────────────────────── */}
-      <TVGuideGrid initialPrograms={programs} />
+      <TVGuideGrid initialPrograms={programs} maxDays={30} />
 
       {/* ── FOOTER CTA ───────────────────────────────────────────────── */}
       <section className="border-t border-white/5 py-16">

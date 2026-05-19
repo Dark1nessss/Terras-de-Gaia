@@ -14,21 +14,21 @@ function formatDay(date: Date): string {
   return `${dayName}, ${day}/${month}`;
 }
 
-function generateNext7Days(): string[] {
+function generateNextDays(count: number): string[] {
   const today = new Date();
-  return Array.from({ length: 7 }, (_, i) => {
+  return Array.from({ length: count }, (_, i) => {
     const d = new Date(today);
     d.setDate(today.getDate() + i);
     return formatDay(d);
   });
 }
 
-export function TVGuideGrid({ initialPrograms = [] }: { initialPrograms?: any[] }) {
+export function TVGuideGrid({ initialPrograms = [], maxDays = 7 }: { initialPrograms?: any[]; maxDays?: number }) {
   const [activeDay, setActiveDay] = useState(() => formatDay(new Date()));
   const [selectedProgram, setSelectedProgram] = useState<any | null>(null);
   const [limit, setLimit] = useState(5);
 
-  const availableDays = useMemo(() => generateNext7Days(), []);
+  const availableDays = useMemo(() => generateNextDays(maxDays), [maxDays]);
 
   const dayPrograms = useMemo(() => {
     return initialPrograms
