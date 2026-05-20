@@ -54,8 +54,8 @@ export default function Footer() {
               <Link href="/programacao" className="text-sm text-white/60 hover:text-[#00a6f0] transition-all duration-300">
                 Programação
               </Link>
-              <Link href="/arquivo" className="text-sm text-white/60 hover:text-[#00a6f0] transition-all duration-300">
-                Arquivo de Vídeos
+              <Link href="/gaia-play" className="text-sm text-white/60 hover:text-[#00a6f0] transition-all duration-300">
+                Gaia Play
               </Link>
               <Link href="/contacto" className="text-sm text-white/60 hover:text-[#00a6f0] transition-all duration-300">
                 Contactos

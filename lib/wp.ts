@@ -411,24 +411,55 @@ export async function getProgramas() {
   const cacheKey = createCacheKey('wp-programas');
 
   return getOrSetCached(cacheKey, async () => {
-    console.log("Fetching programas from:", `${API_URL}/programas?_embed&per_page=100`);
+    const fetchUrl = `${API_URL}/programas?per_page=100`;
+    const headers = getSecureHeaders();
+    console.log('[getProgramas] URL:', fetchUrl);
+    console.log('[getProgramas] Headers sent (auth redacted):', {
+      ...headers,
+      ...(headers['Authorization'] ? { Authorization: 'Basic [REDACTED]' } : {}),
+    });
     try {
-      const res = await fetch(`${API_URL}/programas?_embed&per_page=100`, {
-        headers: getSecureHeaders(),
+      const res = await fetch(fetchUrl, {
+        headers,
         next: { revalidate: 300 } // Cache 5 minutes
       });
 
+      console.log('[getProgramas] Response status:', res.status, res.statusText);
+      console.log('[getProgramas] Response headers:', Object.fromEntries(res.headers.entries()));
+
       if (!res.ok) {
-        console.warn("Programas endpoint not found. Status:", res.status);
+        const body = await res.text();
+        console.warn('[getProgramas] Non-OK body:', body);
         return [];
       }
 
       const programas = await res.json();
-      
-      // Parse temporadas JSON and extract featured images
+      console.log('[getProgramas] Count returned:', programas.length);
+
+      // Collect all featured_media IDs, batch-fetch their URLs in one request
+      const mediaIds: number[] = programas
+        .map((p: any) => p.featured_media)
+        .filter((id: any) => typeof id === 'number' && id > 0);
+
+      const mediaUrlMap: Record<number, string> = {};
+
+      if (mediaIds.length > 0) {
+        const mediaRes = await fetch(
+          `${API_URL}/media?include=${mediaIds.join(',')}&per_page=${mediaIds.length}&_fields=id,source_url`,
+          { headers: getSecureHeaders() }
+        );
+        if (mediaRes.ok) {
+          const mediaItems = await mediaRes.json();
+          mediaItems.forEach((m: any) => { mediaUrlMap[m.id] = m.source_url; });
+          console.log('[getProgramas] Media URLs resolved:', mediaUrlMap);
+        } else {
+          console.warn('[getProgramas] Media batch fetch failed:', mediaRes.status);
+        }
+      }
+
       return programas.map((prog: any) => ({
         ...prog,
-        featured_image_url: prog._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
+        featured_image_url: mediaUrlMap[prog.featured_media] || '',
         temporadas: parseTemporadas(prog.acf?.temporadas),
       }));
     } catch (error) {
@@ -443,8 +474,8 @@ export async function getProgramaBySlug(slug: string) {
 
   return getOrSetCached(cacheKey, async () => {
     try {
-      console.log("Fetching programa by slug:", `${API_URL}/programas?slug=${slug}&_embed`);
-      const res = await fetch(`${API_URL}/programas?slug=${slug}&_embed`, {
+      console.log("Fetching programa by slug:", `${API_URL}/programas?slug=${slug}`);
+      const res = await fetch(`${API_URL}/programas?slug=${slug}`, {
         headers: getSecureHeaders(),
         next: { revalidate: 300 } // Cache 5 minutes
       });
@@ -457,9 +488,21 @@ export async function getProgramaBySlug(slug: string) {
       const programa = programas[0] || null;
 
       if (programa) {
+        // Fetch featured image directly (same approach as getProgramas)
+        let featured_image_url = '';
+        if (programa.featured_media) {
+          const mediaRes = await fetch(
+            `${API_URL}/media/${programa.featured_media}?_fields=id,source_url`,
+            { headers: getSecureHeaders() }
+          );
+          if (mediaRes.ok) {
+            const mediaData = await mediaRes.json();
+            featured_image_url = mediaData.source_url || '';
+          }
+        }
         return {
           ...programa,
-          featured_image_url: programa._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
+          featured_image_url,
           temporadas: parseTemporadas(programa.acf?.temporadas),
         };
       }

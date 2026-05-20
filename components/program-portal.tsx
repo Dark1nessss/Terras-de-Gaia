@@ -117,23 +117,26 @@ export function ProgramsPortal() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 1.05 }}
                   transition={{ duration: 0.6 }}
-                  className="relative w-full h-full bg-[#161b22] border border-white/20 rounded-xl shadow-[0_30px_80px_rgba(0,0,0,0.8)] z-20 group overflow-hidden"
+                  className="relative w-full h-full bg-[#161b22] border border-white/20 rounded-xl shadow-[0_30px_80px_rgba(0,0,0,0.8)] z-20 group"
                 >
+                  {/* Clipped zone — image stays inside rounded corners */}
+                  <div className="absolute inset-0 overflow-hidden rounded-xl">
+                    {activeProg.featured_image_url && (
+                      <Image 
+                        src={activeProg.featured_image_url}
+                        alt={activeProg.title.rendered}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 50vw"
+                        className="object-cover opacity-60 transition-transform duration-700 group-hover:scale-105"
+                      />
+                    )}
+                    {/* Gradientes de Profundidade */}
+                    <div className="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-r from-black/40 via-transparent to-transparent" />
+                  </div>
+
                   {/* Clickable overlay — whole card navigates to program page */}
                   <Link href={`/gaia-play/${activeProg.slug}`} className="absolute inset-0 z-10" aria-label={activeProg.title.rendered} />
-                  {activeProg.featured_image_url && (
-                    <Image 
-                      src={activeProg.featured_image_url}
-                      alt={activeProg.title.rendered}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 50vw"
-                      className="object-cover opacity-60 transition-transform duration-700 group-hover:scale-105"
-                    />
-                  )}
-                  
-                  {/* Gradientes de Profundidade */}
-                  <div className="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent" />
-                  <div className="absolute inset-0 bg-linear-to-r from-black/40 via-transparent to-transparent" />
 
                   {/* INFO DO PROGRAMA (DINÂMICO) */}
                   <div className="absolute bottom-6 left-6 right-6 flex justify-between items-end">
