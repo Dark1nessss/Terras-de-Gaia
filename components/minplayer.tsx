@@ -4,7 +4,6 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { Maximize2, Minus, Tv, Play, Pause, Volume2, VolumeX, Radio } from "lucide-react";
 import Link from "next/link";
 
-const DEFAULT_VIDEO_ID = "jfKfPfyJRdk";
 const DIAS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 
 function todayLabel(): string {
@@ -14,10 +13,10 @@ function todayLabel(): string {
   return DIAS[d.getDay()] + ', ' + day + '/' + month;
 }
 
-function parseYouTubeId(link: string): string | null {
-  if (!link) return null;
-  if (/^[a-zA-Z0-9_-]{11}$/.test(link)) return link;
-  const m = link.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+function parseYouTubeId(url: string): string | null {
+  if (!url) return null;
+  if (/^[a-zA-Z0-9_-]{11}$/.test(url)) return url;
+  const m = url.match(/(?:v=|youtu\.be\/|embed\/|live\/|shorts\/)([a-zA-Z0-9_-]{11})/);
   return m ? m[1] : null;
 }
 
@@ -27,16 +26,18 @@ export default function LiveStreamPlayer() {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const [isLive, setIsLive] = useState(true);
-  const [hasStream, setHasStream] = useState(true);
+  const [hasStream, setHasStream] = useState(false);
   const [currentProgram, setCurrentProgram] = useState<string | null>(null);
-  const [streamVideoId, setStreamVideoId] = useState(DEFAULT_VIDEO_ID);
+  const [streamVideoId, setStreamVideoId] = useState<string | null>(null);
 
   const playerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const clickTimer = useRef<NodeJS.Timeout | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const embedUrl = 'https://www.youtube.com/embed/' + streamVideoId + '?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&enablejsapi=1';
+  const embedUrl = streamVideoId
+    ? 'https://www.youtube.com/embed/' + streamVideoId + '?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&enablejsapi=1'
+    : null;
 
   // Sync with localStorage and Fullscreen events
   useEffect(() => {
@@ -62,8 +63,9 @@ export default function LiveStreamPlayer() {
           p.hora_inicio <= ct && p.hora_fim > ct
       );
       if (live?.title) setCurrentProgram(live.title);
-      const id = (live?.link && parseYouTubeId(live.link)) || DEFAULT_VIDEO_ID;
+      const id = live?.video_url ? parseYouTubeId(live.video_url) : null;
       setStreamVideoId(id);
+      setHasStream(!!id);
       // Schedule auto-switch when program ends
       if (live?.hora_fim) {
         const parts = (live.hora_fim as string).split(':').map(Number);
@@ -172,7 +174,7 @@ export default function LiveStreamPlayer() {
         </div>
       ) : (
         <div className="relative w-full h-full">
-          <iframe ref={iframeRef} src={embedUrl} className="w-full h-full pointer-events-none" allow="autoplay; fullscreen" />
+          <iframe ref={iframeRef} src={embedUrl ?? ''} className="w-full h-full pointer-events-none" allow="autoplay; fullscreen" />
           
           {/* Top Bar - Hidden when FS */}
           {!isFullscreen && (
@@ -191,7 +193,7 @@ export default function LiveStreamPlayer() {
             <div className="flex items-center gap-5 pointer-events-auto shrink-0">
               <button onClick={() => setIsPlaying(!isPlaying)} className="text-white cursor-pointer">{isPlaying ? <Pause size={20} fill="white" /> : <Play size={20} fill="white" />}</button>
               <button onClick={() => setIsMuted(!isMuted)} className="text-white cursor-pointer">{isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}</button>
-              <button onClick={() => { if (iframeRef.current) iframeRef.current.src = embedUrl; }} className="flex items-center gap-2 px-2 py-1 border border-red-600 rounded text-xs font-bold text-white uppercase italic cursor-pointer">
+              <button onClick={() => { if (iframeRef.current && embedUrl) iframeRef.current.src = embedUrl; }} className="flex items-center gap-2 px-2 py-1 border border-red-600 rounded text-xs font-bold text-white uppercase italic cursor-pointer">
                 <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse" /> Direto
               </button>
             </div>

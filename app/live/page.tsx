@@ -61,7 +61,7 @@ export default async function LivePage() {
               <div className="absolute top-4 left-4">
                  <div className="bg-black/60 backdrop-blur-md px-3 py-1 border border-white/10 rounded flex items-center gap-2">
                     <Tv size={14} className="text-[#00a6f0]" />
-                    <span className="text-xs font-black uppercase italic">
+                    <span className="text-xs font-black uppercase italic mt-1">
                       {liveNow?.title ?? 'Canal Principal'}
                     </span>
                  </div>

@@ -370,6 +370,7 @@ export async function getTVGuide() {
         data_completa: formatACFDate(raw_dia),
         color: fullProgram.acf?.cor_tematica || "#00a6f0",
         image: fullProgram._embedded?.['wp:featuredmedia']?.[0]?.source_url || "/mesa-posta.jpg",
+        video_url: fullProgram.acf?.video_url || null,
         slug: fullProgram.slug
       };
     })

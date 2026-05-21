@@ -1,4 +1,4 @@
-import { getAdsByPosition } from '@/lib/ads';
+import { AdPosition, getAdsByPosition, getMidrollAds } from '@/lib/ads';
 import { NextRequest, NextResponse } from 'next/server';
 
 const requestCounts = new Map<string, { count: number; reset: number }>();
@@ -33,6 +33,20 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const position = searchParams.get('position');
+    const type = searchParams.get('type');
+
+    // Mid-roll ads: type: unmuted_video + position: midroll (server-side filtering for performance)
+    if (type === 'unmuted_video' || position === 'midroll') {
+      const ads = await getMidrollAds();
+      return NextResponse.json(
+        { ads, count: ads.length },
+        {
+          headers: {
+            'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=60',
+          },
+        }
+      );
+    }
 
     if (!position) {
       return NextResponse.json(
@@ -42,7 +56,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch ads for this position (server-side filtering happens in getAdsByPosition)
-    const ads = await getAdsByPosition(position as any);
+    const ads = await getAdsByPosition(position as AdPosition);
 
     return NextResponse.json(
       { ads, count: ads.length },

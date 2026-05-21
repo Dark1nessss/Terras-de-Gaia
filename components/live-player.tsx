@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-
-const DEFAULT_VIDEO_ID = "jfKfPfyJRdk";
+import { Tv } from "lucide-react";
 
 const DIAS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 
@@ -13,26 +12,39 @@ function todayLabel(): string {
   return DIAS[d.getDay()] + ', ' + day + '/' + month;
 }
 
-function parseYouTubeId(link: string): string | null {
-  if (!link) return null;
-  if (/^[a-zA-Z0-9_-]{11}$/.test(link)) return link;
-  const m = link.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+function parseYouTubeId(url: string): string | null {
+  if (!url) return null;
+  if (/^[a-zA-Z0-9_-]{11}$/.test(url)) return url;
+  const m = url.match(/(?:v=|youtu\.be\/|embed\/|live\/|shorts\/)([a-zA-Z0-9_-]{11})/);
   return m ? m[1] : null;
 }
 
+type StreamSource =
+  | { type: 'youtube'; id: string }
+  | { type: 'video'; url: string }
+  | { type: 'offline' };
+
+function resolveSource(videoUrl: string | null | undefined): StreamSource {
+  if (!videoUrl) return { type: 'offline' };
+  const ytId = parseYouTubeId(videoUrl);
+  if (ytId) return { type: 'youtube', id: ytId };
+  if (videoUrl.startsWith('http') || videoUrl.startsWith('/')) return { type: 'video', url: videoUrl };
+  return { type: 'offline' };
+}
+
 export function LivePlayer({
-  defaultVideoId = DEFAULT_VIDEO_ID,
   initialPrograms = [],
 }: {
-  defaultVideoId?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialPrograms?: any[];
 }) {
-  const [videoId, setVideoId] = useState(defaultVideoId);
+  const [source, setSource] = useState<StreamSource>({ type: 'offline' });
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
-    function applyPrograms(programs: any[]) { // eslint-disable-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    function applyPrograms(programs: any[]) {
       const now = new Date();
       const ct =
         now.getHours().toString().padStart(2, '0') +
@@ -43,20 +55,16 @@ export function LivePlayer({
       const live = programs.find(
         (p) =>
           p.data_completa?.trim() === today &&
-          p.hora_inicio &&
-          p.hora_fim &&
-          p.hora_inicio <= ct &&
-          p.hora_fim > ct
+          p.hora_inicio && p.hora_fim &&
+          p.hora_inicio <= ct && p.hora_fim > ct
       );
 
-      const id = (live?.link && parseYouTubeId(live.link)) || defaultVideoId;
-      setVideoId(id);
+      setSource(resolveSource(live?.video_url));
 
-      // Schedule auto-switch when this program ends
       if (live?.hora_fim) {
         const parts = (live.hora_fim as string).split(':').map(Number);
         const end = new Date();
-        end.setHours(parts[0], parts[1], 5, 0); // 5s buffer after program end
+        end.setHours(parts[0], parts[1], 5, 0);
         const ms = end.getTime() - Date.now();
         if (ms > 0) {
           if (timerRef.current) clearTimeout(timerRef.current);
@@ -71,21 +79,67 @@ export function LivePlayer({
     }
 
     applyPrograms(initialPrograms);
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+  }, [initialPrograms]);
+
+  // Catch YouTube embed errors and fall back to offline placeholder
+  useEffect(() => {
+    const handleMessage = (e: MessageEvent) => {
+      if (!e.origin.includes('youtube.com')) return;
+      try {
+        const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
+        if (data.event === 'onError') setSource({ type: 'offline' });
+      } catch { /* ignore */ }
     };
-  }, [initialPrograms, defaultVideoId]);
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
 
-  const src =
-    'https://www.youtube.com/embed/' +
-    videoId +
-    '?autoplay=1&mute=0&controls=1&modestbranding=1';
+  if (source.type === 'offline') {
+    return (
+      <div className="w-full h-full flex flex-col items-center justify-center bg-[#070809] select-none relative overflow-hidden">
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.025]"
+          style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, #fff 2px, #fff 3px)' }}
+        />
+        <div className="absolute inset-0 pointer-events-none bg-radial from-transparent to-black/60" />
+        <div className="relative z-10 flex flex-col items-center gap-4 text-center px-8">
+          <Tv size={40} className="text-white/10 mb-2" />
+          <p className="text-white/15 text-[10px] font-black uppercase tracking-[0.5em]">Terras de Gaia TV</p>
+          <p className="text-white/50 text-2xl font-black uppercase italic tracking-tighter">Fora de Emissão</p>
+          <p className="text-white/20 text-xs font-bold uppercase tracking-widest leading-relaxed max-w-xs mt-1">
+            Consulta a programação para os próximos conteúdos
+          </p>
+        </div>
+      </div>
+    );
+  }
 
+  if (source.type === 'video') {
+    return (
+      <video
+        src={source.url}
+        autoPlay
+        controls
+        className="w-full h-full bg-black"
+        onError={() => setSource({ type: 'offline' })}
+      />
+    );
+  }
+
+  // YouTube
   return (
     <iframe
-      src={src}
+      ref={iframeRef}
+      src={`https://www.youtube.com/embed/${source.id}?autoplay=1&mute=0&controls=1&modestbranding=1&enablejsapi=1`}
       className="w-full h-full"
       allow="autoplay; fullscreen"
+      onLoad={() =>
+        iframeRef.current?.contentWindow?.postMessage(
+          JSON.stringify({ event: 'listening' }), '*'
+        )
+      }
     />
   );
 }
+

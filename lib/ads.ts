@@ -2,8 +2,8 @@ import { getWordPressAuthHeaders } from './auth';
 
 const API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || process.env.WORDPRESS_API_URL || 'http://localhost:8000/wp-json/wp/v2';
 
-export type AdPosition = 'sidebar' | 'featured' | 'inline' | 'footer';
-export type MediaType = 'image' | 'gif' | 'muted_video';
+export type AdPosition = 'sidebar' | 'featured' | 'inline' | 'footer' | 'midroll' ;
+export type MediaType = 'image' | 'gif' | 'muted_video' | 'unmuted_video';
 
 export interface Advertisement {
   id: number;
@@ -11,12 +11,13 @@ export interface Advertisement {
   featured_media: number;
   featured_media_url?: string;
   acf: {
-    posicao_anuncio: AdPosition; // Position (sidebar, inline, featured, footer)
-    tipo_de_midia: MediaType; // Media type (required)
-    data_inicio: string; // Start date (required)
-    data_fim?: string; // End date (optional)
-    url_clickthrough?: string; // Click destination
-    ativo: boolean; // Active status (required)
+    posicao_anuncio: AdPosition;
+    tipo_de_midia: MediaType;
+    data_inicio: string;
+    data_fim?: string;
+    url_clickthrough?: string;
+    video_url?: string; // Direct URL for muted_video / unmuted_video ads
+    ativo: boolean;
   };
 }
 
@@ -73,8 +74,15 @@ export async function getAds(): Promise<Advertisement[]> {
           return true;
         })
         .map(async (ad: Advertisement) => {
-          // Fetch featured media URL if featured_media ID exists
-          if (ad.featured_media && !ad.featured_media_url) {
+          const mediaType = ad.acf?.tipo_de_midia;
+          const isVideo = mediaType === 'muted_video' || mediaType === 'unmuted_video';
+
+          if (isVideo) {
+            if (ad.acf?.video_url) {
+              ad.featured_media_url = ad.acf.video_url;
+            }
+          } else if (ad.featured_media && !ad.featured_media_url) {
+            // Images/GIFs use the WP featured media
             const mediaUrl = await getMediaUrl(ad.featured_media);
             ad.featured_media_url = mediaUrl || undefined;
           }
@@ -90,7 +98,7 @@ export async function getAds(): Promise<Advertisement[]> {
 }
 
 /**
- * Get ads by position (e.g., 'sidebar', 'inline', 'featured', 'footer')
+ * Get ads by position (e.g., 'sidebar', 'inline', 'featured', 'footer', 'midroll')
  * Filters by position from ACF
  */
 export async function getAdsByPosition(position: AdPosition): Promise<Advertisement[]> {
@@ -99,35 +107,12 @@ export async function getAdsByPosition(position: AdPosition): Promise<Advertisem
 }
 
 /**
- * Get single ad by ID
+ * Get mid-roll video ads (unmuted_video type only).
+ * These are used as in-video interstitial ads in Gaia Play.
  */
-export async function getAdById(id: number): Promise<Advertisement | null> {
-  try {
-    const res = await fetch(`${API_URL}/advertisement/${id}`, {
-      headers: getWordPressAuthHeaders(),
-      next: { revalidate: 86400 },
-    });
-
-    if (!res.ok) return null;
-    return await res.json();
-  } catch (error) {
-    console.error('Error fetching ad:', error);
-    return null;
-  }
-}
-
-/**
- * Get ads grouped by position for rotating galleries
- */
-export async function getAdsByPositionGrouped(): Promise<Record<string, Advertisement[]>> {
+export async function getMidrollAds(): Promise<Advertisement[]> {
   const allAds = await getAds();
-  return allAds.reduce(
-    (acc, ad) => {
-      const pos = ad.acf?.posicao_anuncio || 'unknown';
-      if (!acc[pos]) acc[pos] = [];
-      acc[pos].push(ad);
-      return acc;
-    },
-    {} as Record<string, Advertisement[]>
-  );
+  return allAds.filter((ad) => ad.acf?.posicao_anuncio === 'midroll' && ad.acf?.tipo_de_midia === 'unmuted_video');
 }
+
+

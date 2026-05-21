@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams } from 'next/navigation';
-import { Play, ArrowLeft, Plus, Star, MonitorPlay, Check } from 'lucide-react';
+import { Play, ArrowLeft, MonitorPlay } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -10,7 +10,8 @@ import { ShareButton } from "@/components/share-button";
 import { SeasonSelector } from "@/components/season-selector";
 import { cleanText } from "@/lib/decode-html";
 import { formatExibicao, formatYear } from "@/lib/date";
-import type { Program, Season } from '@/lib/programas';
+import { MidrollAd } from "@/components/midroll-ad";
+import type { Program } from '@/lib/programas';
 
 // Helper function to extract YouTube video ID
 function getYouTubeVideoId(url: string): string | null {
@@ -39,16 +40,105 @@ export default function ProgramSlugPage() {
   const [activeEpIndex, setActiveEpIndex] = useState(0);
   const [activeSeason, setActiveSeason] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [showMidroll, setShowMidroll] = useState(false);
+  const [showTitleBar, setShowTitleBar] = useState(false);
+
+  // Ref to the YouTube iframe so we can pause/resume via postMessage
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  // Ref for the 20-minute mid-roll interval timer
+  const midrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Ref for the 5-second title bar hide timer
+  const titleBarTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const MIDROLL_INTERVAL_MS = 20 * 60 * 1000;
+
+  /** Show the title bar for 5 seconds then auto-hide */
+  const showTitleBarFor5s = useCallback(() => {
+    setShowTitleBar(true);
+    if (titleBarTimerRef.current) clearTimeout(titleBarTimerRef.current);
+    titleBarTimerRef.current = setTimeout(() => setShowTitleBar(false), 5000);
+  }, []);
+
+  /** Pause the embedded YouTube player via postMessage */
+  const pauseYouTube = useCallback(() => {
+    iframeRef.current?.contentWindow?.postMessage(
+      '{"event":"command","func":"pauseVideo","args":""}',
+      '*'
+    );
+  }, []);
+
+  /** Resume the embedded YouTube player via postMessage */
+  const resumeYouTube = useCallback(() => {
+    iframeRef.current?.contentWindow?.postMessage(
+      '{"event":"command","func":"playVideo","args":""}',
+      '*'
+    );
+  }, []);
+
+  /** Schedule the next mid-roll trigger */
+  const scheduleMidroll = useCallback(() => {
+    if (midrollTimerRef.current) clearTimeout(midrollTimerRef.current);
+    midrollTimerRef.current = setTimeout(() => setShowMidroll(true), MIDROLL_INTERVAL_MS);
+  }, [MIDROLL_INTERVAL_MS]);
+
+  /** Called when MidrollAd finishes */
+  const handleMidrollFinished = useCallback((played: boolean) => {
+    setShowMidroll(false);
+    resumeYouTube();
+    if (played) scheduleMidroll();
+  }, [resumeYouTube, scheduleMidroll]);
+
+  // Pause YouTube and start showing the ad when showMidroll becomes true
+  useEffect(() => {
+    if (showMidroll) pauseYouTube();
+  }, [showMidroll, pauseYouTube]);
+
+  // Listen for YouTube player state changes via postMessage (pause / end → show title bar)
+  useEffect(() => {
+    const handleYTMessage = (event: MessageEvent) => {
+      if (!event.origin.includes('youtube.com')) return;
+      try {
+        const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+        let playerState: number | undefined;
+        if (data.event === 'onStateChange') {
+          playerState = data.info;
+        } else if (data.event === 'infoDelivery' && typeof data.info?.playerState === 'number') {
+          playerState = data.info.playerState;
+        }
+        // 0 = ended, 2 = paused
+        if (playerState === 0 || playerState === 2) showTitleBarFor5s();
+      } catch { /* non-JSON messages ignored */ }
+    };
+    window.addEventListener('message', handleYTMessage);
+    return () => window.removeEventListener('message', handleYTMessage);
+  }, [showTitleBarFor5s]);
+
+  /** Tell the YouTube iframe to start broadcasting events back to us */
+  const handleIframeLoad = useCallback(() => {
+    iframeRef.current?.contentWindow?.postMessage(
+      JSON.stringify({ event: 'listening' }),
+      '*'
+    );
+    // Show title bar for 5s when a new episode loads
+    showTitleBarFor5s();
+  }, [showTitleBarFor5s]);
+
+  // Reset mid-roll timer when the episode changes
+  useEffect(() => {
+    setShowMidroll(false);
+    scheduleMidroll();
+    return () => {
+      if (midrollTimerRef.current) clearTimeout(midrollTimerRef.current);
+      if (titleBarTimerRef.current) clearTimeout(titleBarTimerRef.current);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeEpIndex, activeSeason]);
 
   useEffect(() => {
     const loadProgram = async () => {
       try {
         const response = await fetch(`/api/programs?slug=${slug}`);
         const data = await response.json();
-        console.log('[PAGE] Program data:', data);
-        console.log('[PAGE] ACF data:', data?.acf);
-        console.log('[PAGE] ano_lancamento raw:', data?.acf?.ano_lancamento, typeof data?.acf?.ano_lancamento);
-        console.log('[PAGE] exibicao_original raw:', data?.acf?.exibicao_original, typeof data?.acf?.exibicao_original);
         setProgram(data || null);
       } catch (error) {
         console.error('Error fetching program:', error);
@@ -59,7 +149,6 @@ export default function ProgramSlugPage() {
     loadProgram();
   }, [slug]);
 
-  // Get all episodes from all seasons
   const allEpisodes = program?.temporadas?.flatMap(season => 
     season.episodios?.map(ep => ({
       ...ep,
@@ -68,14 +157,11 @@ export default function ProgramSlugPage() {
     })) || []
   ) || [];
 
-  // Get episodes for active season
   const currentSeasonEpisodes = program?.temporadas?.[activeSeason]?.episodios || [];
   const currentEp = currentSeasonEpisodes[activeEpIndex];
   const currentVideoId = currentEp?.link ? getYouTubeVideoId(currentEp.link) : null;
 
-  // Handle episode click - update episode index for current season
   const handleEpisodeClick = (episode: any) => {
-    // Find the index only within the CURRENT season
     const epIdx = currentSeasonEpisodes.findIndex(ep => ep.numero === episode.numero) || 0;
     setActiveEpIndex(epIdx);
   };
@@ -141,14 +227,16 @@ export default function ProgramSlugPage() {
               >
                 {currentVideoId ? (
                   <iframe
+                    ref={iframeRef}
                     key={`${activeSeason}-${currentEp?.numero}`}
                     width="100%"
                     height="100%"
-                    src={`https://www.youtube.com/embed/${currentVideoId}?modestbranding=1&rel=0&controls=1`}
+                    src={`https://www.youtube.com/embed/${currentVideoId}?modestbranding=1&rel=0&controls=1&enablejsapi=1`}
                     title={currentEp?.titulo}
                     frameBorder="0"
                     allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
+                    onLoad={handleIframeLoad}
                     className="w-full h-full"
                   />
                 ) : (
@@ -173,7 +261,6 @@ export default function ProgramSlugPage() {
 
                     <div className="absolute bottom-0 left-0 w-full p-6 md:p-10 bg-linear-to-t from-black via-black/80 to-transparent">
                       <div className="flex items-center gap-4 mb-3">
-                        <span className="px-2 py-0.5 bg-[#00a6f0] text-white text-sm font-black uppercase tracking-tighter">HD 4K</span>
                         <span className="text-md font-black text-white/40 uppercase tracking-widest italic">S{(activeSeason + 1).toString().padStart(2, '0')} : EP{currentEp?.numero?.toString().padStart(2, '0')}</span>
                       </div>
                       <h2 className="text-3xl md:text-4xl font-black uppercase italic tracking-tighter leading-none">{currentEp?.titulo}</h2>
@@ -181,17 +268,32 @@ export default function ProgramSlugPage() {
                   </>
                 )}
 
-                {currentVideoId && (
-                  <div className="absolute bottom-0 left-0 w-full p-6 md:p-10 bg-linear-to-t from-black via-black/80 to-transparent pointer-events-none">
-                    <div className="flex items-center gap-4 mb-3">
-                      <span className="px-2 py-0.5 bg-[#00a6f0] text-white text-sm font-black uppercase tracking-tighter">HD 4K</span>
-                      <span className="text-md font-black text-white/40 uppercase tracking-widest italic">S{(activeSeason + 1).toString().padStart(2, '0')} : EP{currentEp?.numero?.toString().padStart(2, '0')}</span>
-                    </div>
-                    <h2 className="text-3xl md:text-4xl font-black uppercase italic tracking-tighter leading-none">{currentEp?.titulo}</h2>
-                  </div>
+{currentVideoId && (
+                  <AnimatePresence>
+                    {showTitleBar && (
+                      <motion.div
+                        key="title-bar"
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 8 }}
+                        transition={{ duration: 0.4 }}
+                        className="absolute bottom-0 left-0 w-full p-6 md:p-10 bg-linear-to-t from-black via-black/80 to-transparent pointer-events-none"
+                      >
+                        <div className="flex items-center gap-4 mb-3">
+                          <span className="text-md font-black text-white/40 uppercase tracking-widest italic">S{(activeSeason + 1).toString().padStart(2, '0')} : EP{currentEp?.numero?.toString().padStart(2, '0')}</span>
+                        </div>
+                        <h2 className="text-3xl md:text-4xl font-black uppercase italic tracking-tighter leading-none">{currentEp?.titulo}</h2>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 )}
               </motion.div>
             </AnimatePresence>
+
+            {/* MID-ROLL AD OVERLAY */}
+            {showMidroll && (
+              <MidrollAd onFinished={handleMidrollFinished} />
+            )}
           </div>
 
           {/* LADO DIREITO: EPISODE LIST (FIXED SCROLL) */}
