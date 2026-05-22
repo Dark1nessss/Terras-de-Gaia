@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { 
   X, Trophy, Shield, Newspaper, Calendar, 
   ChevronRight, MessageSquare, ArrowLeft, Radio, BookOpen, Phone, 
-  Tv
+  Tv, Home
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,6 +26,12 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
 
   const menuItems: MenuItem[] = [
+    {
+      label: "Início",
+      icon: <Home size={24} />,
+      hasSub: false,
+      path: "/"
+    },
     { 
       label: "Informação", 
       icon: <Newspaper size={24} />, 

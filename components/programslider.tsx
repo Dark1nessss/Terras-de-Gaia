@@ -60,10 +60,10 @@ export function ProgramSlider({ initialPrograms = [] }: ProgramSliderProps) {
           </h2>
           
           <div className="flex gap-3">
-            <button onClick={() => scroll('left')} className="p-3 bg-white/5 hover:bg-white/10 active:scale-95 rounded-full text-white transition-all border border-white/5">
+            <button onClick={() => scroll('left')} className="p-3 bg-white/5 hover:bg-white/10 active:scale-95 rounded-full text-white transition-all border border-white/5 cursor-pointer">
               <ChevronLeft size={20} />
             </button>
-            <button onClick={() => scroll('right')} className="p-3 bg-white/5 hover:bg-white/10 active:scale-95 rounded-full text-white transition-all border border-white/5">
+            <button onClick={() => scroll('right')} className="p-3 bg-white/5 hover:bg-white/10 active:scale-95 rounded-full text-white transition-all border border-white/5 cursor-pointer">
               <ChevronRight size={20} />
             </button>
           </div>

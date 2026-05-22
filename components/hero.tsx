@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LiveDot } from "@/components/live-dot";
 
 export default function Hero() {
   return (
@@ -58,13 +59,10 @@ export default function Hero() {
               before:absolute before:-z-10 before:-inset-x-(--x) before:inset-y-0 before:-skew-x-8 before:bg-[#0055ff]
             ">
               <div className="flex items-center gap-2 md:gap-3">
-                <span className="text-white uppercase italic tracking-tight md:tracking-widest text-xs md:text-[11px] whitespace-nowrap">
+                <span className="text-white uppercase italic tracking-tight md:tracking-widest text-xs md:text-[11px] whitespace-nowrap mt-1">
                   Ver emissão em direto
                 </span>
-                <span className="relative flex size-1.5 md:size-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full size-1.5 md:size-2 bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,1)]"></span>
-                </span>
+                  <LiveDot size="sm" />
               </div>
             </button>
           </Link>
