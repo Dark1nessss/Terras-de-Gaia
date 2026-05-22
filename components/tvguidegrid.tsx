@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useRef, useState, useMemo } from 'react';
+import React, { useRef, useState, useMemo, useEffect, useCallback } from 'react';
 import { Clock, Plus, Minus } from "lucide-react";
 import { TVSidebarInfo } from "./tv-sidebar-info";
+import { LiveDot } from "./live-dot";
 import Image from 'next/image';
 
 const DIAS_SEMANA = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
@@ -53,6 +54,50 @@ export function TVGuideGrid({ initialPrograms = [], maxDays = 7 }: { initialProg
   };
 
   const scrollRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const dragStartX = useRef(0);
+  const dragScrollLeft = useRef(0);
+
+  // Shift+wheel → horizontal scroll
+  const handleWheel = useCallback((e: WheelEvent) => {
+    if (e.shiftKey && scrollRef.current) {
+      e.preventDefault();
+      scrollRef.current.scrollLeft += e.deltaY;
+    }
+  }, []);
+
+  // Mouse-drag → horizontal scroll
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    if (!scrollRef.current) return;
+    isDragging.current = true;
+    dragStartX.current = e.pageX - scrollRef.current.offsetLeft;
+    dragScrollLeft.current = scrollRef.current.scrollLeft;
+  }, []);
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (!isDragging.current || !scrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    scrollRef.current.scrollLeft = dragScrollLeft.current - (x - dragStartX.current) * 1.5;
+  }, []);
+
+  const stopDrag = useCallback(() => { isDragging.current = false; }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.addEventListener('wheel', handleWheel, { passive: false });
+    return () => el.removeEventListener('wheel', handleWheel);
+  }, [handleWheel]);
+
+  useEffect(() => {
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', stopDrag);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', stopDrag);
+    };
+  }, [handleMouseMove, stopDrag]);
 
   return (
     <section className="bg-[#0a0c10] font-nurom border-t border-white/5 select-none relative">
@@ -63,7 +108,8 @@ export function TVGuideGrid({ initialPrograms = [], maxDays = 7 }: { initialProg
         
         <div 
           ref={scrollRef}
-          className="flex overflow-x-auto mb-8 pb-1 scroll-smooth scrollbar-hide snap-x snap-mandatory border-b border-white/10"
+          onMouseDown={handleMouseDown}
+          className="flex overflow-x-auto mb-8 pb-1 scroll-smooth scrollbar-hide snap-x snap-mandatory border-b border-white/10 cursor-grab active:cursor-grabbing"
         >
           {availableDays.map((day, i) => (
             <button 
@@ -110,33 +156,34 @@ export function TVGuideGrid({ initialPrograms = [], maxDays = 7 }: { initialProg
                 <div className="w-1 self-stretch shrink-0" style={{ backgroundColor: item.color || '#00a6f0' }} />
 
                 {/* Image */}
-                <div className="w-48 aspect-video relative shrink-0 bg-black">
+                <div className="w-30 md:w-48 aspect-video relative shrink-0 bg-black">
                   <Image 
                     src={item.image} 
                     alt={item.title}
                     fill
+                    sizes="(max-width: 768px) 96px, 192px"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
                   {isLive && (
                     <div className="absolute top-2 left-2 flex items-center gap-1.5 bg-black/70 px-2 py-1">
-                      <span className="size-1.5 rounded-full bg-red-500 animate-pulse shrink-0" />
+                      <LiveDot size="sm" />
                       <span className="text-[9px] font-black uppercase tracking-[0.3em] text-red-400">Ao Vivo</span>
                     </div>
                   )}
                 </div>
                 
-                <div className="flex flex-col px-8">
-                  <h4 className="text-white font-black uppercase italic text-lg group-hover:text-[#00a6f0] transition-colors leading-tight">
+                <div className="flex flex-col px-4 md:px-8 min-w-0">
+                  <h4 className="text-white font-black uppercase italic text-sm md:text-lg group-hover:text-[#00a6f0] transition-colors leading-tight">
                     {item.title}
                   </h4>
-                  <div className="flex items-center gap-4 text-xs mt-1.5">
-                    <div className="flex items-center gap-1.5 text-white/40">
-                      <Clock size={13} className="text-[#00a6f0]" />
-                      <span className="font-bold uppercase tracking-wider">{item.time}</span>
+                  <div className="flex items-center gap-2 md:gap-4 text-xs mt-1.5">
+                    <div className="flex items-center gap-1 md:gap-1.5 text-white/40">
+                      <Clock size={11} className="text-[#00a6f0] shrink-0" />
+                      <span className="font-bold uppercase tracking-wider text-[10px] md:text-xs">{item.time}</span>
                     </div>
                     {duration > 0 && (
-                      <span className="text-white/25 font-bold uppercase tracking-wider">{duration}min</span>
+                      <span className="text-white/25 font-bold uppercase tracking-wider text-[10px] md:text-xs">{duration}min</span>
                     )}
                   </div>
                 </div>

@@ -44,6 +44,7 @@ function AdMedia({ ad }: { ad: Advertisement }) {
       src={ad.featured_media_url}
       alt={ad.title.rendered}
       fill
+      sizes="(max-width: 640px) 100vw, 300px"
       className="object-cover group-hover:opacity-90 transition-opacity"
       priority={false}
     />

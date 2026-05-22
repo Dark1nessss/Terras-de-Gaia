@@ -23,6 +23,7 @@ export function FeaturedPostSection({ post }: FeaturedPostProps) {
               src={post._embedded["wp:featuredmedia"][0].source_url}
               alt={post.title.rendered}
               fill
+              sizes="(max-width: 768px) 100vw, 33vw"
               className="object-cover group-hover:scale-105 transition-transform"
             />
           </div>

@@ -100,7 +100,7 @@ export default function GlobalError({
               marginBottom: "24px",
             }}
           >
-            Erro Crítico
+            Serviço Indisponível
           </p>
 
           <h1
@@ -114,16 +114,16 @@ export default function GlobalError({
               marginBottom: "24px",
             }}
           >
-            A aplicação<br />
+            Estamos a<br />
             <span style={{ color: "#00a6f0", textShadow: "0 0 60px rgba(0,166,240,0.4)" }}>
-              falhou.
+              trabalhar.
             </span>
           </h1>
 
           <div style={{ width: "64px", height: "1px", background: "rgba(255,255,255,0.1)", margin: "32px 0" }} />
 
           <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "15px", maxWidth: "380px", lineHeight: 1.7, marginBottom: "40px" }}>
-            Ocorreu um erro crítico. Recarregue a página ou contacte-nos se o problema persistir.
+            Os nossos conteúdos estão temporariamente indisponíveis. A equipa já está a resolver o problema — volte mais tarde.
           </p>
 
           {error.digest && (

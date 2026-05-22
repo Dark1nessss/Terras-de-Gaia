@@ -1,5 +1,6 @@
 import { getWordPressAuthHeaders } from './auth';
 import { getOrSetCached, createCacheKey } from './memory-cache';
+import { revistaLogger } from './logger';
 
 const API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || process.env.WORDPRESS_API_URL;
 
@@ -34,7 +35,7 @@ export async function getRevistas(): Promise<Revista[]> {
       });
 
       if (!res.ok) {
-        console.error('Failed to fetch revistas:', res.statusText);
+        revistaLogger.error('Failed to fetch revistas:', res.statusText);
         return [];
       }
 
@@ -46,7 +47,7 @@ export async function getRevistas(): Promise<Revista[]> {
         featured_media_url: revista._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
       }));
     } catch (error) {
-      console.error('Error fetching revistas:', error);
+      revistaLogger.error('Error fetching revistas:', error);
       return [];
     }
   }, 30000); // Memory cache: 30 seconds
@@ -66,7 +67,7 @@ export async function getRevistaBySlug(slug: string): Promise<Revista | null> {
       });
 
       if (!res.ok) {
-        console.error('Failed to fetch revista:', res.statusText);
+        revistaLogger.error('Failed to fetch revista:', res.statusText);
         return null;
       }
 
@@ -79,7 +80,7 @@ export async function getRevistaBySlug(slug: string): Promise<Revista | null> {
         featured_media_url: revista._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
       };
     } catch (error) {
-      console.error('Error fetching revista by slug:', error);
+      revistaLogger.error('Error fetching revista by slug:', error);
       return null;
     }
   }, 30000); // Memory cache: 30 seconds

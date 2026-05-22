@@ -1,3 +1,5 @@
+import { logger } from './logger';
+
 const PT_LOCALE = "pt-PT";
 
 export function formatDate(date: Date | string, format: "full" | "short" = "full"): string {
@@ -61,7 +63,7 @@ export function formatExibicao(dateTimeString: string | null | undefined): strin
     
     return `${dia} às ${hora}`;
   } catch (error) {
-    console.error('[formatExibicao] Error:', error);
+    logger.error('[formatExibicao] Error:', error);
     return "Não especificado";
   }
 }

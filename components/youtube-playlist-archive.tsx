@@ -89,7 +89,7 @@ export default function YouTubePlaylistArchive({
         {/* Section Header */}
         <div className="mb-8">
           <span className="text-[#00a6f0] text-xs font-black uppercase tracking-[0.2em] inline-block mb-3 px-3 py-1 border border-[#00a6f0]/30 rounded-full">
-            ✦ Arquivo
+            ✦ <span className="mt-1">Arquivo</span>
           </span>
           <h2 className="text-3xl md:text-4xl font-black uppercase italic tracking-tighter text-white mb-2">
             Transmissões <span className="text-[#00a6f0]">Anteriores</span>

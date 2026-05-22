@@ -2,6 +2,7 @@ import { Tv, Calendar } from "lucide-react";
 import { ShareButton } from "@/components/share-button";
 import { LivePlayer } from "@/components/live-player";
 import { AdPlaceholder } from "@/components/ad-placeholder";
+import { LiveDot } from "@/components/live-dot";
 import { formatDate } from "@/lib/date";
 import { getTVGuide } from "@/lib/wp";
 
@@ -39,7 +40,7 @@ export default async function LivePage() {
           <div>
             <div className="flex items-center gap-1 mb-2">
               <span className="text-[#00a6f0] text-xs font-black uppercase tracking-widest mt-0.5 ml-2 lg:ml-3">Em Direto</span>
-              <span className="flex h-2 w-2 rounded-full bg-red-600 animate-pulse" />
+              <LiveDot />
             </div>
             <h1 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter leading-none">
               Terras de Gaia <span className="text-[#00a6f0]">TV</span>

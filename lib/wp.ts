@@ -1,6 +1,7 @@
 import { enrichPosts } from "./post-enricher";
 import { getSecureHeaders } from "./auth";
 import { getOrSetCached, createCacheKey } from "./memory-cache";
+import { wpLogger, programasLogger } from "./logger";
 
 const API_URL = process.env.WORDPRESS_API_URL;
 
@@ -10,7 +11,7 @@ export async function getPosts() {
   return getOrSetCached(cacheKey, async () => {
     const res = await fetch(`${API_URL}/posts?_embed`, {
       headers: getSecureHeaders(),
-      next: { revalidate: 180 } // ISR: Revalidate every 180 seconds (3 minutes)
+      next: { revalidate: 300 } // ISR: 5 minutes
     });
 
     if (!res.ok) {
@@ -29,7 +30,7 @@ export async function getPostBySlug(slug: string) {
     try {
       const res = await fetch(`${API_URL}/posts?slug=${slug}&_embed`, {
         headers: getSecureHeaders(),
-        next: { revalidate: 180 } 
+        next: { revalidate: 300 } 
       });
 
       if (!res.ok) {
@@ -40,6 +41,34 @@ export async function getPostBySlug(slug: string) {
       const post = posts[0] || null;
 
       if (post) {
+        // Try to fetch post meta separately (needed for td_post_video, etc.)
+        // Uses context=edit — requires edit_posts capability on the application password
+        try {
+          const metaRes = await fetch(
+            `${API_URL}/posts/${post.id}?context=edit&_fields=id,meta,format`,
+            { headers: getSecureHeaders(), next: { revalidate: 300 } }
+          );
+          if (metaRes.ok) {
+            const metaData = await metaRes.json();
+            if (metaData.meta) post.meta = metaData.meta;
+            if (metaData.format) post.format = metaData.format;
+          } else {
+            wpLogger.warn(
+              `[video-meta] context=edit fetch returned ${metaRes.status} for post ${post.id}. ` +
+              `Grant edit_posts to the app password, or add to functions.php: ` +
+              `register_post_meta('post','td_post_video',['show_in_rest'=>true,'single'=>true,'type'=>'string']);`
+            );
+          }
+        } catch {
+          // network error — extractVideoUrl will fall back to content scanning
+        }
+
+        // Debug: log what video-related data the API returned
+        wpLogger.info(`[video-meta] post "${post.slug}" | format="${post.format}" | ` +
+          `meta keys=[${Object.keys(post.meta ?? {}).join(', ') || 'none'}] | ` +
+          `content length=${(post.content?.rendered ?? '').length}`
+        );
+
         post.author_name = await extractAuthorName(post);
         post.category = extractCategory(post);
         
@@ -47,27 +76,27 @@ export async function getPostBySlug(slug: string) {
         const categories = extractCategories(post);
         if (categories.length > 0) {
           const categorySlug = categories[0].slug;
-          console.log("Fetching related posts for category:", categorySlug);
+          wpLogger.debug("Fetching related posts for category:", categorySlug);
           
           const relatedRes = await fetch(
             `${API_URL}/posts?category_slug=${categorySlug}&_embed&per_page=6`,
             { 
               headers: getSecureHeaders(),
-              next: { revalidate: 180 } // Every 3 minutes to keep related posts fresh
+              next: { revalidate: 300 } // Keep related posts fresh
             }
           );
           
           if (relatedRes.ok) {
             const relatedPostsData = await relatedRes.json();
             post.relatedPosts = await enrichPosts(relatedPostsData);
-            console.log("Related posts fetched:", post.relatedPosts.length);
+            wpLogger.debug("Related posts fetched:", post.relatedPosts.length);
           }
         }
       }
 
       return post ? (await enrichPosts([post]))[0] : null;
     } catch (error) {
-      console.error("Erro ao obter o post:", error);
+      wpLogger.error("Erro ao obter o post:", error);
       return null;
     }
   }, 30000); // Memory cache: 30 seconds
@@ -76,17 +105,17 @@ export async function getPostBySlug(slug: string) {
 export async function getLeagueTable() {
   try {
     const res = await fetch(`${API_URL}/leagues?_embed`, {
-      next: { revalidate: 180 }
+      next: { revalidate: 300 }
     });
 
     if (!res.ok) {
-      console.warn("A rota das ligas não foi encontrada. Estado da API:", res.status);
-      return []; // Retorna um array vazio em vez de um erro fatal
+      wpLogger.warn("A rota das ligas não foi encontrada. Estado da API:", res.status);
+      return [];
     }
 
     return await res.json();
   } catch (error) {
-    console.error("Erro ao obter a tabela no WP:", error);
+    wpLogger.error("Erro ao obter a tabela no WP:", error);
     return []; // Retorna um array vazio para não quebrar o .map()
   }
 }
@@ -124,7 +153,7 @@ export async function getPostsByCategoryPaginated(categorySlug: string, page: nu
         `${API_URL}/posts?categories=${categoryParam}&_embed&per_page=${perPage}&page=${page}&orderby=date&order=desc`,
         { 
           headers: getSecureHeaders(),
-          next: { revalidate: 180 } 
+          next: { revalidate: 300 }
         }
       );
 
@@ -136,7 +165,7 @@ export async function getPostsByCategoryPaginated(categorySlug: string, page: nu
 
       return { posts: enriched, totalPosts };
     } catch (error) {
-      console.error("Erro no fetch paginado:", error);
+      wpLogger.error("Erro no fetch paginado:", error);
       return { posts: [], totalPosts: 0 };
     }
   }, 30000); // Memory cache: 30 seconds
@@ -228,7 +257,7 @@ export async function getCategoryTitleBySlug(slug: string): Promise<string> {
     categoryCache.set(slug, title);
     return title;
   } catch (error) {
-    console.error("Error fetching category title:", error);
+    wpLogger.error("Error fetching category title:", error);
     categoryCache.set(slug, slug); // Cache the slug as fallback
     return slug;
   }
@@ -263,7 +292,7 @@ async function getUserById(userId: number): Promise<string> {
       const user = await res.json();
       return user.name || "Redação";
     } catch (error) {
-      console.error("Erro ao obter usuário:", error);
+      wpLogger.error("Erro ao obter usuário:", error);
       return "Redação";
     }
   }, 3600000); // Memory cache: 1 hour for user data
@@ -273,23 +302,23 @@ export async function getPrograms() {
   const cacheKey = createCacheKey('wp-programs');
 
   return getOrSetCached(cacheKey, async () => {
-    console.log("Fetching programs from:", `${API_URL}/programs?_embed`);
+    wpLogger.debug("Fetching programs from:", `${API_URL}/programs?_embed`);
     try {
       const res = await fetch(`${API_URL}/programs?_embed`, {
         headers: getSecureHeaders(),
-        next: { revalidate: 180 }
+        next: { revalidate: 300 }
       });
 
       if (!res.ok) {
-        console.warn("Programs endpoint not found. Status:", res.status);
+        wpLogger.warn("Programs endpoint not found. Status:", res.status);
         return [];
       }
 
       const programs = await res.json();
-      console.log("Programs fetched:", programs.length);
+      wpLogger.debug("Programs fetched:", programs.length);
       return programs;
     } catch (error) {
-      console.error("Error fetching programs:", error);
+      wpLogger.error("Error fetching programs:", error);
       return [];
     }
   }, 30000); // Memory cache: 30 seconds
@@ -326,7 +355,7 @@ function formatACFDate(rawDate: string): string {
 
     return `${nomeDia}, ${diaMes}`;
   } catch (e) {
-    console.error("Erro ao processar data:", rawDate);
+    wpLogger.error("Erro ao processar data:", rawDate);
     return rawDate;
   }
 }
@@ -390,7 +419,7 @@ export async function getTVGuide() {
       return a.hora_inicio.localeCompare(b.hora_inicio);
     });
     } catch (error) {
-      console.error("Erro em getTVGuide:", error);
+      wpLogger.error("Erro em getTVGuide:", error);
       return [];
     }
   }, 30000); // Memory cache: 30 seconds
@@ -402,7 +431,7 @@ function parseTemporadas(jsonString: string | undefined) {
   try {
     return JSON.parse(jsonString);
   } catch (error) {
-    console.error('[parseTemporadas] Error parsing temporadas JSON:', error);
+    wpLogger.error('[parseTemporadas] Error parsing temporadas JSON:', error);
     return [];
   }
 }
@@ -412,59 +441,58 @@ export async function getProgramas() {
   const cacheKey = createCacheKey('wp-programas');
 
   return getOrSetCached(cacheKey, async () => {
-    const fetchUrl = `${API_URL}/programas?per_page=100`;
-    const headers = getSecureHeaders();
-    console.log('[getProgramas] URL:', fetchUrl);
-    console.log('[getProgramas] Headers sent (auth redacted):', {
-      ...headers,
-      ...(headers['Authorization'] ? { Authorization: 'Basic [REDACTED]' } : {}),
-    });
     try {
-      const res = await fetch(fetchUrl, {
-        headers,
-        next: { revalidate: 300 } // Cache 5 minutes
+      const res = await fetch(`${API_URL}/programas?per_page=100&_embed`, {
+        headers: getSecureHeaders(),
+        next: { revalidate: 300 },
       });
 
-      console.log('[getProgramas] Response status:', res.status, res.statusText);
-      console.log('[getProgramas] Response headers:', Object.fromEntries(res.headers.entries()));
-
       if (!res.ok) {
-        const body = await res.text();
-        console.warn('[getProgramas] Non-OK body:', body);
+        programasLogger.error(`[getProgramas] Non-OK response: ${res.status}`);
         return [];
       }
 
       const programas = await res.json();
-      console.log('[getProgramas] Count returned:', programas.length);
+      programasLogger.debug(`[getProgramas] Count returned: ${programas.length}`);
+      programasLogger.debug(
+        `[getProgramas] featured_media IDs: [${programas.map((p: any) => p.featured_media).join(', ')}]`
+      );
+      programasLogger.debug(
+        `[getProgramas] _embed image urls: [${programas.map((p: any) => p._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'NONE').join(', ')}]`
+      );
 
-      // Collect all featured_media IDs, batch-fetch their URLs in one request
-      const mediaIds: number[] = programas
-        .map((p: any) => p.featured_media)
-        .filter((id: any) => typeof id === 'number' && id > 0);
+      // Step 1: extract image URLs from _embed (fast path)
+      let mapped = programas.map((prog: any) => ({
+        ...prog,
+        featured_image_url: prog._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
+        temporadas: parseTemporadas(prog.acf?.temporadas),
+      }));
 
-      const mediaUrlMap: Record<number, string> = {};
+      // Step 2: fallback — batch-fetch media for any program _embed didn't resolve
+      const missingIds: number[] = mapped
+        .filter((p: any) => !p.featured_image_url && typeof p.featured_media === 'number' && p.featured_media > 0)
+        .map((p: any) => p.featured_media as number);
 
-      if (mediaIds.length > 0) {
+      if (missingIds.length > 0) {
+        programasLogger.debug(`[getProgramas] _embed missed ${missingIds.length} images — batch-fetching`);
         const mediaRes = await fetch(
-          `${API_URL}/media?include=${mediaIds.join(',')}&per_page=${mediaIds.length}&_fields=id,source_url`,
+          `${API_URL}/media?include=${missingIds.join(',')}&per_page=${missingIds.length}&_fields=id,source_url`,
           { headers: getSecureHeaders() }
         );
         if (mediaRes.ok) {
           const mediaItems = await mediaRes.json();
+          const mediaUrlMap: Record<number, string> = {};
           mediaItems.forEach((m: any) => { mediaUrlMap[m.id] = m.source_url; });
-          console.log('[getProgramas] Media URLs resolved:', mediaUrlMap);
-        } else {
-          console.warn('[getProgramas] Media batch fetch failed:', mediaRes.status);
+          mapped = mapped.map((p: any) => ({
+            ...p,
+            featured_image_url: p.featured_image_url || mediaUrlMap[p.featured_media] || '',
+          }));
         }
       }
 
-      return programas.map((prog: any) => ({
-        ...prog,
-        featured_image_url: mediaUrlMap[prog.featured_media] || '',
-        temporadas: parseTemporadas(prog.acf?.temporadas),
-      }));
+      return mapped;
     } catch (error) {
-      console.error("Error fetching programas:", error);
+      programasLogger.error('[getProgramas] Error fetching programas:', error);
       return [];
     }
   }, 30000); // Memory cache: 30 seconds
@@ -475,42 +503,40 @@ export async function getProgramaBySlug(slug: string) {
 
   return getOrSetCached(cacheKey, async () => {
     try {
-      console.log("Fetching programa by slug:", `${API_URL}/programas?slug=${slug}`);
-      const res = await fetch(`${API_URL}/programas?slug=${slug}`, {
+      const res = await fetch(`${API_URL}/programas?slug=${slug}&_embed`, {
         headers: getSecureHeaders(),
-        next: { revalidate: 300 } // Cache 5 minutes
+        next: { revalidate: 300 },
       });
 
-      if (!res.ok) {
-        throw new Error("Falha ao obter o programa.");
-      }
+      if (!res.ok) return null;
 
-      const programas = await res.json();
-      const programa = programas[0] || null;
+      const data = await res.json();
+      const programa = data[0] || null;
 
-      if (programa) {
-        // Fetch featured image directly (same approach as getProgramas)
-        let featured_image_url = '';
-        if (programa.featured_media) {
-          const mediaRes = await fetch(
-            `${API_URL}/media/${programa.featured_media}?_fields=id,source_url`,
-            { headers: getSecureHeaders() }
-          );
-          if (mediaRes.ok) {
-            const mediaData = await mediaRes.json();
-            featured_image_url = mediaData.source_url || '';
-          }
+      if (!programa) return null;
+
+      // Try _embed first, fall back to direct media fetch
+      let featured_image_url: string =
+        programa._embedded?.['wp:featuredmedia']?.[0]?.source_url || '';
+
+      if (!featured_image_url && programa.featured_media > 0) {
+        const mediaRes = await fetch(
+          `${API_URL}/media/${programa.featured_media}?_fields=id,source_url`,
+          { headers: getSecureHeaders() }
+        );
+        if (mediaRes.ok) {
+          const mediaData = await mediaRes.json();
+          featured_image_url = mediaData.source_url || '';
         }
-        return {
-          ...programa,
-          featured_image_url,
-          temporadas: parseTemporadas(programa.acf?.temporadas),
-        };
       }
 
-      return null;
+      return {
+        ...programa,
+        featured_image_url,
+        temporadas: parseTemporadas(programa.acf?.temporadas),
+      };
     } catch (error) {
-      console.error("Erro ao obter o programa:", error);
+      programasLogger.error('[getProgramaBySlug] Error:', error);
       return null;
     }
   }, 30000); // Memory cache: 30 seconds
@@ -547,7 +573,7 @@ export async function getAdvertisements() {
         featured_image_url: ad._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
       }));
     } catch (error) {
-      console.error('[WP] Error fetching advertisements:', error);
+      wpLogger.error('[WP] Error fetching advertisements:', error);
       return [];
     }
   }, 30000); // Memory cache: 30 seconds

@@ -109,10 +109,10 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               </button>
             ) : (
               <Link href="/" onClick={handleClose} className="flex items-center gap-3">
-                <Image src="/logo-tg.png" alt="Logo" width={48} height={48} className="object-contain h-auto" />
+                <Image src="/logo-tg.png" alt="Logo" width={48} height={48} className="object-contain" />
               </Link>
             )}
-            <span className="font-bold uppercase text-sm tracking-wide mt-[4px]">{activeSubmenu || "Terras de Gaia"}</span>
+            <span className="font-bold uppercase text-sm tracking-wide mt-1.5">{activeSubmenu || "Terras de Gaia"}</span>
           </div>
           <button onClick={handleClose} className="p-2 text-white/40 hover:text-white transition-colors cursor-pointer">
             <X size={28} strokeWidth={1.5} />

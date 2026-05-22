@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Tv } from "lucide-react";
+import { parseYouTubeId } from "@/lib/video";
 
 const DIAS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 
@@ -10,13 +11,6 @@ function todayLabel(): string {
   const day = d.getDate().toString().padStart(2, '0');
   const month = (d.getMonth() + 1).toString().padStart(2, '0');
   return DIAS[d.getDay()] + ', ' + day + '/' + month;
-}
-
-function parseYouTubeId(url: string): string | null {
-  if (!url) return null;
-  if (/^[a-zA-Z0-9_-]{11}$/.test(url)) return url;
-  const m = url.match(/(?:v=|youtu\.be\/|embed\/|live\/|shorts\/)([a-zA-Z0-9_-]{11})/);
-  return m ? m[1] : null;
 }
 
 type StreamSource =

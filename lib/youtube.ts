@@ -3,6 +3,10 @@
  * Fetches playlist videos from YouTube Data API v3
  */
 
+import { logger } from './logger';
+
+const youtubeLogger = logger.getSubLogger({ name: 'youtube' });
+
 interface YouTubeVideo {
   id: string;
   title: string;
@@ -31,7 +35,7 @@ export async function getPlaylistVideos(
   maxResults: number = 20
 ): Promise<PlaylistResponse> {
   if (!YOUTUBE_API_KEY) {
-    console.error('[YOUTUBE] API Key not configured');
+    youtubeLogger.error('[YOUTUBE] API Key not configured');
     return { videos: [] };
   }
 
@@ -79,7 +83,7 @@ export async function getPlaylistVideos(
       nextPageToken: data.nextPageToken,
     };
   } catch (error) {
-    console.error('[YOUTUBE] Playlist fetch error:', error);
+    youtubeLogger.error('[YOUTUBE] Playlist fetch error:', error);
     return { videos: [] };
   }
 }
@@ -121,7 +125,7 @@ export async function getVideoDetails(videoId: string) {
       publishedAt: item.snippet.publishedAt,
     };
   } catch (error) {
-    console.error('[YOUTUBE] Video details fetch error:', error);
+    youtubeLogger.error('[YOUTUBE] Video details fetch error:', error);
     return null;
   }
 }

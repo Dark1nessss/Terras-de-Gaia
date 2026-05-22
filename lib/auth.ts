@@ -4,6 +4,8 @@
  */
 
 import { NextRequest } from 'next/server';
+import { authLogger } from './logger';
+import { randomBytes } from 'crypto';
 
 /**
  * Verify request comes from internal Next.js server
@@ -15,9 +17,7 @@ export function isInternalRequest(request: NextRequest): boolean {
 
   // No token configured = no authentication required (development mode)
   if (!expectedToken) {
-    console.warn(
-      '[SECURITY] No INTERNAL_API_TOKEN set. API routes are unprotected. Set this in production!'
-    );
+    authLogger.warn('[SECURITY] No INTERNAL_API_TOKEN set. API routes are unprotected. Set this in production!');
     return true;
   }
 
@@ -33,7 +33,7 @@ export function getWordPressAuthHeaders(): Record<string, string> {
   const wpPassword = process.env.WP_APP_PASSWORD;
 
   if (!wpUser || !wpPassword) {
-    console.error('[AUTH] Missing WP_USER or WP_APP_PASSWORD environment variables');
+    authLogger.error('[AUTH] Missing WP_USER or WP_APP_PASSWORD environment variables');
     return {};
   }
 
@@ -83,20 +83,14 @@ export function validateSecuritySetup(): void {
   }
 
   if (warnings.length > 0) {
-    console.warn('[SECURITY WARNINGS]');
-    warnings.forEach((w) => console.warn(`  - ${w}`));
+    warnings.forEach((w) => authLogger.warn(`[SECURITY] ${w}`));
   }
 }
 
 /**
- * Generate secure random token for INTERNAL_API_TOKEN
+ * Generate cryptographically secure random token for INTERNAL_API_TOKEN
  * Run once and add to .env.local
  */
 export function generateSecureToken(length: number = 32): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let token = '';
-  for (let i = 0; i < length; i++) {
-    token += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return token;
+  return randomBytes(length).toString('base64url').slice(0, length);
 }

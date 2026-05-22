@@ -21,7 +21,8 @@ export function NewsFeed({ initialPosts }: { initialPosts: any[] }) {
                 src={activePost._embedded['wp:featuredmedia'][0].source_url}
                 alt={activePost.title?.rendered || "News"}
                 fill
-                priority // Performance: Loads main image faster
+                priority
+                sizes="(max-width: 1024px) 100vw, 66vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
             ) : (

@@ -4,14 +4,11 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AdPlaceholder } from '@/components/ad-placeholder';
 import type { Program } from '@/lib/programas';
-import { Play, Plus, Info, ChevronRight, MonitorPlay, Star, Calendar } from 'lucide-react';
-import { WeatherWidgetTile } from '@/components/weather-widget';
+import { Play, Plus, MonitorPlay, Layers, ArrowRight, Tv } from 'lucide-react';
 
 export default function ProgramsPage() {
   const [programs, setPrograms] = useState<Program[]>([]);
-  const [hoveredId, setHoveredId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [currentFeaturedIndex, setCurrentFeaturedIndex] = useState(0);
 
@@ -123,7 +120,11 @@ export default function ProgramsPage() {
 
         {/* O Carrossel de Expansão */}
         <div className="flex w-full h-[450px] md:h-[550px] overflow-x-auto no-scrollbar px-6 md:px-[5%] gap-2 group/list">
-          {programs.map((prog) => (
+          {isLoading
+            ? Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="min-w-[320px] h-full flex-shrink-0 bg-zinc-900/60 border border-white/5 animate-pulse" />
+              ))
+            : programs.map((prog) => (
             <motion.div
               key={prog.id}
               layout
@@ -190,13 +191,12 @@ export default function ProgramsPage() {
             </motion.div>
           ))}
           
-          {/* Card Final de "Explorar Mais" */}
-          <div className="min-w-[300px] h-full flex items-center justify-center bg-white/5 border border-dashed border-white/10 hover:bg-[#00a6f0]/10 transition-colors cursor-pointer">
-             <div className="text-center space-y-4">
-                <MonitorPlay className="mx-auto text-white/20" size={40} />
-                <span className="text-[10px] font-black uppercase tracking-[0.4em] block text-white/40">Ver Tudo</span>
-             </div>
-          </div>
+          {/* Card Final de "Ver Tudo" */}
+          <Link href="/programacao" className="min-w-[300px] h-full flex flex-col items-center justify-center bg-white/5 border border-dashed border-white/10 hover:bg-[#00a6f0]/10 hover:border-[#00a6f0]/40 transition-all duration-300 gap-4 group">
+            <MonitorPlay className="text-white/20 group-hover:text-[#00a6f0] transition-colors" size={40} />
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 group-hover:text-[#00a6f0] transition-colors">Ver Tudo</span>
+            <ArrowRight size={16} className="text-white/10 group-hover:text-[#00a6f0] group-hover:translate-x-1 transition-all" />
+          </Link>
         </div>
 
         {/* Dica de Navegação */}
@@ -206,80 +206,83 @@ export default function ProgramsPage() {
         </div>
       </section>
 
-      {/* 3. SECTION: THE PULSE (Exploração Sensorial) */}
-      <section className="py-20 bg-[#0a0c10] relative overflow-hidden border-t border-white/5">
+      {/* 3. SECTION: CATEGORIAS */}
+      <section className="py-24 bg-[#0a0c10] relative border-t border-white/5">
         <div className="container mx-auto px-6">
-          
-          <div className="mb-16">
-            <h2 className="text-md font-black uppercase tracking-[0.6em] text-[#00a6f0] mb-4">Gaia em Tempo Real</h2>
-            <div className="h-px w-full bg-linear-to-r from-[#00a6f0] to-transparent opacity-30" />
+
+          {/* Header */}
+          <div className="flex items-end justify-between mb-16">
+            <div className="space-y-2">
+              <span className="text-[#00a6f0] text-[10px] font-black uppercase tracking-[0.5em]">Explorar</span>
+              <h2 className="text-5xl md:text-6xl font-black uppercase italic tracking-tighter text-white">
+                Browse por <span className="text-transparent outline-text-vibrant">Categoria</span>
+              </h2>
+            </div>
+            <Link href="/programacao" className="hidden md:flex items-center gap-2 text-white/40 hover:text-[#00a6f0] transition-colors text-xs font-black uppercase tracking-widest">
+              <span className="mt-1">Ver Programação</span> <ArrowRight size={14} />
+            </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 auto-rows-[160px]">
-            
-            {/* Tile 1: Grande Destaque / Citação */}
-            <motion.div 
-              whileHover={{ scale: 0.98 }}
-              className="col-span-2 row-span-2 bg-zinc-900 border border-white/10 p-8 flex flex-col justify-between group relative overflow-hidden"
-            >
-              <div className="relative z-10">
-                <span className="text-[10px] font-black uppercase text-[#00a6f0]">Trending Agora</span>
-                <p className="text-2xl md:text-4xl font-black uppercase italic italic tracking-tighter mt-6 leading-none">
-                  &quot;O segredo da <span className="text-transparent outline-text-vibrant">gastronomia</span> de Gaia está nas pessoas.&quot;
-                </p>
+          {/* Dynamic category cards from programs data */}
+          {(() => {
+            const categories = Array.from(
+              programs.reduce((map, prog) => {
+                const cat = prog.acf?.categoria_programa || 'Sem Categoria';
+                if (!map.has(cat)) map.set(cat, []);
+                map.get(cat)!.push(prog);
+                return map;
+              }, new Map<string, Program[]>())
+            );
+
+            return (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {categories.map(([cat, progs], i) => (
+                  <motion.div
+                    key={cat}
+                    whileHover={{ y: -4 }}
+                    transition={{ duration: 0.3 }}
+                    className="group relative border border-white/10 hover:border-[#00a6f0]/50 bg-zinc-900/40 hover:bg-zinc-900/80 transition-all duration-300 p-8 cursor-pointer overflow-hidden"
+                  >
+                    <div className="absolute top-0 left-0 h-0.5 w-0 group-hover:w-full bg-[#00a6f0] transition-all duration-500" />
+                    <div className="absolute -right-6 -bottom-6 text-[6rem] font-black italic opacity-[0.04] group-hover:opacity-[0.08] transition-opacity select-none">
+                      {String(i + 1).padStart(2, '0')}
+                    </div>
+                    <div className="flex items-start justify-between mb-6">
+                      <Layers size={20} className="text-[#00a6f0]" />
+                      <ArrowRight size={16} className="text-white/20 group-hover:text-[#00a6f0] group-hover:translate-x-1 transition-all" />
+                    </div>
+                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 mb-2">
+                      {progs.length} {progs.length === 1 ? 'Programa' : 'Programas'}
+                    </p>
+                    <h3 className="text-2xl font-black uppercase italic tracking-tighter">{cat}</h3>
+                    <div className="mt-6 flex flex-wrap gap-2">
+                      {progs.slice(0, 3).map(p => (
+                        <span key={p.id} className="text-[9px] font-bold uppercase tracking-widest text-white/30 border border-white/10 px-2 py-1">
+                          {p.title.rendered}
+                        </span>
+                      ))}
+                    </div>
+                  </motion.div>
+                ))}
+
+                {/* Platform CTA card */}
+                <motion.div
+                  whileHover={{ y: -4 }}
+                  transition={{ duration: 0.3 }}
+                  className="group border border-dashed border-[#00a6f0]/30 hover:border-[#00a6f0] bg-[#00a6f0]/5 hover:bg-[#00a6f0]/10 transition-all duration-300 p-8 flex flex-col justify-between cursor-pointer"
+                >
+                  <Tv size={24} className="text-[#00a6f0]" />
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#00a6f0]/60 mb-2">Gaia Play</p>
+                    <h3 className="text-2xl font-black uppercase italic tracking-tighter mb-4">Conteúdo On Demand</h3>
+                    <Link href="/live" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#00a6f0] hover:gap-4 transition-all">
+                      Ver em Direto <ArrowRight size={12} />
+                    </Link>
+                  </div>
+                </motion.div>
               </div>
-              <div className="flex items-center gap-4 relative z-10">
-                <div className="size-10 rounded-full bg-white/10" />
-                <span className="text-[10px] font-bold uppercase opacity-40">Chef do Mesa Posta</span>
-              </div>
-              {/* Decorativo de fundo */}
-              <div className="absolute -right-10 -bottom-10 text-[15rem] font-black italic opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">&quot;</div>
-            </motion.div>
-
-            {/* Tile 2: Foto de Bastidores */}
-            <div className="col-span-2 row-span-3 relative group overflow-hidden border border-white/10">
-              <Image 
-                src="/backstage.jpg" 
-                alt="Backstage" 
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover opacity-50 group-hover:scale-110 group-hover:opacity-100 transition-all duration-1000 grayscale group-hover:grayscale-0" 
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-transparent" />
-              <div className="absolute bottom-6 left-6 font-black uppercase italic text-xs tracking-widest">
-                #Bastidores <br /> <span className="text-[#00a6f0]">Grande Angular</span>
-              </div>
-            </div>
-
-            {/* Tile 3: Estatística / Counter */}
-            <div className="col-span-2 row-span-1 bg-[#00a6f0] p-6 flex items-center justify-between group cursor-help">
-              <div className="space-y-1">
-                <span className="text-[40px] font-black italic leading-none text-white tracking-tighter">+250k</span>
-                <p className="text-[9px] font-black uppercase text-black/60 tracking-widest leading-none">Minutos de Streaming</p>
-              </div>
-              <Star size={32} className="text-white opacity-20 group-hover:rotate-90 transition-transform duration-500" />
-            </div>
-
-            {/* Tile 4: Pequena Curiosidade */}
-            <div className="col-span-1 row-span-2 bg-zinc-900 border border-white/5 p-6 flex flex-col justify-end gap-4 hover:border-[#00a6f0]/50 transition-colors">
-              <Calendar className="text-[#00a6f0]" size={20} />
-              <p className="text-[10px] font-bold uppercase leading-relaxed text-white/40">
-                Próximo Evento ao Vivo: <br />
-                <span className="text-white font-black italic text-xs uppercase tracking-tighter">15 MAIO</span>
-              </p>
-            </div>
-
-            {/* Tile 5: Minimal Play Button */}
-            <div className="col-span-1 row-span-1 border border-white/10 flex items-center justify-center group hover:bg-white transition-all duration-500">
-               <Play size={24} className="text-white group-hover:text-black transition-colors" fill="currentColor" />
-            </div>
-
-            {/* Tile 6: Local weather/vibe */}
-            <div className="col-span-2 row-span-1 bg-zinc-900/50 border border-white/10 p-6 flex items-center gap-6">
-               <WeatherWidgetTile />
-            </div>
-
-          </div>
+            );
+          })()}
         </div>
       </section>
 

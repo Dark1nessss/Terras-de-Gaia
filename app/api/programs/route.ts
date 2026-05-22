@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getProgramas, getProgramaBySlug, getFeaturedProgramas } from '@/lib/wp';
+import { programasLogger } from '@/lib/logger';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,7 +23,7 @@ export async function GET(request: Request) {
     const programas = await getProgramas();
     return NextResponse.json(programas);
   } catch (error) {
-    console.error('[API] Programs API error:', error);
+    programasLogger.error('[API] Programs API error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch programs' },
       { status: 500 }

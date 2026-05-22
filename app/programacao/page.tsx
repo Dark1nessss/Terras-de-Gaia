@@ -1,5 +1,6 @@
 import { getTVGuide } from '@/lib/wp';
 import { TVGuideGrid } from '@/components/tvguidegrid';
+import { LiveDot } from '@/components/live-dot';
 import Link from 'next/link';
 
 export const revalidate = 300;
@@ -34,8 +35,8 @@ export default async function ProgramacaoPage() {
 
           {/* Label */}
           <span className="flex items-center gap-3 text-[#00a6f0] text-[10px] font-black uppercase tracking-[0.5em] mb-8">
-            <span className="size-2 bg-[#00a6f0] rounded-full" />
-            Terras de Gaia TV
+            <LiveDot variant="broadcast" />
+            <span className="mt-1">Terras de Gaia TV</span>
           </span>
 
           {/* Title + inline meta */}
@@ -49,8 +50,8 @@ export default async function ProgramacaoPage() {
               {liveNow ? (
                 <div className="mb-5">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="size-2 rounded-full bg-red-500 animate-pulse shrink-0" />
-                    <span className="text-[9px] font-black uppercase tracking-[0.45em] text-red-400">Em Emissão</span>
+                    <LiveDot />
+                    <span className="text-[9px] font-black uppercase tracking-[0.45em] text-red-400 mt-1">Em Emissão</span>
                   </div>
                   <p className="text-white font-black uppercase italic text-2xl leading-tight tracking-tighter">{liveNow.title}</p>
                   <p className="text-white/30 text-xs font-bold mt-1 tracking-widest">{liveNow.time}</p>
@@ -100,8 +101,8 @@ export default async function ProgramacaoPage() {
             <p className="text-white font-black uppercase italic text-2xl tracking-tighter">Acompanha a emissão ao vivo</p>
           </div>
           <Link href="/live">
-            <button className="flex items-center gap-3 bg-[#00a6f0] text-white px-10 py-4 font-black uppercase italic tracking-widest text-xs hover:bg-white hover:text-black transition-all cursor-pointer">
-              <span className="size-2 rounded-full bg-red-600 animate-pulse" />
+            <button className="flex items-center gap-3 bg-[#00a6f0] text-white px-10 py-4 font-black uppercase italic tracking-widest text-xs transition-all cursor-pointer">
+              <LiveDot variant={liveNow ? 'live' : 'inactive'} />
               <span className="mt-1">Ver em Direto</span>
             </button>
           </Link>

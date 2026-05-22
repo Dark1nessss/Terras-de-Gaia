@@ -33,8 +33,8 @@ export default function Error({
         style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, #fff 2px, #fff 3px)" }}
       />
 
-      {/* Red-tinted glow for error state */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] max-w-3xl h-[60vh] bg-red-500/5 blur-[140px] rounded-full pointer-events-none" />
+      {/* Blue glow for service outage */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] max-w-3xl h-[60vh] bg-[#00a6f0]/5 blur-[140px] rounded-full pointer-events-none" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40vw] max-w-xl h-[40vh] bg-[#00a6f0]/4 blur-[100px] rounded-full pointer-events-none" />
 
       {/* Ghost text */}
@@ -44,21 +44,21 @@ export default function Error({
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center text-center gap-0">
-        <p className="text-red-400/80 text-[10px] font-black uppercase tracking-[0.6em] mb-6">
-          Erro Interno
+        <p className="text-[#00a6f0]/80 text-[10px] font-black uppercase tracking-[0.6em] mb-6">
+          Serviço Indisponível
         </p>
 
         <h1 className="text-[clamp(3rem,12vw,10rem)] font-black uppercase italic leading-[0.82] tracking-tighter mb-6">
-          Algo correu<br />
+          Estamos a<br />
           <span className="text-[#00a6f0] drop-shadow-[0_0_50px_rgba(0,166,240,0.35)]">
-            mal.
+            trabalhar.
           </span>
         </h1>
 
         <div className="w-16 h-px bg-white/10 my-8" />
 
         <p className="text-white/40 text-base max-w-md leading-relaxed mb-10">
-          Ocorreu um erro inesperado. Pode tentar novamente ou regressar à página inicial.
+          Os nossos conteúdos estão temporariamente indisponíveis. A equipa já está a resolver o problema — volte mais tarde.
         </p>
 
         {error.digest && (

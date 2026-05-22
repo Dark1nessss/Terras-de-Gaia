@@ -57,7 +57,7 @@ export default function NotFound() {
             className="group flex items-center gap-2 bg-[#00a6f0] text-white text-[11px] font-black uppercase tracking-[0.3em] px-8 py-4 hover:bg-[#00a6f0]/80 transition-colors duration-300"
           >
             <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform duration-300" />
-            Início
+            <span className="mt-1">Início</span>
           </Link>
         </div>
       </div>

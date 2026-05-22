@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="pt"
       className={`${nuromFont.variable} h-full antialiased`}
     >
       <head>

@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { VideoCard } from "./video-card";
 import { LoadingSpinner } from "@/components/loading-spinner";
-import { getCachedData, setCachedData } from "@/lib/cache";
+import { setCachedData } from "@/lib/cache";
 import { ArrowRight } from "lucide-react";
 
 interface Post {
@@ -126,7 +126,7 @@ export function InfiniteScrollPosts({
               src={post._embedded["wp:featuredmedia"][0].source_url}
               alt={post.title.rendered}
               fill
-              sizes={showVideoCards ? "(max-width: 768px) 100vw, 50vw" : ""}
+              sizes={showVideoCards ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"}
               className="object-cover group-hover:scale-105 transition-transform"
             />
           )}
@@ -170,7 +170,7 @@ export function InfiniteScrollPosts({
             onClick={loadMorePosts}
             className="px-8 py-3 border border-white/20 hover:border-white/40 font-black uppercase text-sm flex items-center gap-2 transition-all group cursor-pointer hover:text-[#00a6f0]"
           >
-            <span className="transition-colors mt-[3px]">Carregar Mais</span>
+            <span className="transition-colors mt-0.75">Carregar Mais</span>
             <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
           </button>
         </div>

@@ -80,7 +80,7 @@ export function ProgramsPortal() {
           <div className="lg:col-span-6 flex flex-col justify-center">
             <span className="flex items-center gap-3 text-[#00a6f0] text-xs font-black uppercase tracking-[0.5em] mb-8 drop-shadow-[0_0_8px_rgba(0,166,240,0.4)]">
               <span className="size-2 bg-[#00a6f0] rounded-full animate-pulse" />
-              Conteúdo On Demand
+              <span className="mt-1">Conteúdo On Demand</span>
             </span>
             
             <h2 className="text-7xl md:text-[8rem] lg:text-[9.5rem] font-black uppercase italic leading-[0.75] tracking-tighter mb-10 text-white drop-shadow-2xl">

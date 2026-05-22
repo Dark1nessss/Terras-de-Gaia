@@ -1,4 +1,5 @@
 import { getWordPressAuthHeaders } from './auth';
+import { adsLogger } from './logger';
 
 const API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || process.env.WORDPRESS_API_URL || 'http://localhost:8000/wp-json/wp/v2';
 
@@ -35,7 +36,7 @@ async function getMediaUrl(mediaId: number): Promise<string | null> {
     const media = await res.json();
     return media.source_url || null;
   } catch (error) {
-    console.error('Error fetching media URL:', error);
+    adsLogger.error('Error fetching media URL:', error);
     return null;
   }
 }
@@ -52,7 +53,7 @@ export async function getAds(): Promise<Advertisement[]> {
     });
 
     if (!res.ok) {
-      console.error('Failed to fetch ads:', res.statusText);
+      adsLogger.error('Failed to fetch ads:', res.statusText);
       return [];
     }
 
@@ -92,7 +93,7 @@ export async function getAds(): Promise<Advertisement[]> {
 
     return filteredAds;
   } catch (error) {
-    console.error('Error fetching ads:', error);
+    adsLogger.error('Error fetching ads:', error);
     return [];
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Menu, Phone, MessageCircle, MoreVertical } from "lucide-react";
+import { Menu, Phone, MoreVertical } from "lucide-react";
 import Sidebar from "./sidebar";
 import Image from "next/image";
 import Link from "next/link";
@@ -77,12 +77,9 @@ export default function Navbar() {
         <Link href="/contacto">
           <button className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white text-xs font-bold py-2.5 px-5 rounded-sm border border-white/10 transition-all cursor-pointer">
             <Phone size={14} className="text-blue-300" />
-            <span className="top-[2px] relative">CONTACTOS</span>
+            <span className="top-0.5 relative">CONTACTOS</span>
           </button>
         </Link>
-        <button className="text-white/50 hover:text-white p-1">
-          <MoreVertical size={20} />
-        </button>
       </div>
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
     </nav>

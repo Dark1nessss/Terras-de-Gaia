@@ -29,17 +29,17 @@ export default function ContactPage() {
           
           {/* Left Side: Editorial Contacts */}
           <div className="lg:col-span-4 space-y-12">
-            <div className="group cursor-pointer">
+            <a href={`mailto:${CONTACT_INFO.email}`} className="group cursor-pointer">
               <p className="text-[#00a6f0] text-[10px] font-black uppercase tracking-widest mb-4">Redação e Geral</p>
-              <div className="flex items-center gap-4 border-b border-white/5 pb-6 group-hover:border-[#00a6f0] transition-colors">
+              <div className="flex items-center gap-4 border-b border-white/5 pb-6 mb-6 group-hover:border-[#00a6f0] transition-colors">
                 <Mail className="text-white/20 group-hover:text-[#00a6f0]" size={20} />
                 <span className="text-2xl font-bold italic uppercase tracking-tighter group-hover:pl-2 transition-all">
                   {CONTACT_INFO.email}
                 </span>
               </div>
-            </div>
+            </a>
 
-            <div className="group cursor-pointer">
+            <a href={`tel:${CONTACT_INFO.phone.replace(/\s/g, '')}`} className="group cursor-pointer">
               <p className="text-[#00a6f0] text-[10px] font-black uppercase tracking-widest mb-4">Linha Direta</p>
               <div className="flex items-center gap-4 border-b border-white/5 pb-6 group-hover:border-[#00a6f0] transition-colors">
                 <Phone className="text-white/20 group-hover:text-[#00a6f0]" size={20} />
@@ -47,7 +47,7 @@ export default function ContactPage() {
                   {CONTACT_INFO.phone}
                 </span>
               </div>
-            </div>
+            </a>
           </div>
 
           {/* Right Side: The Big Social List (SVG Focus) */}
@@ -115,6 +115,27 @@ export default function ContactPage() {
                 </div>
                 <svg className="absolute -right-10 top-1/2 -translate-y-1/2 w-[30%] opacity-[0.02] group-hover:opacity-10 group-hover:-translate-x-10 transition-all duration-700 fill-white" viewBox="0 0 24 24">
                    <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+                </svg>
+              </a>
+
+              {/* TikTok Row */}
+              <a href={OFFICIAL_PROFILES.tiktok} target="_blank" rel="noopener noreferrer" className="group relative py-10 flex items-center justify-between overflow-hidden">
+                <div className="flex items-center gap-8 relative z-10">
+                  <span className="text-white/10 group-hover:text-[#00a6f0] font-black italic text-2xl transition-colors">04</span>
+                  <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter group-hover:translate-x-4 transition-transform duration-500">
+                    TikTok
+                  </h2>
+                </div>
+                <div className="flex items-center gap-4 relative z-10 group-hover:-translate-x-4 transition-transform duration-500">
+                  <span className="hidden md:block text-xs font-black uppercase tracking-widest opacity-0 group-hover:opacity-100">Seguir @TerrasdeGaia</span>
+                  <div className="p-4 bg-white/5 rounded-full group-hover:bg-[#ee1d52] transition-colors relative z-10">
+                    <svg className="w-8 h-8 fill-white" viewBox="0 0 24 24">
+                      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.77a4.85 4.85 0 0 1-1.01-.08z" />
+                    </svg>
+                  </div>
+                </div>
+                <svg className="absolute -right-10 top-1/2 -translate-y-1/2 w-[30%] opacity-[0.02] group-hover:opacity-10 group-hover:-translate-x-10 transition-all duration-700 fill-white" viewBox="0 0 24 24">
+                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.77a4.85 4.85 0 0 1-1.01-.08z" />
                 </svg>
               </a>
 

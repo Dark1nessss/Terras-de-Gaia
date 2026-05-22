@@ -12,6 +12,7 @@ import { Breadcrumb } from "@/components/breadcrumb";
 import { AdPlaceholder } from "@/components/ad-placeholder";
 import { decodeHtml, truncateBreadcrumbTitle } from "@/lib/decode-html";
 import { formatDate } from "@/lib/date";
+import { PostVideoPlayer } from "@/components/post-video-player";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -105,16 +106,24 @@ export default async function SinglePostPage({ params }: Props) {
               )}
             </header>
 
-            {/* Featured Image */}
-            <div className="relative w-full aspect-video rounded-sm overflow-hidden mb-12 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-              <Image
-                src={featuredImage}
-                alt={post.title.rendered || "Imagem do Artigo"}
-                fill
-                className="object-cover"
-                priority
+            {/* Featured Image / Video Player */}
+            {post.hasVideo && post.videoUrl ? (
+              <PostVideoPlayer
+                videoUrl={post.videoUrl}
+                thumbnailUrl={featuredImage}
+                title={decodeHtml(post.title.rendered)}
               />
-            </div>
+            ) : (
+              <div className="relative w-full aspect-video rounded-sm overflow-hidden mb-12 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+                <Image
+                  src={featuredImage}
+                  alt={post.title.rendered || "Imagem do Artigo"}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            )}
 
             {/* Body Content */}
             <div

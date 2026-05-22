@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Maximize2, Minus, Tv, Play, Pause, Volume2, VolumeX, Radio } from "lucide-react";
 import Link from "next/link";
+import { parseYouTubeId } from "@/lib/video";
+import { LiveDot } from "@/components/live-dot";
 
 const DIAS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 
@@ -11,13 +13,6 @@ function todayLabel(): string {
   const day = d.getDate().toString().padStart(2, '0');
   const month = (d.getMonth() + 1).toString().padStart(2, '0');
   return DIAS[d.getDay()] + ', ' + day + '/' + month;
-}
-
-function parseYouTubeId(url: string): string | null {
-  if (!url) return null;
-  if (/^[a-zA-Z0-9_-]{11}$/.test(url)) return url;
-  const m = url.match(/(?:v=|youtu\.be\/|embed\/|live\/|shorts\/)([a-zA-Z0-9_-]{11})/);
-  return m ? m[1] : null;
 }
 
 export default function LiveStreamPlayer() {
@@ -169,7 +164,7 @@ export default function LiveStreamPlayer() {
       {!hasStream ? (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-950 text-center">
           <Radio className="text-white/20 mb-3 animate-pulse" size={48} />
-          <h3 className="text-white font-bold uppercase italic">No Livestream atm</h3>
+          <h3 className="text-white font-bold uppercase italic">Sem Livestreams de Momento</h3>
           <button onClick={() => toggleView("hidden")} className="absolute top-4 right-4 text-white/40 cursor-pointer"><Minus size={20} /></button>
         </div>
       ) : (
@@ -194,7 +189,7 @@ export default function LiveStreamPlayer() {
               <button onClick={() => setIsPlaying(!isPlaying)} className="text-white cursor-pointer">{isPlaying ? <Pause size={20} fill="white" /> : <Play size={20} fill="white" />}</button>
               <button onClick={() => setIsMuted(!isMuted)} className="text-white cursor-pointer">{isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}</button>
               <button onClick={() => { if (iframeRef.current && embedUrl) iframeRef.current.src = embedUrl; }} className="flex items-center gap-2 px-2 py-1 border border-red-600 rounded text-xs font-bold text-white uppercase italic cursor-pointer">
-                <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse" /> Direto
+                <LiveDot size="sm" /> Direto
               </button>
             </div>
             {currentProgram && (
