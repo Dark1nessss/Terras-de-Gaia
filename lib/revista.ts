@@ -10,8 +10,11 @@ export interface Revista {
   excerpt?: { rendered: string };
   featured_media: number;
   featured_media_url?: string;
+  _embedded?: {
+    'wp:featuredmedia'?: Array<{ source_url: string }>;
+  };
   acf: {
-    pdf_url?: string; // Direct PDF URL from ACF
+    url_jornal?: string; // PDF uploaded to WordPress media library (ACF field)
     data_publicacao?: string; // Publication date
   };
 }
@@ -38,7 +41,7 @@ export async function getRevistas(): Promise<Revista[]> {
       const revistas = await res.json();
       
       // Enhance with featured image URLs
-      return revistas.map((revista: any) => ({
+      return revistas.map((revista: Revista) => ({
         ...revista,
         featured_media_url: revista._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
       }));

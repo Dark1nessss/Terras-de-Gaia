@@ -103,12 +103,12 @@ export default async function RevistaDetailPage({ params }: Props) {
 
       {/* PDF Reader */}
       <section className="container mx-auto px-4 sm:px-6 max-w-6xl py-10 pb-24">
-        {revista.acf?.pdf_url ? (
+        {revista.acf?.url_jornal ? (
           <>
             <p className="text-white/25 text-xs text-center mb-6 uppercase tracking-widest">
               Use as setas do teclado ← → para navegar entre páginas
             </p>
-            <PdfViewer pdfUrl={revista.acf.pdf_url} title={title} />
+            <PdfViewer pdfUrl={revista.acf.url_jornal} title={title} />
           </>
         ) : (
           <div className="flex flex-col items-center justify-center py-32 text-white/30 gap-4">
