@@ -36,6 +36,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const slug = searchParams.get('slug');
     const page = parseInt(searchParams.get('page') || '1');
+    const search = searchParams.get('search') || undefined;
+    const sort = searchParams.get('sort') || 'date_desc';
     const perPage = 12;
     const maxPages = 50; // Prevent deep pagination abuse
 
@@ -46,7 +48,18 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const { posts, totalPosts } = await getPostsByCategoryPaginated(slug, page, perPage);
+    const SORT_MAP: Record<string, { orderby: string; order: string }> = {
+      date_desc: { orderby: 'date',  order: 'desc' },
+      date_asc:  { orderby: 'date',  order: 'asc'  },
+      title_asc: { orderby: 'title', order: 'asc'  },
+    };
+    const { orderby, order } = SORT_MAP[sort] ?? SORT_MAP.date_desc;
+
+    const { posts, totalPosts } = await getPostsByCategoryPaginated(slug, page, perPage, {
+      search,
+      orderby,
+      order,
+    });
     const hasMore = (page * perPage) < totalPosts;
 
     return NextResponse.json({

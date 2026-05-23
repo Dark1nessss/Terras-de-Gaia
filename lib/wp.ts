@@ -125,8 +125,23 @@ export async function getPostsByCategory(categorySlug: string) {
   return posts;
 }
 
-export async function getPostsByCategoryPaginated(categorySlug: string, page: number, perPage: number) {
-  const cacheKey = createCacheKey('wp-posts-category', { categorySlug, page, perPage });
+export async function getPostsByCategoryPaginated(
+  categorySlug: string,
+  page: number,
+  perPage: number,
+  options?: { search?: string; orderby?: string; order?: string }
+) {
+  const cacheKey = createCacheKey('wp-posts-category', {
+    categorySlug,
+    page,
+    perPage,
+    search:  options?.search  ?? "",
+    orderby: options?.orderby ?? "date",
+    order:   options?.order   ?? "desc",
+  });
+
+  // Search results are user-driven — shorter cache to avoid stale hits
+  const cacheTTL = options?.search ? 10_000 : 30_000;
 
   return getOrSetCached(cacheKey, async () => {
     try {
@@ -148,17 +163,25 @@ export async function getPostsByCategoryPaginated(categorySlug: string, page: nu
       }
 
       const categoryParam = categoryIds.join(',');
+      const orderby = options?.orderby ?? 'date';
+      const order   = options?.order   ?? 'desc';
 
-      const res = await fetch(
-        `${API_URL}/posts?categories=${categoryParam}&_embed&per_page=${perPage}&page=${page}&orderby=date&order=desc`,
-        { 
-          headers: getSecureHeaders(),
-          next: { revalidate: 300 }
-        }
-      );
+      const wpUrl = new URL(`${API_URL}/posts`);
+      wpUrl.searchParams.set('categories', categoryParam);
+      wpUrl.searchParams.set('_embed', '1');
+      wpUrl.searchParams.set('per_page', String(perPage));
+      wpUrl.searchParams.set('page', String(page));
+      wpUrl.searchParams.set('orderby', orderby);
+      wpUrl.searchParams.set('order', order);
+      if (options?.search) wpUrl.searchParams.set('search', options.search);
+
+      const res = await fetch(wpUrl.toString(), {
+        headers: getSecureHeaders(),
+        next: { revalidate: options?.search ? 60 : 300 },
+      });
 
       if (!res.ok) return { posts: [], totalPosts: 0 };
-      
+
       const totalPosts = parseInt(res.headers.get('X-WP-Total') || '0');
       const posts = await res.json();
       const enriched = await enrichPosts(posts);
@@ -168,7 +191,7 @@ export async function getPostsByCategoryPaginated(categorySlug: string, page: nu
       wpLogger.error("Erro no fetch paginado:", error);
       return { posts: [], totalPosts: 0 };
     }
-  }, 30000); // Memory cache: 30 seconds
+  }, cacheTTL);
 }
 
 export async function extractAuthorName(post: any): Promise<string> {

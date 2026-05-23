@@ -118,28 +118,28 @@ export function InfiniteScrollPosts({
       <Link
         key={`${post.id}-${post.slug}`}
         href={`/post/${post.slug}`}
-        className={showVideoCards ? "group block" : "group border border-white/10 hover:border-white/30 overflow-hidden transition-all"}
+        className={showVideoCards ? "group block" : "group flex flex-col bg-[#07090c] border border-white/6 hover:border-white/15 overflow-hidden transition-[border-color] duration-200"}
       >
-        <div className={showVideoCards ? "relative aspect-video mb-4 overflow-hidden bg-zinc-900" : "relative h-48 overflow-hidden bg-white/5"}>
+        <div className={showVideoCards ? "relative aspect-video mb-4 overflow-hidden bg-zinc-900" : "relative aspect-video overflow-hidden bg-zinc-950 shrink-0"}>
           {post._embedded?.["wp:featuredmedia"]?.[0]?.source_url && (
             <Image
               src={post._embedded["wp:featuredmedia"][0].source_url}
               alt={post.title.rendered}
               fill
               sizes={showVideoCards ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"}
-              className="object-cover group-hover:scale-105 transition-transform"
+              className={showVideoCards ? "object-cover group-hover:scale-105 transition-transform" : "object-cover brightness-55 group-hover:brightness-70 group-hover:scale-[1.03] transition-all duration-400"}
             />
           )}
         </div>
-        <div className={showVideoCards ? "" : "p-4"}>
-          <h3 className={showVideoCards ? "text-lg font-black uppercase tracking-tight group-hover:text-[#00a6f0] transition-colors line-clamp-2" : "font-black uppercase text-sm mb-2 group-hover:text-[#00a6f0] transition-colors line-clamp-2"}>
+        <div className={showVideoCards ? "" : "flex flex-col flex-1 p-4 gap-2.5"}>
+          <h3 className={showVideoCards ? "text-lg font-black uppercase tracking-tight group-hover:text-[#00a6f0] transition-colors line-clamp-2" : "font-black uppercase italic text-base tracking-tighter leading-tight group-hover:text-[#00a6f0] transition-colors line-clamp-3"}>
             {post.title_clean || post.title.rendered.replace(/<[^>]*>/g, "")}
           </h3>
           {!showVideoCards && post.author_name && post.date && (
-            <div className="flex items-center gap-2 text-xs text-white/40 border-t border-white/10 pt-2 mt-2">
-              <span>{post.author_name}</span>
-              <span>•</span>
-              <span>{new Date(post.date).toLocaleDateString("pt-PT")}</span>
+            <div className="mt-auto pt-2.5 border-t border-white/5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest">
+              <span className="text-white/40 truncate">{post.author_name}</span>
+              <span className="text-white/15 shrink-0">·</span>
+              <span className="text-white/40 tabular-nums shrink-0">{new Date(post.date).toLocaleDateString("pt-PT")}</span>
             </div>
           )}
         </div>
