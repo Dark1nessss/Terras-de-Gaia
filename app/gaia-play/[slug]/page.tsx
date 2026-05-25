@@ -275,7 +275,7 @@ export default function ProgramSlugPage() {
           </div>
 
           <div className="flex items-center gap-3">
-             <ShareButton title={program.title.rendered} season={currentEp?.season_num} episode={currentEp?.numero} />
+             <ShareButton title={program.title.rendered} season={program?.temporadas?.[activeSeason]?.numero_temporada} episode={currentEp?.numero} />
           </div>
         </div>
 

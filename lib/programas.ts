@@ -28,6 +28,8 @@ export interface Program {
     categoria_programa: string; // Only ACF field for category
     destaque_gaia_play: boolean; // Only ACF field for featured
     temporadas?: string; // JSON string that we'll parse
+    ano_lancamento?: string;
+    exibicao_original?: string;
   };
   temporadas?: Season[]; // Parsed from JSON
 }

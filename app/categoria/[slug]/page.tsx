@@ -132,7 +132,7 @@ export default async function CategoryPage({
                       <h2 className="text-2xl font-black uppercase italic tracking-tighter">Mais Artigos</h2>
                       <div className="h-0.5 flex-1 bg-white/10" />
                     </div>
-                    <InfiniteScrollPosts slug={slug} initialPosts={gridPosts} variant="list" />
+                    <InfiniteScrollPosts slug={slug} initialPosts={gridPosts} variant="grid-2" />
                   </div>
                 )}
               </>
