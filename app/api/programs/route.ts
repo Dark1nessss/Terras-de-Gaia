@@ -2,8 +2,7 @@ import { NextResponse } from 'next/server';
 import { getProgramas, getProgramaBySlug, getFeaturedProgramas } from '@/lib/wp';
 import { programasLogger } from '@/lib/logger';
 
-// Allow Next.js data cache — revalidate every 5 minutes
-export const revalidate = 300;
+export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
   try {

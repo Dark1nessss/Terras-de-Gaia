@@ -1,4 +1,6 @@
 import { getRevistaBySlug, getRevistas, getPdfUrlFromRevista } from '@/lib/revista';
+
+export const dynamic = 'force-dynamic';
 import { notFound } from 'next/navigation';
 import { PdfViewer } from '@/components/pdf-viewer-dynamic';
 import { Breadcrumb } from '@/components/breadcrumb';
