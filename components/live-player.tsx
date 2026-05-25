@@ -53,9 +53,8 @@ export function LivePlayer({
 
   // ── Mid-roll ads ─────────────────────────────────────────────────────
   // Live streams aren't paused during ads — the ad overlays on top.
-  // TODO: change intervalSeconds to 1200 (20 min) before going to production.
   const { showMidroll, startTicking, stopTicking, reset: resetMidroll, handleAdFinished } =
-    useMidroll({ intervalSeconds: 30 });
+    useMidroll({ intervalSeconds: 1200 });
 
   // Start / stop ticking based on whether the stream is live
   useEffect(() => {

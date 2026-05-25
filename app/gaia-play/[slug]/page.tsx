@@ -122,9 +122,8 @@ export default function ProgramSlugPage() {
   }, []);
 
   // ── Mid-roll ad timing ──────────────────────────────────────────────────────
-  // TODO: change intervalSeconds to 1200 (20 min) before going to production
   const { showMidroll, startTicking, stopTicking, reset: resetMidroll, handleAdFinished } = useMidroll({
-    intervalSeconds: 30,
+    intervalSeconds: 1200,
     onAdStart:  pausePlayer,
     onAdEnd:    resumePlayer,
   });
