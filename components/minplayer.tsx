@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { Maximize2, Minus, Tv, Play, Pause, Volume2, VolumeX, Radio } from "lucide-react";
 import Link from "next/link";
 import { parseYouTubeId } from "@/lib/video";
+import { buildBunnyLiveEmbedUrl } from "@/lib/bunny";
 import { LiveDot } from "@/components/live-dot";
 
 const DIAS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
@@ -30,9 +31,14 @@ export default function LiveStreamPlayer() {
   const clickTimer = useRef<NodeJS.Timeout | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const embedUrl = streamVideoId
-    ? 'https://www.youtube.com/embed/' + streamVideoId + '?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&enablejsapi=1'
-    : null;
+  // Bunny livestream takes priority when NEXT_PUBLIC_* env vars are set
+  const bunnyLiveUrl = buildBunnyLiveEmbedUrl();
+
+  const embedUrl = bunnyLiveUrl
+    ? `${bunnyLiveUrl}?autoplay=true&muted=true`
+    : streamVideoId
+      ? 'https://www.youtube.com/embed/' + streamVideoId + '?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&enablejsapi=1'
+      : null;
 
   // Sync with localStorage and Fullscreen events
   useEffect(() => {
@@ -58,9 +64,17 @@ export default function LiveStreamPlayer() {
           p.hora_inicio <= ct && p.hora_fim > ct
       );
       if (live?.title) setCurrentProgram(live.title);
-      const id = live?.video_url ? parseYouTubeId(live.video_url) : null;
-      setStreamVideoId(id);
-      setHasStream(!!id);
+
+      if (bunnyLiveUrl) {
+        // Bunny livestream is always active when configured
+        setHasStream(true);
+      } else {
+        // Fallback: YouTube URL from program
+        const id = live?.video_url ? parseYouTubeId(live.video_url) : null;
+        setStreamVideoId(id);
+        setHasStream(!!id);
+      }
+
       // Schedule auto-switch when program ends
       if (live?.hora_fim) {
         const parts = (live.hora_fim as string).split(':').map(Number);
@@ -85,6 +99,8 @@ export default function LiveStreamPlayer() {
       .catch(() => null);
 
     return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+  // bunnyLiveUrl is derived from env vars (constant at runtime), no need to include
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Listen to isPlaying state changes and send postMessage to YouTube IFrame API

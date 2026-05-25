@@ -5,6 +5,7 @@ import { AdPlaceholder } from "@/components/ad-placeholder";
 import { LiveDot } from "@/components/live-dot";
 import { formatDate } from "@/lib/date";
 import { getTVGuide } from "@/lib/wp";
+import { buildServerLivestreamEmbedUrl } from "@/lib/bunny";
 
 export const revalidate = 300;
 
@@ -20,6 +21,7 @@ function todayLabel(): string {
 
 export default async function LivePage() {
   const programs = await getTVGuide();
+  const livestreamEmbedUrl = buildServerLivestreamEmbedUrl();
   const today = todayLabel();
   const now = new Date();
   const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
@@ -58,7 +60,7 @@ export default async function LivePage() {
           <div className="lg:col-span-8 flex flex-col">
             <div className="relative aspect-video bg-black shadow-2xl border border-white/5 overflow-hidden group">
               {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-              <LivePlayer initialPrograms={programs as any[]} />
+              <LivePlayer initialPrograms={programs as any[]} livestreamEmbedUrl={livestreamEmbedUrl} />
               <div className="absolute top-4 left-4">
                  <div className="bg-black/60 backdrop-blur-md px-3 py-1 border border-white/10 rounded flex items-center gap-2">
                     <Tv size={14} className="text-[#00a6f0]" />

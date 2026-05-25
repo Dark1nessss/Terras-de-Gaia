@@ -72,6 +72,13 @@ export function proxy(request: NextRequest) {
     return response;
   }
 
+  // Remove /test-news from production
+  if (request.nextUrl.pathname.startsWith("/test-news")) {
+    if (process.env.NODE_ENV === "production") {
+      return NextResponse.rewrite(new URL("/not-found", request.url));
+    }
+  }
+
   return NextResponse.next();
 }
 

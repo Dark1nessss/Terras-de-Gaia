@@ -276,7 +276,7 @@ export default function ProgramsPage() {
                     <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#00a6f0]/60 mb-2">Gaia Play</p>
                     <h3 className="text-2xl font-black uppercase italic tracking-tighter mb-4">Conteúdo On Demand</h3>
                     <Link href="/live" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#00a6f0] hover:gap-4 transition-all">
-                      Ver em Direto <ArrowRight size={12} />
+                      <span className="mt-0.75">Ver em Direto</span> <ArrowRight size={12} />
                     </Link>
                   </div>
                 </motion.div>

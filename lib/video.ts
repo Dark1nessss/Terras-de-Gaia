@@ -5,18 +5,25 @@
  * Used by: post-enricher, post-video-player, live-player, minplayer.
  *
  * Supported sources (in priority order inside extractVideoUrl):
- *  1. ACF fields  (video_url, url_video, featured_video)
+ *  1. ACF fields  (video_url, url_video, featured_video, bunny_video_id)
  *  2. WordPress post.meta — tagDiv td_post_video + generic scan
  *  3. YouTube URL anywhere in post.content.rendered
  *  4. Native WordPress video attachment (featured media)
- *  5. (future) VPS / direct mp4 — already handled as "direct" type
+ *  5. Direct mp4/webm URL
+ *
+ * Video types:
+ *  'youtube' — YouTube embed (youtube.com/embed/...)
+ *  'bunny'   — Bunny Stream embed (player.mediadelivery.net/embed/...)
+ *  'direct'  — Direct video file (mp4, webm, ...)
+ *  null      — Unknown / not detected
  */
 
 import { logger } from './logger';
+import { parseBunnyEmbedUrl, buildBunnyVodEmbedUrl, toBunnyEmbedUrl } from './bunny';
 
 const videoLogger = logger.getSubLogger({ name: 'video' });
 
-export type VideoType = 'youtube' | 'direct' | null;
+export type VideoType = 'youtube' | 'bunny' | 'direct' | null;
 
 const DIRECT_VIDEO_EXT = /\.(mp4|webm|ogg|mov|avi|mkv)(\?.*)?$/i;
 
@@ -49,12 +56,21 @@ export function isDirectVideoUrl(url: string): boolean {
 
 /**
  * Convert any video URL to an embed-ready URL:
- *  • YouTube     → https://www.youtube.com/embed/{id}
- *  • Direct file → returned unchanged
- *  • Unknown     → null
+ *  • YouTube              → https://www.youtube.com/embed/{id}
+ *  • Bunny embed URL      → returned unchanged (already embed-ready)
+ *  • Bunny bare video ID  → https://player.mediadelivery.net/embed/{libId}/{id}
+ *  • Direct file          → returned unchanged
+ *  • Unknown              → null
  */
 export function toEmbedUrl(url: string): string | null {
   if (!url) return null;
+  // Bunny URL (/embed/ or /play/) — normalise to /embed/
+  const bunnyUrl = toBunnyEmbedUrl(url);
+  if (bunnyUrl) return bunnyUrl;
+  // Bare Bunny video UUID (36-char format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)
+  if (/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(url)) {
+    return buildBunnyVodEmbedUrl(url);
+  }
   const yt = buildYouTubeEmbedUrl(url);
   if (yt) return yt;
   if (isDirectVideoUrl(url)) return url;
@@ -64,6 +80,8 @@ export function toEmbedUrl(url: string): string | null {
 /** Classify an already-embed-converted URL so the player knows what to render. */
 export function detectVideoType(url: string): VideoType {
   if (url.includes('youtube.com/embed/')) return 'youtube';
+  // Match both /embed/ and /play/ (parseBunnyEmbedUrl handles both)
+  if (parseBunnyEmbedUrl(url)) return 'bunny';
   if (DIRECT_VIDEO_EXT.test(url)) return 'direct';
   return null;
 }
@@ -103,7 +121,7 @@ const YT_CONTENT_PATTERNS: RegExp[] = [
 export function extractVideoUrl(post: any): string | null {
 
   // 1. ACF fields ─────────────────────────────────────────────────────────────
-  for (const key of ['video_url', 'url_video', 'featured_video']) {
+  for (const key of ['video_url', 'url_video', 'featured_video', 'bunny_video_id']) {
     const raw: unknown = post.acf?.[key];
     if (raw && typeof raw === 'string') {
       const embed = toEmbedUrl(raw);

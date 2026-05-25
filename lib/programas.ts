@@ -3,7 +3,10 @@ export interface Episode {
   numero: number;
   titulo: string;
   data: string;
-  link: string;
+  /** Primary video link — Bunny URL (/play/ or /embed/) or YouTube URL. Takes priority over link_youtube. */
+  link?: string;
+  /** Legacy YouTube-only field. Used as fallback when `link` is absent. */
+  link_youtube?: string;
   duracao: number;
 }
 

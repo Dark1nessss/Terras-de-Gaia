@@ -26,6 +26,14 @@ export function PostVideoPlayer({ videoUrl, thumbnailUrl, title }: PostVideoPlay
             allowFullScreen
             className="absolute inset-0 w-full h-full border-0"
           />
+        ) : type === 'bunny' ? (
+          <iframe
+            src={`${videoUrl}?autoplay=true`}
+            title={title}
+            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen"
+            allowFullScreen
+            className="absolute inset-0 w-full h-full border-0"
+          />
         ) : (
           /* Direct video file — VPS-hosted mp4/webm */
           <video

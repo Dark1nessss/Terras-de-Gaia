@@ -138,6 +138,12 @@
   100% { transform: translateX(-50%); }
 }
 
+/* Midroll post-ad ring countdown: stroke-dashoffset 0 → 100 depletes the circle */
+@keyframes midroll-ring {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: 100; }
+}
+
 @layer utilities{
   .animate-marquee {
     animation: marquee 40s linear infinite;

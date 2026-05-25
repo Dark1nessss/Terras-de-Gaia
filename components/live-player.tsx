@@ -3,6 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Tv } from "lucide-react";
 import { parseYouTubeId } from "@/lib/video";
+import { parseBunnyEmbedUrl } from "@/lib/bunny";
+import { useMidroll } from "@/hooks/use-midroll";
+import { MidrollAd } from "@/components/midroll-ad";
 
 const DIAS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 
@@ -14,12 +17,20 @@ function todayLabel(): string {
 }
 
 type StreamSource =
+  | { type: 'bunny'; embedUrl: string }
   | { type: 'youtube'; id: string }
   | { type: 'video'; url: string }
   | { type: 'offline' };
 
-function resolveSource(videoUrl: string | null | undefined): StreamSource {
+function resolveSource(
+  videoUrl: string | null | undefined,
+  livestreamEmbedUrl?: string,
+): StreamSource {
+  // Bunny livestream has priority when configured
+  if (livestreamEmbedUrl) return { type: 'bunny', embedUrl: livestreamEmbedUrl };
   if (!videoUrl) return { type: 'offline' };
+  // Fallback: Bunny embed URL stored in the program's video_url field
+  if (parseBunnyEmbedUrl(videoUrl)) return { type: 'bunny', embedUrl: videoUrl };
   const ytId = parseYouTubeId(videoUrl);
   if (ytId) return { type: 'youtube', id: ytId };
   if (videoUrl.startsWith('http') || videoUrl.startsWith('/')) return { type: 'video', url: videoUrl };
@@ -28,15 +39,41 @@ function resolveSource(videoUrl: string | null | undefined): StreamSource {
 
 export function LivePlayer({
   initialPrograms = [],
+  livestreamEmbedUrl,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialPrograms?: any[];
+  /** Pre-built Bunny embed URL passed from the server. When set, this is always shown. */
+  livestreamEmbedUrl?: string;
 }) {
   const [source, setSource] = useState<StreamSource>({ type: 'offline' });
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const playerContainerRef = useRef<HTMLDivElement>(null);
+
+  // ── Mid-roll ads ─────────────────────────────────────────────────────
+  // Live streams aren't paused during ads — the ad overlays on top.
+  // TODO: change intervalSeconds to 1200 (20 min) before going to production.
+  const { showMidroll, startTicking, stopTicking, reset: resetMidroll, handleAdFinished } =
+    useMidroll({ intervalSeconds: 30 });
+
+  // Start / stop ticking based on whether the stream is live
+  useEffect(() => {
+    if (source.type !== 'offline') {
+      startTicking();
+    } else {
+      stopTicking();
+      resetMidroll();
+    }
+  }, [source.type, startTicking, stopTicking, resetMidroll]);
 
   useEffect(() => {
+    // If a fixed Bunny livestream is configured, use it immediately
+    if (livestreamEmbedUrl) {
+      setSource({ type: 'bunny', embedUrl: livestreamEmbedUrl });
+      return;
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function applyPrograms(programs: any[]) {
       const now = new Date();
@@ -53,7 +90,7 @@ export function LivePlayer({
           p.hora_inicio <= ct && p.hora_fim > ct
       );
 
-      setSource(resolveSource(live?.video_url));
+      setSource(resolveSource(live?.video_url, livestreamEmbedUrl));
 
       if (live?.hora_fim) {
         const parts = (live.hora_fim as string).split(':').map(Number);
@@ -74,7 +111,7 @@ export function LivePlayer({
 
     applyPrograms(initialPrograms);
     return () => { if (timerRef.current) clearTimeout(timerRef.current); };
-  }, [initialPrograms]);
+  }, [initialPrograms, livestreamEmbedUrl]);
 
   // Catch YouTube embed errors and fall back to offline placeholder
   useEffect(() => {
@@ -121,19 +158,37 @@ export function LivePlayer({
     );
   }
 
+  if (source.type === 'bunny') {
+    return (
+      <div ref={playerContainerRef} className="relative w-full h-full">
+        <iframe
+          ref={iframeRef}
+          src={`${source.embedUrl}?autoplay=true&muted=false`}
+          className="w-full h-full"
+          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen"
+          allowFullScreen
+        />
+        {showMidroll && <MidrollAd onFinished={handleAdFinished} containerRef={playerContainerRef} />}
+      </div>
+    );
+  }
+
   // YouTube
   return (
-    <iframe
-      ref={iframeRef}
-      src={`https://www.youtube.com/embed/${source.id}?autoplay=1&mute=0&controls=1&modestbranding=1&enablejsapi=1`}
-      className="w-full h-full"
-      allow="autoplay; fullscreen"
-      onLoad={() =>
-        iframeRef.current?.contentWindow?.postMessage(
-          JSON.stringify({ event: 'listening' }), '*'
-        )
-      }
-    />
+    <div ref={playerContainerRef} className="relative w-full h-full">
+      <iframe
+        ref={iframeRef}
+        src={`https://www.youtube.com/embed/${source.id}?autoplay=1&mute=0&controls=1&modestbranding=1&enablejsapi=1`}
+        className="w-full h-full"
+        allow="autoplay; fullscreen"
+        onLoad={() =>
+          iframeRef.current?.contentWindow?.postMessage(
+            JSON.stringify({ event: 'listening' }), '*'
+          )
+        }
+      />
+      {showMidroll && <MidrollAd onFinished={handleAdFinished} containerRef={playerContainerRef} />}
+    </div>
   );
 }
 

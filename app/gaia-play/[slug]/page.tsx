@@ -5,13 +5,28 @@ import { useParams } from 'next/navigation';
 import { Play, ArrowLeft, MonitorPlay } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import Script from 'next/script';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShareButton } from "@/components/share-button";
 import { SeasonSelector } from "@/components/season-selector";
 import { cleanText } from "@/lib/decode-html";
 import { formatExibicao, formatYear } from "@/lib/date";
 import { MidrollAd } from "@/components/midroll-ad";
+import { buildBunnyVodEmbedUrl, toBunnyEmbedUrl } from "@/lib/bunny";
 import type { Program } from '@/lib/programas';
+import { useMidroll } from '@/hooks/use-midroll';
+
+// ── Minimal Bunny playerjs types ─────────────────────────────────────────────
+interface PlayerJSInstance {
+  pause(): void;
+  play(): void;
+  on(event: string, cb: () => void): void;
+}
+declare global {
+  interface Window {
+    playerjs?: { Player: new (iframe: HTMLElement) => PlayerJSInstance };
+  }
+}
 
 // Helper function to extract YouTube video ID
 function getYouTubeVideoId(url: string): string | null {
@@ -32,6 +47,32 @@ function getYouTubeVideoId(url: string): string | null {
   }
 }
 
+/**
+ * Resolve an episode to a renderable embed URL.
+ * Priority: `link` (Bunny or any URL) → `link_youtube` (legacy fallback)
+ */
+function resolveEpisodeVideo(
+  ep: { link?: string; link_youtube?: string } | undefined,
+): 
+  | { type: 'youtube'; id: string }
+  | { type: 'bunny'; embedUrl: string }
+  | null {
+  const candidates = [ep?.link, ep?.link_youtube].filter(Boolean) as string[];
+  for (const link of candidates) {
+    // Bunny URL (either /embed/ or /play/) — normalise to /embed/ for iframe
+    const bunnyEmbed = toBunnyEmbedUrl(link);
+    if (bunnyEmbed) return { type: 'bunny', embedUrl: bunnyEmbed };
+    // Bare Bunny video UUID
+    if (/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(link)) {
+      return { type: 'bunny', embedUrl: buildBunnyVodEmbedUrl(link) };
+    }
+    // YouTube
+    const ytId = getYouTubeVideoId(link);
+    if (ytId) return { type: 'youtube', id: ytId };
+  }
+  return null;
+}
+
 export default function ProgramSlugPage() {
   const params = useParams();
   const slug = params.slug as string;
@@ -40,17 +81,20 @@ export default function ProgramSlugPage() {
   const [activeEpIndex, setActiveEpIndex] = useState(0);
   const [activeSeason, setActiveSeason] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [showMidroll, setShowMidroll] = useState(false);
   const [showTitleBar, setShowTitleBar] = useState(false);
+  /** False = show poster/play-button (no iframe in DOM, zero bandwidth). True = player active. */
+  const [playerActive, setPlayerActive] = useState(false);
 
-  // Ref to the YouTube iframe so we can pause/resume via postMessage
+  // Ref to the player iframe so we can pause/resume via postMessage or playerjs
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  // Ref for the 20-minute mid-roll interval timer
-  const midrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // Ref for the 5-second title bar hide timer
   const titleBarTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const MIDROLL_INTERVAL_MS = 20 * 60 * 1000;
+  // Stable ref so pause/resume callbacks always see the current video type
+  const videoTypeRef = useRef<'youtube' | 'bunny' | null>(null);
+  // Bunny playerjs instance — set up when the Bunny iframe loads
+  const bunnyPlayerRef = useRef<PlayerJSInstance | null>(null);
+  // Ref to the player container div — used to request fullscreen from within ads
+  const playerContainerRef = useRef<HTMLDivElement>(null);
 
   /** Show the title bar for 5 seconds then auto-hide */
   const showTitleBarFor5s = useCallback(() => {
@@ -59,41 +103,33 @@ export default function ProgramSlugPage() {
     titleBarTimerRef.current = setTimeout(() => setShowTitleBar(false), 5000);
   }, []);
 
-  /** Pause the embedded YouTube player via postMessage */
-  const pauseYouTube = useCallback(() => {
-    iframeRef.current?.contentWindow?.postMessage(
-      '{"event":"command","func":"pauseVideo","args":""}',
-      '*'
-    );
+  /** Pause the active player */
+  const pausePlayer = useCallback(() => {
+    if (videoTypeRef.current === 'youtube') {
+      iframeRef.current?.contentWindow?.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+    } else if (videoTypeRef.current === 'bunny') {
+      bunnyPlayerRef.current?.pause?.();
+    }
   }, []);
 
-  /** Resume the embedded YouTube player via postMessage */
-  const resumeYouTube = useCallback(() => {
-    iframeRef.current?.contentWindow?.postMessage(
-      '{"event":"command","func":"playVideo","args":""}',
-      '*'
-    );
+  /** Resume the active player */
+  const resumePlayer = useCallback(() => {
+    if (videoTypeRef.current === 'youtube') {
+      iframeRef.current?.contentWindow?.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+    } else if (videoTypeRef.current === 'bunny') {
+      bunnyPlayerRef.current?.play?.();
+    }
   }, []);
 
-  /** Schedule the next mid-roll trigger */
-  const scheduleMidroll = useCallback(() => {
-    if (midrollTimerRef.current) clearTimeout(midrollTimerRef.current);
-    midrollTimerRef.current = setTimeout(() => setShowMidroll(true), MIDROLL_INTERVAL_MS);
-  }, [MIDROLL_INTERVAL_MS]);
+  // ── Mid-roll ad timing ──────────────────────────────────────────────────────
+  // TODO: change intervalSeconds to 1200 (20 min) before going to production
+  const { showMidroll, startTicking, stopTicking, reset: resetMidroll, handleAdFinished } = useMidroll({
+    intervalSeconds: 30,
+    onAdStart:  pausePlayer,
+    onAdEnd:    resumePlayer,
+  });
 
-  /** Called when MidrollAd finishes */
-  const handleMidrollFinished = useCallback((played: boolean) => {
-    setShowMidroll(false);
-    resumeYouTube();
-    if (played) scheduleMidroll();
-  }, [resumeYouTube, scheduleMidroll]);
-
-  // Pause YouTube and start showing the ad when showMidroll becomes true
-  useEffect(() => {
-    if (showMidroll) pauseYouTube();
-  }, [showMidroll, pauseYouTube]);
-
-  // Listen for YouTube player state changes via postMessage (pause / end → show title bar)
+  // Listen for YouTube player state changes via postMessage
   useEffect(() => {
     const handleYTMessage = (event: MessageEvent) => {
       if (!event.origin.includes('youtube.com')) return;
@@ -105,34 +141,63 @@ export default function ProgramSlugPage() {
         } else if (data.event === 'infoDelivery' && typeof data.info?.playerState === 'number') {
           playerState = data.info.playerState;
         }
-        // 0 = ended, 2 = paused
-        if (playerState === 0 || playerState === 2) showTitleBarFor5s();
+        // 1 = playing → start ticker; 0 = ended, 2 = paused → stop ticker
+        if (playerState === 1) startTicking();
+        if (playerState === 0 || playerState === 2) {
+          stopTicking();
+          showTitleBarFor5s();
+        }
       } catch { /* non-JSON messages ignored */ }
     };
     window.addEventListener('message', handleYTMessage);
     return () => window.removeEventListener('message', handleYTMessage);
-  }, [showTitleBarFor5s]);
+  }, [showTitleBarFor5s, startTicking, stopTicking]);
 
-  /** Tell the YouTube iframe to start broadcasting events back to us */
+  /** Set up playerjs on the Bunny iframe — required for reliable pause/play/events */
+  const setupBunnyPlayer = useCallback((iframe: HTMLIFrameElement) => {
+    if (!window.playerjs) return;
+    const player = new window.playerjs.Player(iframe);
+    bunnyPlayerRef.current = player;
+    player.on('ready', () => {
+      player.on('play',  () => startTicking());
+      player.on('pause', () => stopTicking());
+      player.on('ended', () => stopTicking());
+    });
+  }, [startTicking, stopTicking]);
+
+  /** Called when any player iframe finishes loading */
   const handleIframeLoad = useCallback(() => {
-    iframeRef.current?.contentWindow?.postMessage(
-      JSON.stringify({ event: 'listening' }),
-      '*'
-    );
-    // Show title bar for 5s when a new episode loads
+    if (videoTypeRef.current === 'bunny' && iframeRef.current) {
+      if (window.playerjs) {
+        setupBunnyPlayer(iframeRef.current);
+      } else {
+        const el = iframeRef.current;
+        setTimeout(() => { if (window.playerjs) setupBunnyPlayer(el); }, 1000);
+      }
+    } else {
+      iframeRef.current?.contentWindow?.postMessage(JSON.stringify({ event: 'listening' }), '*');
+    }
     showTitleBarFor5s();
-  }, [showTitleBarFor5s]);
+  }, [showTitleBarFor5s, setupBunnyPlayer]);
 
-  // Reset mid-roll timer when the episode changes
+  // Reset mid-roll and unload player when the episode changes
   useEffect(() => {
-    setShowMidroll(false);
-    scheduleMidroll();
-    return () => {
-      if (midrollTimerRef.current) clearTimeout(midrollTimerRef.current);
-      if (titleBarTimerRef.current) clearTimeout(titleBarTimerRef.current);
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeEpIndex, activeSeason]);
+    setPlayerActive(false);
+    bunnyPlayerRef.current = null;
+    resetMidroll();
+    if (titleBarTimerRef.current) clearTimeout(titleBarTimerRef.current);
+  }, [activeEpIndex, activeSeason, resetMidroll]);
+
+  // Cleanup title-bar timer on unmount (ticker cleanup is handled by useMidroll)
+  useEffect(() => {
+    return () => { if (titleBarTimerRef.current) clearTimeout(titleBarTimerRef.current); };
+  }, []);
+
+  const handlePlayClick = useCallback(() => {
+    setPlayerActive(true);
+    showTitleBarFor5s();
+    // Midroll ticking starts when the player fires its first 'play' event
+  }, [showTitleBarFor5s]);
 
   useEffect(() => {
     const loadProgram = async () => {
@@ -159,7 +224,9 @@ export default function ProgramSlugPage() {
 
   const currentSeasonEpisodes = program?.temporadas?.[activeSeason]?.episodios || [];
   const currentEp = currentSeasonEpisodes[activeEpIndex];
-  const currentVideoId = currentEp?.link ? getYouTubeVideoId(currentEp.link) : null;
+  const currentVideo = resolveEpisodeVideo(currentEp);
+  // Keep the ref in sync — done in an effect to avoid updating refs during render
+  useEffect(() => { videoTypeRef.current = currentVideo?.type ?? null; });
 
   const handleEpisodeClick = (episode: any) => {
     const epIdx = currentSeasonEpisodes.findIndex(ep => ep.numero === episode.numero) || 0;
@@ -188,6 +255,8 @@ export default function ProgramSlugPage() {
 
   return (
     <main className="min-h-screen bg-[#050505] text-white font-nurom pt-28 pb-20 overflow-x-hidden">
+      {/* playerjs library — required for Bunny player pause/play/event control */}
+      <Script src="//assets.mediadelivery.net/playerjs/playerjs-latest.min.js" strategy="afterInteractive" />
       
       <div className="container mx-auto px-6 md:px-12">
         
@@ -215,7 +284,7 @@ export default function ProgramSlugPage() {
         <div className="flex flex-col lg:flex-row bg-[#0a0c10] border border-white/10 shadow-3xl overflow-hidden lg:max-h-[600px]">
           
           {/* LADO ESQUERDO: VIDEO AREA */}
-          <div className="lg:w-[72%] relative aspect-video bg-black group flex-shrink-0 overflow-hidden">
+          <div ref={playerContainerRef} className="lg:w-[72%] relative aspect-video bg-black group flex-shrink-0 overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.div 
                 key={`${currentEp?.numero}`}
@@ -225,20 +294,64 @@ export default function ProgramSlugPage() {
                 transition={{ duration: 0.4 }}
                 className="absolute inset-0"
               >
-                {currentVideoId ? (
-                  <iframe
-                    ref={iframeRef}
-                    key={`${activeSeason}-${currentEp?.numero}`}
-                    width="100%"
-                    height="100%"
-                    src={`https://www.youtube.com/embed/${currentVideoId}?modestbranding=1&rel=0&controls=1&enablejsapi=1`}
-                    title={currentEp?.titulo}
-                    frameBorder="0"
-                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    onLoad={handleIframeLoad}
-                    className="w-full h-full"
-                  />
+                {currentVideo ? (
+                  playerActive ? (
+                    // ── ACTIVE PLAYER — iframe only injected after user clicks play ──
+                    currentVideo.type === 'bunny' ? (
+                      <iframe
+                        ref={iframeRef}
+                        key={`${activeSeason}-${currentEp?.numero}`}
+                        width="100%"
+                        height="100%"
+                        src={`${currentVideo.embedUrl}?autoplay=true`}
+                        title={currentEp?.titulo}
+                        allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen"
+                        allowFullScreen
+                        onLoad={handleIframeLoad}
+                        className="w-full h-full border-0"
+                      />
+                    ) : (
+                      <iframe
+                        ref={iframeRef}
+                        key={`${activeSeason}-${currentEp?.numero}`}
+                        width="100%"
+                        height="100%"
+                        src={`https://www.youtube.com/embed/${currentVideo.id}?modestbranding=1&rel=0&controls=1&enablejsapi=1&autoplay=1`}
+                        title={currentEp?.titulo}
+                        frameBorder="0"
+                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        onLoad={handleIframeLoad}
+                        className="w-full h-full"
+                      />
+                    )
+                  ) : (
+                    // ── POSTER / FACADE — zero CDN requests until user clicks ──
+                    <button
+                      onClick={handlePlayClick}
+                      className="absolute inset-0 w-full h-full flex items-center justify-center group/play cursor-pointer bg-black"
+                      aria-label={`Reproduzir ${currentEp?.titulo}`}
+                    >
+                      {program?.featured_image_url && (
+                        <Image
+                          src={program.featured_image_url}
+                          alt={currentEp?.titulo ?? ''}
+                          fill
+                          className="object-cover opacity-40 transition-opacity duration-300 group-hover/play:opacity-30"
+                          priority
+                        />
+                      )}
+                      <div className="relative z-10 flex flex-col items-center gap-4">
+                        <div className="w-20 h-20 rounded-full bg-white/10 border-2 border-white/40 flex items-center justify-center backdrop-blur-sm transition-all duration-200 group-hover/play:scale-110 group-hover/play:bg-white/20 group-hover/play:border-white/70">
+                          <Play size={32} className="text-white ml-1" fill="white" />
+                        </div>
+                        <div className="text-center">
+                          <p className="text-white/50 text-xs uppercase tracking-widest font-black">S{(activeSeason + 1).toString().padStart(2, '0')} · EP{currentEp?.numero?.toString().padStart(2, '0')}</p>
+                          <p className="text-white font-black text-lg uppercase italic tracking-tight mt-1">{currentEp?.titulo}</p>
+                        </div>
+                      </div>
+                    </button>
+                  )
                 ) : (
                   <>
                     {program.featured_image_url ? (
@@ -268,7 +381,7 @@ export default function ProgramSlugPage() {
                   </>
                 )}
 
-{currentVideoId && (
+                {currentVideo && playerActive && (
                   <AnimatePresence>
                     {showTitleBar && (
                       <motion.div
@@ -292,7 +405,7 @@ export default function ProgramSlugPage() {
 
             {/* MID-ROLL AD OVERLAY */}
             {showMidroll && (
-              <MidrollAd onFinished={handleMidrollFinished} />
+              <MidrollAd onFinished={handleAdFinished} containerRef={playerContainerRef} />
             )}
           </div>
 

@@ -168,7 +168,7 @@ export function TVGuideGrid({ initialPrograms = [], maxDays = 7 }: { initialProg
                   {isLive && (
                     <div className="absolute top-2 left-2 flex items-center gap-1.5 bg-black/70 px-2 py-1">
                       <LiveDot size="sm" />
-                      <span className="text-[9px] font-black uppercase tracking-[0.3em] text-red-400">Ao Vivo</span>
+                      <span className="text-[9px] font-black uppercase tracking-[0.3em] text-red-400 mt-0.75">Ao Vivo</span>
                     </div>
                   )}
                 </div>
