@@ -1,4 +1,4 @@
-import { getRevistaBySlug, getRevistas } from '@/lib/revista';
+import { getRevistaBySlug, getRevistas, getPdfUrlFromRevista } from '@/lib/revista';
 import { notFound } from 'next/navigation';
 import { PdfViewer } from '@/components/pdf-viewer-dynamic';
 import { Breadcrumb } from '@/components/breadcrumb';
@@ -40,6 +40,8 @@ export default async function RevistaDetailPage({ params }: Props) {
   if (!revista) notFound();
 
   const title = cleanText(revista.title.rendered);
+  const rawPdfUrl = getPdfUrlFromRevista(revista);
+  const pdfUrl = rawPdfUrl ? `/api/pdf?url=${encodeURIComponent(rawPdfUrl)}` : null;
 
   return (
     <main className="min-h-screen bg-[#0a0c10] text-white font-nurom">
@@ -103,12 +105,12 @@ export default async function RevistaDetailPage({ params }: Props) {
 
       {/* PDF Reader */}
       <section className="container mx-auto px-4 sm:px-6 max-w-6xl py-10 pb-24">
-        {revista.acf?.url_jornal ? (
+        {pdfUrl ? (
           <>
             <p className="text-white/25 text-xs text-center mb-6 uppercase tracking-widest">
               Use as setas do teclado ← → para navegar entre páginas
             </p>
-            <PdfViewer pdfUrl={revista.acf.url_jornal} title={title} />
+            <PdfViewer pdfUrl={pdfUrl} title={title} />
           </>
         ) : (
           <div className="flex flex-col items-center justify-center py-32 text-white/30 gap-4">
