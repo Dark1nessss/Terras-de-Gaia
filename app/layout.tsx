@@ -12,7 +12,7 @@ const nuromFont = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Jornal Diário - Terras de Gaia",
+  title: "Jornal Terras de Gaia | Notícias, Desporto e Cultura em Direto",
   description: "Desporto, Notícias, Politica, Cultura e muito mais. Fique informado sobre tudo o que acontece em Terras de Gaia.",
 };
 

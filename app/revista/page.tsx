@@ -134,7 +134,7 @@ export default function RevistaPage() {
               </div>
 
               <h1 className="text-6xl md:text-8xl font-black uppercase italic tracking-tighter leading-none mb-5">
-                Revista
+                Jornal
                 <br />
                 <span className="text-[#006ec2]">Digital</span>
               </h1>

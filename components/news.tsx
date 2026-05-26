@@ -28,7 +28,7 @@ export async function News() {
           <h2 className="text-2xl font-black uppercase italic tracking-tighter text-white">
             Terras de Gaia <span className="text-[#006ec2]">Gazeta</span>
           </h2>
-          <Link href="/noticias" className="text-white/40 hover:text-[#006ec2] text-xs font-black uppercase tracking-widest transition-colors mt-1">
+          <Link href="/categoria/informacao" className="text-white/40 hover:text-[#006ec2] text-xs font-black uppercase tracking-widest transition-colors mt-1">
             Edição Digital
           </Link>
         </div>

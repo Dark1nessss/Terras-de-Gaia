@@ -35,7 +35,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     { 
       label: "Informação", 
       icon: <Newspaper size={24} />, 
-      hasSub: true, 
+      hasSub: true,
+      path: "/categoria/informacao",
       subItems: [
         "Política", "Saúde", "Espaço Cidadão", "Música",
         "Empresas e Empreendedorismo", "Lazer", "Multimédia e Informática",
@@ -45,7 +46,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     { 
       label: "Desporto", 
       icon: <Trophy size={24} />, 
-      hasSub: true, 
+      hasSub: true,
+      path: "/desporto",
       subItems: [
         "Futebol", "Futsal", "Andebol", "Basquetebol", "Voleibol", 
         "Ciclismo", "Hóquei", "Natação", "Desporto Adaptado", 
@@ -134,6 +136,33 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               {menuItems.map((item) => (
                 <div key={item.label}>
                   {item.hasSub ? (
+                    item.path ? (
+                      <div className="group relative w-full flex items-center rounded-sm overflow-hidden transition duration-300">
+                        {/* Main link — navigates to the category page */}
+                        <Link
+                          href={item.path}
+                          onClick={handleClose}
+                          className="flex items-center gap-8 flex-1 px-4 py-3 active:scale-[0.98]"
+                        >
+                          <div className="text-[#969199] group-hover:text-[#006ec2] transition-colors shrink-0">{item.icon}</div>
+                          <div className="relative">
+                            <span className="font-bold uppercase text-[15px] tracking-wide">{item.label}</span>
+                            <div className="absolute -bottom-1.5 left-0 w-6 h-0.5 bg-white/10 group-hover:bg-[#006ec2] group-hover:w-full transition-all duration-300" />
+                          </div>
+                        </Link>
+                        {/* Divider */}
+                        <div className="w-px h-10 bg-white/10 shrink-0" />
+                        {/* Submenu trigger — clearly labelled */}
+                        <button
+                          onClick={() => setActiveSubmenu(item.label)}
+                          className="flex items-center gap-1 px-3 py-3 shrink-0 text-[#969199] hover:text-[#006ec2] hover:bg-white/5 transition-all cursor-pointer"
+                          title="Ver subcategorias"
+                        >
+                          <span className="text-[10px] font-bold uppercase tracking-widest leading-none">ver mais</span>
+                          <ChevronRight size={12} />
+                        </button>
+                      </div>
+                    ) : (
                     <button 
                       onClick={() => setActiveSubmenu(item.label)}
                       className="group relative w-full flex items-center justify-between gap-2 rounded-sm px-4 py-3 text-left transition duration-300 active:scale-[0.98] cursor-pointer"
@@ -147,6 +176,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                       </div>
                       <ChevronRight size={16} className="text-[#969199] group-hover:text-[#006ec2] group-hover:translate-x-1 transition-all" />
                     </button>
+                    )
                   ) : (
                     <Link 
                       href={item.path || "#"}

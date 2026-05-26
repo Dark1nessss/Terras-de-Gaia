@@ -136,15 +136,6 @@ export default function YouTubePlaylistArchive({
               <p className="text-white/60 leading-relaxed text-xs line-clamp-3">
                 {selectedVideo.description}
               </p>
-
-              <a
-                href={`https://www.youtube.com/watch?v=${selectedVideo.id}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 mt-4 text-[#006ec2] hover:text-[#00d4ff] font-black uppercase text-xs tracking-widest transition-colors cursor-pointer group"
-              >
-                Ver no YouTube <span className="group-hover:translate-x-1 transition-transform">→</span>
-              </a>
             </div>
           </div>
 
