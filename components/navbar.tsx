@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Menu, Phone, MoreVertical } from "lucide-react";
+import { Menu, Phone } from "lucide-react";
 import Sidebar from "./sidebar";
 import Image from "next/image";
 import Link from "next/link";
@@ -40,6 +40,7 @@ export default function Navbar() {
   };
 
   return (
+    <>
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-500 ease-in-out px-4 md:px-8 py-3 flex items-center justify-between ${
         // If scrollY = 0 opacity is 0, if scrollY > 0 & isSolid is false opacity is 100 but with glassy effect, if scrollY > 0 & isSolid is true opacity is 100 with solid background
@@ -81,7 +82,8 @@ export default function Navbar() {
           </button>
         </Link>
       </div>
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
     </nav>
+    <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+    </>
   );
 }
