@@ -154,6 +154,7 @@ const TIMELINE = [
 
 const PLATFORMS = [
   { Icon: Globe, label: "Jornal Online", desc: "Notícias, reportagens e opinião em terrasdegaia.pt", href: "/" },
+  { Icon: Newspaper, label: "Jornal em Papel", desc: "Edição impressa disponível em pontos de venda na região de Gaia", href: "/contacto" },
   { Icon: Tv, label: "Canal TV", desc: "Transmissão televisiva em direto para a região", href: "/live" },
   { Icon: Play, label: "Gaia Play", desc: "Programas originais e conteúdos on demand", href: "/gaia-play" },
   { Icon: Users, label: "Redes Sociais", desc: "Siga-nos e acompanhe as últimas novidades", href: "/contacto" },
@@ -430,7 +431,7 @@ export default function SobreNos() {
             </div>
           </Reveal>
 
-          <RevealStagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <RevealStagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
             {PLATFORMS.map((p) => {
               const PIcon = p.Icon;
               return (

@@ -2,6 +2,7 @@
 
 import { CheckCircle2, Mail, Phone } from "lucide-react";
 import Link from "next/link";
+import { CONTACT_INFO } from "@/lib/contact";
 
 export default function ViraParceiro() {
   const partnershipTypes = [
@@ -35,7 +36,7 @@ export default function ViraParceiro() {
             Oportunidades de Negócio
           </span>
           <h1 className="text-8xl md:text-[12rem] font-black uppercase italic leading-[0.7] tracking-tighter">
-            VIRA <br /> 
+            SEJA NOSSO<br /> 
             <span className="text-white/5 outline-text ml-20">PARCEIRO</span>
           </h1>
         </div>
@@ -50,8 +51,9 @@ export default function ViraParceiro() {
             <div>
               <p className="text-[#00a6f0] text-[10px] font-black uppercase tracking-widest mb-4">Sobre a Parceria</p>
               <p className="text-white/70 leading-relaxed mb-4">
-                Terras de Gaia é a plataforma de comunicação mais relevante de Vila Nova de Gaia. 
-                Junte-se a nós e alcance milhares de pessoas todos os dias.
+                O Terras de Gaia é uma plataforma digital de comunicação mais influente
+                da região. Ao tornar-se parceiro, a sua marca ganha acesso direto a uma audiência ativa,
+                conteúdos de alto impacto e oportunidades exclusivas de visiblidade.
               </p>
               <div className="space-y-2 text-sm text-white/60">
                 <p>✓ 100k+ utilizadores mensais</p>
@@ -63,10 +65,10 @@ export default function ViraParceiro() {
             {/* Email Contact */}
             <div className="group cursor-pointer">
               <p className="text-[#00a6f0] text-[10px] font-black uppercase tracking-widest mb-4">Email</p>
-              <a href="mailto:geral@diretogaia.pt" className="flex items-center gap-4 border-b border-white/5 pb-6 group-hover:border-[#00a6f0] transition-colors">
+              <a href={`mailto:${CONTACT_INFO.email_comercial}`} className="flex items-center gap-4 border-b border-white/5 pb-6 group-hover:border-[#00a6f0] transition-colors">
                 <Mail className="text-white/20 group-hover:text-[#00a6f0]" size={24} />
                 <span className="text-2xl font-bold italic uppercase tracking-tighter group-hover:pl-2 transition-all">
-                  geral@diretogaia.pt
+                  {CONTACT_INFO.email_comercial}
                 </span>
               </a>
             </div>
@@ -74,10 +76,10 @@ export default function ViraParceiro() {
             {/* Phone Contact */}
             <div className="group cursor-pointer">
               <p className="text-[#00a6f0] text-[10px] font-black uppercase tracking-widest mb-4">Telefone</p>
-              <a href="tel:+351256200000" className="flex items-center gap-4 border-b border-white/5 pb-6 group-hover:border-[#00a6f0] transition-colors">
+              <a href={`tel:${CONTACT_INFO.phone}`} className="flex items-center gap-4 border-b border-white/5 pb-6 group-hover:border-[#00a6f0] transition-colors">
                 <Phone className="text-white/20 group-hover:text-[#00a6f0]" size={24} />
                 <span className="text-2xl font-bold italic uppercase tracking-tighter group-hover:pl-2 transition-all">
-                  +351 256 200 000
+                  {CONTACT_INFO.phone}
                 </span>
               </a>
             </div>

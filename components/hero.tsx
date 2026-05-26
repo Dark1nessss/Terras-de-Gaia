@@ -22,14 +22,14 @@ export default function Hero() {
         {/* Headlines: Adjusting size for Mobile */}
         <div className="max-w-4xl select-none">
           <h1 className="text-5xl md:text-7xl font-black uppercase italic tracking-tighter leading-[0.8] mb-4 md:mb-6 drop-shadow-2xl">
-            Jornal <br /> 
-            <span className="text-[#00a6f0]">Diário</span>
+            Terras de <br /> 
+            <span className="text-[#00a6f0]">Gaia</span>
           </h1>
           
           <div className="relative border-l-[3px] border-[#00a6f0] pl-4 md:pl-6 py-1 md:py-2">
             <p className="text-md md:text-lg text-white/90 font-bold max-w-sm md:max-w-xl leading-tight italic tracking-tight uppercase">
-              Espaço de notícias que marcam a atualidade <br className="hidden md:block" /> 
-              do desporto e da região.
+              O lugar onde as Histórias de Gaia ganham vida <br className="hidden md:block" /> 
+              Desporto, Informação e Entretenimento num só Espaço.
             </p>
           </div>
         </div>

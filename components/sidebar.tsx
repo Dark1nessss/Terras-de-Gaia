@@ -55,10 +55,10 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     { label: "Transmissões", icon: <Radio size={24} />, hasSub: false, path: "/live" },
     { label: "Programação", icon: <Calendar size={24} />, hasSub: false, path: "/programacao" },
     { label: "Gaia Play", icon: <Tv size={24} />, hasSub: false, path: "/gaia-play" },
-    { label: "Revista", icon: <BookOpen size={24} />, hasSub: false, path: "/revista" },
+    { label: "Jornal Digital", icon: <BookOpen size={24} />, hasSub: false, path: "/revista" },
     { label: "Sobre Nós", icon: <Shield size={24} />, hasSub: false, path: "/sobre-nos" },
     { label: "Contactos", icon: <Phone size={24} />, hasSub: false, path: "/contacto" },
-    { label: "Vira Parceiro", icon: <MessageSquare size={24} />, hasSub: false, path: "/vira-parceiro" },
+    { label: "Torne-se Parceiro TG", icon: <MessageSquare size={24} />, hasSub: false, path: "/vira-parceiro" },
   ];
 
   const handleClose = () => {
@@ -184,16 +184,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             </div>
           </div>
         </div>
-
-        {/* Footer */}
-        {!activeSubmenu && (
-          <div className="p-6 bg-black/10 mt-auto border-t border-white/5">
-            <button className="w-full flex items-center justify-start gap-4 text-white/60 hover:text-white transition-all px-2">
-              <MessageSquare size={20} className="text-[#00a6f0]" />
-              <span className="font-black uppercase text-xs tracking-widest border-b border-white/20 pb-1">Dar Feedback</span>
-            </button>
-          </div>
-        )}
       </aside>
     </>
   );
