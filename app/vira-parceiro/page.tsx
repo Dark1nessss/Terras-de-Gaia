@@ -8,21 +8,21 @@ export default function ViraParceiro() {
   const partnershipTypes = [
     {
       number: "01",
-      title: "Patrocínios",
-      description: "Apoie conteúdos e programas específicos da nossa plataforma",
-      items: ["Programas de TV", "Conteúdos digitais", "Eventos especiais"]
+      title: "Parceiros de Impacto Comunitário",
+      description: "Apoie iniciativas que fazem a diferença na nossa comunidade",
+      items: ["Reconhecimento público", "Presença institucional", "Participação em iniciativas sociais"]
     },
     {
       number: "02",
-      title: "Publicidade",
+      title: "Parceiros Comerciais de Conteúdo",
       description: "Coloque a sua marca onde a audiência nos vê",
-      items: ["Banners digitais", "Spots publicitários", "Publicidade integrada"]
+      items: ["Conteúdos profissionais", "Divulgação digital", "Visibilidade contínua"]
     },
     {
       number: "03",
-      title: "Parcerias Comerciais",
+      title: "Parceiros Premium TG",
       description: "Desenvolva oportunidades de negócio em conjunto",
-      items: ["Produtos conjuntos", "Promoções exclusivas", "Colaborações criativas"]
+      items: ["Publicidade mensal exclusiva", "Prioridade em conteúdos", "Acesso a grupo de Parceiros Premium TG (networking, workshops, encontros)"]
     }
   ];
 
@@ -33,7 +33,7 @@ export default function ViraParceiro() {
         {/* Kinetic Header */}
         <div className="relative mb-24">
           <span className="text-[#006ec2] text-xs font-black uppercase tracking-[0.8em] mb-5 block">
-            Oportunidades de Negócio
+            Parcerias e valorização de marca
           </span>
           <h1 className="text-8xl md:text-[12rem] font-black uppercase italic leading-[0.7] tracking-tighter">
             SEJA NOSSO<br /> 

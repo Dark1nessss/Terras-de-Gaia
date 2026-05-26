@@ -28,7 +28,7 @@ export default function Hero() {
           
           <div className="relative border-l-[3px] border-[#006ec2] pl-4 md:pl-6 py-1 md:py-2">
             <p className="text-md md:text-lg text-white/90 font-bold max-w-sm md:max-w-xl leading-tight italic tracking-tight uppercase">
-              O lugar onde as Histórias de Gaia ganham vida <br className="hidden md:block" /> 
+              O lugar onde as Histórias de Gaia ganham vida - <br className="hidden md:block" /> 
               Desporto, Informação e Entretenimento num só Espaço.
             </p>
           </div>
