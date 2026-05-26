@@ -132,7 +132,7 @@ export function InfiniteScrollPosts({
           )}
         </div>
         <div className={showVideoCards ? "" : "flex flex-col flex-1 p-4 gap-2.5"}>
-          <h3 className={showVideoCards ? "text-lg font-black uppercase tracking-tight group-hover:text-[#00a6f0] transition-colors line-clamp-2" : "font-black uppercase italic text-base tracking-tighter leading-tight group-hover:text-[#00a6f0] transition-colors line-clamp-3"}>
+          <h3 className={showVideoCards ? "text-lg font-black uppercase tracking-tight group-hover:text-[#006ec2] transition-colors line-clamp-2" : "font-black uppercase italic text-base tracking-tighter leading-tight group-hover:text-[#006ec2] transition-colors line-clamp-3"}>
             {post.title_clean || post.title.rendered.replace(/<[^>]*>/g, "")}
           </h3>
           {!showVideoCards && post.author_name && post.date && (
@@ -168,7 +168,7 @@ export function InfiniteScrollPosts({
         <div className="flex justify-center pt-8">
           <button
             onClick={loadMorePosts}
-            className="px-8 py-3 border border-white/20 hover:border-white/40 font-black uppercase text-sm flex items-center gap-2 transition-all group cursor-pointer hover:text-[#00a6f0]"
+            className="px-8 py-3 border border-white/20 hover:border-white/40 font-black uppercase text-sm flex items-center gap-2 transition-all group cursor-pointer hover:text-[#006ec2]"
           >
             <span className="transition-colors mt-0.75">Carregar Mais</span>
             <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />

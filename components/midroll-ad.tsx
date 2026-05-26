@@ -333,7 +333,7 @@ export function MidrollAd({ onFinished, containerRef }: MidrollAdProps) {
           ) : skipReady ? (
             <button
               onClick={() => finish(true)}
-              className="flex items-center gap-2 bg-[#00a6f0] hover:bg-[#0090d0] text-white text-sm font-black uppercase tracking-widest px-5 py-2 transition-colors cursor-pointer select-none"
+              className="flex items-center gap-2 bg-[#006ec2] hover:bg-[#0090d0] text-white text-sm font-black uppercase tracking-widest px-5 py-2 transition-colors cursor-pointer select-none"
             >
               <span className="mt-0.5">Saltar Anúncio</span>
               <span className="text-base leading-none">›</span>
@@ -344,7 +344,7 @@ export function MidrollAd({ onFinished, containerRef }: MidrollAdProps) {
             </div>
           ) : adCountdown !== null ? (
             <div className="flex items-center gap-2 bg-black/60 text-white text-sm font-black tabular-nums px-4 py-2 select-none">
-              <span className="inline-block w-2 h-2 rounded-full bg-[#00a6f0]" />
+              <span className="inline-block w-2 h-2 rounded-full bg-[#006ec2]" />
               {adCountdown}s
             </div>
           ) : null}
@@ -363,7 +363,7 @@ export function MidrollAd({ onFinished, containerRef }: MidrollAdProps) {
       {/* Progress bar */}
       <div className="absolute bottom-0 left-0 w-full h-0.75 bg-white/10 z-20 pointer-events-none">
         <div
-          className="h-full bg-[#00a6f0]"
+          className="h-full bg-[#006ec2]"
           style={{ width: `${progress}%`, transition: 'width 0.1s linear' }}
         />
       </div>

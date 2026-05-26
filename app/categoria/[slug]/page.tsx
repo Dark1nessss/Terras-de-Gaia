@@ -161,7 +161,7 @@ export default async function CategoryPage({
                         {i + 1}
                       </span>
                       <div>
-                        <p className="text-xs font-black uppercase italic leading-tight line-clamp-2 group-hover:text-[#00a6f0] transition-colors mb-1">
+                        <p className="text-xs font-black uppercase italic leading-tight line-clamp-2 group-hover:text-[#006ec2] transition-colors mb-1">
                           {p.title.rendered.replace(/<[^>]*>/g, "")}
                         </p>
                         <p className="text-[10px] text-white/35 tabular-nums">

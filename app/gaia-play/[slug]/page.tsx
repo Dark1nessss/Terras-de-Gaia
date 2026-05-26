@@ -262,7 +262,7 @@ export default function ProgramSlugPage() {
         {/* NAVEGAÇÃO & ACTIONS */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-8">
           <div className="space-y-4">
-            <Link href="/gaia-play" className="group flex items-center gap-2 text-white/40 hover:text-[#00a6f0] transition-colors">
+            <Link href="/gaia-play" className="group flex items-center gap-2 text-white/40 hover:text-[#006ec2] transition-colors">
               <ArrowLeft size={16} />
               <span className="text-xs font-black uppercase tracking-[0.3em] pt-[2px]">Explorar Programas</span>
             </Link>
@@ -361,7 +361,7 @@ export default function ProgramSlugPage() {
                         className="object-cover opacity-50 transition-transform duration-1000 group-hover:scale-105"
                       />
                     ) : (
-                      <div className="absolute inset-0 bg-gradient-to-br from-[#00a6f0]/20 to-[#0a0c10] opacity-50" />
+                      <div className="absolute inset-0 bg-gradient-to-br from-[#006ec2]/20 to-[#0a0c10] opacity-50" />
                     )}
                     
                     <div className="absolute inset-0 flex items-center justify-center">
@@ -413,7 +413,7 @@ export default function ProgramSlugPage() {
             {/* Season Selector */}
             {program.temporadas && program.temporadas.length > 0 && (
               <div className="p-5 bg-gradient-to-b from-white/[0.04] to-transparent border-b border-white/10 flex-shrink-0">
-                <label className="text-xs font-black uppercase tracking-[0.3em] text-[#00a6f0] block mb-3">Temporadas</label>
+                <label className="text-xs font-black uppercase tracking-[0.3em] text-[#006ec2] block mb-3">Temporadas</label>
                 <SeasonSelector
                   seasons={program.temporadas}
                   activeSeason={activeSeason}
@@ -426,7 +426,7 @@ export default function ProgramSlugPage() {
             )}
             <div className="p-6 bg-white/[0.02] border-b border-white/5 flex items-center justify-between flex-shrink-0">
               <h3 className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
-                <MonitorPlay size={14} className="text-[#00a6f0]" /> Episódios
+                <MonitorPlay size={14} className="text-[#006ec2]" /> Episódios
               </h3>
               <span className="text-sm font-black text-white/40">{currentSeasonEpisodes.length} EP</span>
             </div>
@@ -439,15 +439,15 @@ export default function ProgramSlugPage() {
                   onClick={() => handleEpisodeClick(ep)}
                   className={`w-full flex flex-col gap-1 p-6 transition-all border-b border-white/5 text-left relative cursor-pointer group
                     ${activeEpIndex === idx
-                      ? 'bg-[#00a6f0]/10 border-l-4 border-l-[#00a6f0]' 
-                      : 'hover:bg-white/10 border-l-4 border-l-transparent group-hover:border-l-[#00a6f0]/50'}
+                      ? 'bg-[#006ec2]/10 border-l-4 border-l-[#006ec2]' 
+                      : 'hover:bg-white/10 border-l-4 border-l-transparent group-hover:border-l-[#006ec2]/50'}
                   `}
                 >
                   <div className="flex justify-between items-center mb-1">
-                    <span className={`text-sm font-black uppercase tracking-widest transition-colors ${activeEpIndex === idx ? 'text-[#00a6f0]' : 'text-white/40 group-hover:text-white/70'}`}>
+                    <span className={`text-sm font-black uppercase tracking-widest transition-colors ${activeEpIndex === idx ? 'text-[#006ec2]' : 'text-white/40 group-hover:text-white/70'}`}>
                       EP {ep.numero?.toString().padStart(2, '0')}
                     </span>
-                    {activeEpIndex === idx && <div className="h-1 w-8 bg-[#00a6f0] animate-pulse" />}
+                    {activeEpIndex === idx && <div className="h-1 w-8 bg-[#006ec2] animate-pulse" />}
                   </div>
                   <h4 className={`text-sm font-black uppercase tracking-tight leading-tight transition-colors ${activeEpIndex === idx ? 'text-white' : 'text-white/70 group-hover:text-white'}`}>
                     {ep.titulo}
@@ -483,13 +483,13 @@ export default function ProgramSlugPage() {
                </span>
              </div>
              <div className="flex flex-col border-l border-white/5 pl-8 md:text-right md:border-none md:pl-0">
-               <span className="text-sm font-black text-[#00a6f0] uppercase tracking-[0.2em] mb-1">Exibição Original</span>
+               <span className="text-sm font-black text-[#006ec2] uppercase tracking-[0.2em] mb-1">Exibição Original</span>
                <span className="text-sm font-bold italic">{formatExibicao(program.acf?.exibicao_original) || "Não especificado"}</span>
              </div>
           </div>
 
           <div className="max-w-4xl mt-12 space-y-6">
-            <h3 className="text-xs font-black uppercase tracking-[0.4em] text-[#00a6f0]">Sobre o Programa</h3>
+            <h3 className="text-xs font-black uppercase tracking-[0.4em] text-[#006ec2]">Sobre o Programa</h3>
             <p className="text-xl md:text-3xl text-white/60 font-medium italic leading-[1.3] tracking-tight">
               {cleanText(program.excerpt.rendered)}
             </p>

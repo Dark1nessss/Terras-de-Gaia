@@ -64,7 +64,7 @@ function MagazineCard({ revista }: { revista: Revista }) {
 
         {/* Hover overlay */}
         <div className="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent opacity-0 group-hover:opacity-80 transition-opacity duration-300 z-20 flex flex-col justify-end p-4">
-          <span className="text-[#00a6f0] text-xs font-black uppercase tracking-widest flex items-center gap-1">
+          <span className="text-[#006ec2] text-xs font-black uppercase tracking-widest flex items-center gap-1">
             Ler Agora <ArrowRight size={12} />
           </span>
         </div>
@@ -75,7 +75,7 @@ function MagazineCard({ revista }: { revista: Revista }) {
 
       {/* Info */}
       <div className="mt-3 px-0.5">
-        <h3 className="text-sm font-black uppercase italic tracking-tight line-clamp-2 leading-tight group-hover:text-[#00a6f0] transition-colors duration-300">
+        <h3 className="text-sm font-black uppercase italic tracking-tight line-clamp-2 leading-tight group-hover:text-[#006ec2] transition-colors duration-300">
           {title}
         </h3>
         {revista.acf?.data_publicacao && (
@@ -109,41 +109,8 @@ export default function RevistaPage() {
       <section className="relative pt-32 pb-16 overflow-hidden">
         {/* Ambient glow */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-225 h-125 bg-[#00a6f0]/8 blur-[120px] rounded-full" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-225 h-125 bg-[#006ec2]/8 blur-[120px] rounded-full" />
         </div>
-
-        {/* Latest journal cover — artistic right-side hero background */}
-        {!isLoading && revistas[0]?.featured_media_url && (
-          <div
-            className="absolute right-0 top-0 bottom-0 w-[42%] pointer-events-none z-10"
-            style={{ overflow: 'hidden' }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={revistas[0].featured_media_url}
-              alt=""
-              style={{
-                position: 'absolute',
-                inset: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'top center',
-                opacity: 0.65,
-              }}
-            />
-            {/* Fade left into page background */}
-            <div
-              className="absolute inset-0"
-              style={{ background: 'linear-gradient(to right, #0a0c10 0%, rgba(10,12,16,0.6) 40%, transparent 70%)' }}
-            />
-            {/* Artistic bottom cutoff */}
-            <div
-              className="absolute inset-0"
-              style={{ background: 'linear-gradient(to bottom, transparent 0%, transparent 45%, rgba(10,12,16,0.8) 65%, #0a0c10 85%)' }}
-            />
-          </div>
-        )}
 
         <div className="relative container mx-auto px-6 max-w-7xl z-20">
           <Breadcrumb
@@ -160,8 +127,8 @@ export default function RevistaPage() {
               className="flex-1"
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-0.75 bg-[#00a6f0]" />
-                <span className="text-[#00a6f0] text-xs font-black uppercase tracking-[0.2em]">
+                <div className="w-8 h-0.75 bg-[#006ec2]" />
+                <span className="text-[#006ec2] text-xs font-black uppercase tracking-[0.2em]">
                   Arquivo Digital
                 </span>
               </div>
@@ -169,7 +136,7 @@ export default function RevistaPage() {
               <h1 className="text-6xl md:text-8xl font-black uppercase italic tracking-tighter leading-none mb-5">
                 Revista
                 <br />
-                <span className="text-[#00a6f0]">Digital</span>
+                <span className="text-[#006ec2]">Digital</span>
               </h1>
 
               <p className="text-white/40 text-base max-w-md leading-relaxed">
@@ -187,7 +154,7 @@ export default function RevistaPage() {
       <section className="container mx-auto px-6 max-w-7xl py-16 pb-28">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-32 gap-4">
-            <Loader2 className="animate-spin text-[#00a6f0]" size={40} />
+            <Loader2 className="animate-spin text-[#006ec2]" size={40} />
             <p className="text-white/30 text-sm">A carregar revistas...</p>
           </div>
         ) : revistas.length === 0 ? (

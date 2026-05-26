@@ -88,11 +88,11 @@ export default function YouTubePlaylistArchive({
       <div className="container mx-auto px-6">
         {/* Section Header */}
         <div className="mb-8">
-          <span className="text-[#00a6f0] text-xs font-black uppercase tracking-[0.2em] inline-block mb-3 px-3 py-1 border border-[#00a6f0]/30 rounded-full">
+          <span className="text-[#006ec2] text-xs font-black uppercase tracking-[0.2em] inline-block mb-3 px-3 py-1 border border-[#006ec2]/30 rounded-full">
             ✦ <span className="mt-1">Arquivo</span>
           </span>
           <h2 className="text-3xl md:text-4xl font-black uppercase italic tracking-tighter text-white mb-2">
-            Transmissões <span className="text-[#00a6f0]">Anteriores</span>
+            Transmissões <span className="text-[#006ec2]">Anteriores</span>
           </h2>
           <p className="text-white/60 text-base max-w-2xl">
             Reveja as transmissões anteriores de Terras de Gaia. Conteúdo que marcou presença.
@@ -122,13 +122,13 @@ export default function YouTubePlaylistArchive({
 
               <div className="flex flex-wrap gap-4 mb-4 pb-4 border-b border-white/10">
                 <div className="flex items-center gap-2 text-xs">
-                  <Calendar size={14} className="text-[#00a6f0]" />
+                  <Calendar size={14} className="text-[#006ec2]" />
                   <span className="text-white/70">
                     {formatDate(selectedVideo.publishedAt)}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 text-xs">
-                  <Eye size={14} className="text-[#00a6f0]" />
+                  <Eye size={14} className="text-[#006ec2]" />
                   <span className="text-white/70">YouTube</span>
                 </div>
               </div>
@@ -141,7 +141,7 @@ export default function YouTubePlaylistArchive({
                 href={`https://www.youtube.com/watch?v=${selectedVideo.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 mt-4 text-[#00a6f0] hover:text-[#00d4ff] font-black uppercase text-xs tracking-widest transition-colors cursor-pointer group"
+                className="inline-flex items-center gap-2 mt-4 text-[#006ec2] hover:text-[#00d4ff] font-black uppercase text-xs tracking-widest transition-colors cursor-pointer group"
               >
                 Ver no YouTube <span className="group-hover:translate-x-1 transition-transform">→</span>
               </a>
@@ -151,7 +151,7 @@ export default function YouTubePlaylistArchive({
           {/* RIGHT: Video List - Scrollable */}
           <div className="lg:col-span-1">
             <div className="sticky top-24">
-              <h4 className="text-sm font-black uppercase italic tracking-tighter text-white mb-3 px-3 py-1.5 bg-gradient-to-r from-[#00a6f0] to-[#00d4ff] rounded-t">
+              <h4 className="text-sm font-black uppercase italic tracking-tighter text-white mb-3 px-3 py-1.5 bg-gradient-to-r from-[#006ec2] to-[#00d4ff] rounded-t">
                 Mais Transmissões
               </h4>
 
@@ -167,17 +167,17 @@ export default function YouTubePlaylistArchive({
                       onClick={() => setSelectedVideo(video)}
                       className={`w-full group text-left p-2.5 transition-all duration-300 cursor-pointer relative overflow-hidden ${
                         selectedVideo.id === video.id
-                          ? "bg-gradient-to-r from-[#00a6f0]/20 to-transparent border-l-4 border-l-[#00a6f0]"
+                          ? "bg-gradient-to-r from-[#006ec2]/20 to-transparent border-l-4 border-l-[#006ec2]"
                           : "hover:bg-white/5 border-l-4 border-l-transparent"
                       }`}
                     >
                       {/* Hover glow background */}
                       {selectedVideo.id === video.id && (
-                        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#00a6f0]/10 to-transparent"></div>
+                        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#006ec2]/10 to-transparent"></div>
                       )}
                       
                       {/* Thumbnail */}
-                      <div className="relative aspect-video mb-1.5 overflow-hidden rounded bg-black/50 border border-white/10 group-hover:border-[#00a6f0]/50 transition-colors">
+                      <div className="relative aspect-video mb-1.5 overflow-hidden rounded bg-black/50 border border-white/10 group-hover:border-[#006ec2]/50 transition-colors">
                         <Image
                           src={video.thumbnail}
                           alt={video.title}
@@ -186,7 +186,7 @@ export default function YouTubePlaylistArchive({
                           sizes="(max-width: 768px) 100vw, 33vw"
                         />
                         <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-all duration-300 cursor-pointer">
-                          <div className="w-8 h-8 rounded-full bg-[#00a6f0] flex items-center justify-center group-hover:scale-125 transition-transform duration-300 shadow-lg">
+                          <div className="w-8 h-8 rounded-full bg-[#006ec2] flex items-center justify-center group-hover:scale-125 transition-transform duration-300 shadow-lg">
                             <Play
                               size={16}
                               className="text-white ml-0.5"
@@ -197,7 +197,7 @@ export default function YouTubePlaylistArchive({
                       </div>
 
                       {/* Title */}
-                      <h5 className="text-xs font-black uppercase italic tracking-tight text-white group-hover:text-[#00a6f0] transition-colors line-clamp-2 mb-0.5">
+                      <h5 className="text-xs font-black uppercase italic tracking-tight text-white group-hover:text-[#006ec2] transition-colors line-clamp-2 mb-0.5">
                         {video.title}
                       </h5>
 
@@ -213,7 +213,7 @@ export default function YouTubePlaylistArchive({
                   {/* Loading State */}
                   {isLoading && (
                     <div className="p-2 text-center">
-                      <div className="inline-block w-3 h-3 border-2 border-[#00a6f0]/30 border-t-[#00a6f0] rounded-full animate-spin"></div>
+                      <div className="inline-block w-3 h-3 border-2 border-[#006ec2]/30 border-t-[#006ec2] rounded-full animate-spin"></div>
                     </div>
                   )}
 

@@ -27,14 +27,14 @@ export function RelatedPosts({ posts, currentPostId, categorySlug, categoryName 
       {/* Header with Gazette Aesthetic */}
       <div className="flex items-end justify-between mb-10">
         <div className="space-y-1">
-          <span className="text-[#00a6f0] text-xs font-bold uppercase tracking-[0.3em]">Continuar a Ler</span>
+          <span className="text-[#006ec2] text-xs font-bold uppercase tracking-[0.3em]">Continuar a Ler</span>
           <h3 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter text-white">
             Artigos <span className="text-white/20">Relacionados</span>
           </h3>
         </div>
         {/* Link must be from category */}
 
-        <Link href={viewAllHref} className="hidden md:flex items-center gap-2 text-white/40 hover:text-[#00a6f0] transition-colors text-xs font-bold uppercase tracking-widest pb-2">
+        <Link href={viewAllHref} className="hidden md:flex items-center gap-2 text-white/40 hover:text-[#006ec2] transition-colors text-xs font-bold uppercase tracking-widest pb-2">
           Ver Tudo <MoveRight size={16} />
         </Link>
       </div>
@@ -48,7 +48,7 @@ export function RelatedPosts({ posts, currentPostId, categorySlug, categoryName 
             <Link 
               key={post.id} 
               href={`/post/${post.slug}`}
-              className="group relative bg-[#0a0c10] p-6 md:p-8 hover:bg-[#00a6f0] transition-all duration-500 flex flex-col min-h-[300px]"
+              className="group relative bg-[#0a0c10] p-6 md:p-8 hover:bg-[#006ec2] transition-all duration-500 flex flex-col min-h-[300px]"
             >
               {/* Index Number Background */}
               <span className="absolute top-4 right-6 text-6xl font-black italic text-white/[0.03] group-hover:text-white/50 transition-colors">
@@ -57,7 +57,7 @@ export function RelatedPosts({ posts, currentPostId, categorySlug, categoryName 
 
               <div className="relative z-10 flex flex-col h-full">
                 {/* Minimal Category Tag */}
-                <span className="text-[#00a6f0] group-hover:text-[#0a0c10] text-xs font-black uppercase tracking-widest mb-4 transition-colors">
+                <span className="text-[#006ec2] group-hover:text-[#0a0c10] text-xs font-black uppercase tracking-widest mb-4 transition-colors">
                   {post.category?.name || "Gazeta"}
                 </span>
 

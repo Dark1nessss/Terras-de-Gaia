@@ -62,8 +62,8 @@ export default function TermosDeUtilizacao() {
 
       {/* Background */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-20 right-0 w-125 h-125 bg-[#00a6f0]/4 rounded-full blur-[140px]" />
-        <div className="absolute bottom-0 left-1/3 w-100 h-100 bg-[#00a6f0]/3 rounded-full blur-[120px]" />
+        <div className="absolute top-20 right-0 w-125 h-125 bg-[#006ec2]/4 rounded-full blur-[140px]" />
+        <div className="absolute bottom-0 left-1/3 w-100 h-100 bg-[#006ec2]/3 rounded-full blur-[120px]" />
       </div>
 
       <div className="relative z-10 pt-32 pb-24">
@@ -74,9 +74,9 @@ export default function TermosDeUtilizacao() {
             <motion.span
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="inline-flex items-center gap-2 text-[#00a6f0] text-[10px] font-black uppercase tracking-[0.8em] mb-6"
+              className="inline-flex items-center gap-2 text-[#006ec2] text-[10px] font-black uppercase tracking-[0.8em] mb-6"
             >
-              <span className="w-4 h-px bg-[#00a6f0]" />
+              <span className="w-4 h-px bg-[#006ec2]" />
               Última atualização: Janeiro 2025
             </motion.span>
             <motion.h1
@@ -86,13 +86,13 @@ export default function TermosDeUtilizacao() {
               className="text-5xl md:text-8xl font-black uppercase italic leading-[0.85] tracking-tighter mb-8"
             >
               TERMOS DE<br />
-              <span className="text-[#00a6f0]">UTILIZAÇÃO</span>
+              <span className="text-[#006ec2]">UTILIZAÇÃO</span>
             </motion.h1>
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-white/40 text-sm leading-relaxed max-w-xl border-l-2 border-[#00a6f0]/30 pl-6"
+              className="text-white/40 text-sm leading-relaxed max-w-xl border-l-2 border-[#006ec2]/30 pl-6"
             >
               Estes termos regulam o acesso e uso do website da Terras de Gaia TV.
               Por favor, leia-os atentamente antes de utilizar os nossos serviços.
@@ -108,17 +108,17 @@ export default function TermosDeUtilizacao() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.5, delay: i * 0.04 }}
-                className="group relative bg-[#0a0c10] p-8 hover:bg-[#00a6f0]/3 transition-colors duration-300"
+                className="group relative bg-[#0a0c10] p-8 hover:bg-[#006ec2]/3 transition-colors duration-300"
               >
                 {/* Large ghost number */}
-                <span className="absolute top-4 right-6 text-[5rem] font-black italic leading-none text-white/3 select-none pointer-events-none group-hover:text-[#00a6f0]/5 transition-colors duration-500">
+                <span className="absolute top-4 right-6 text-[5rem] font-black italic leading-none text-white/3 select-none pointer-events-none group-hover:text-[#006ec2]/5 transition-colors duration-500">
                   {s.num}
                 </span>
                 <div className="relative">
-                  <span className="inline-block text-[10px] font-black uppercase tracking-[0.4em] text-[#00a6f0] mb-3">
+                  <span className="inline-block text-[10px] font-black uppercase tracking-[0.4em] text-[#006ec2] mb-3">
                     Art.º {s.num}
                   </span>
-                  <h2 className="text-base font-black uppercase italic tracking-tight text-white mb-4 group-hover:text-[#00a6f0] transition-colors duration-300">
+                  <h2 className="text-base font-black uppercase italic tracking-tight text-white mb-4 group-hover:text-[#006ec2] transition-colors duration-300">
                     {s.title}
                   </h2>
                   <p className="text-white/50 text-sm leading-[1.8]">{s.content}</p>

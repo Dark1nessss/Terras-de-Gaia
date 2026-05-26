@@ -53,13 +53,13 @@ export default async function SportsMainPage({
 
           <div className="mt-5 flex items-end justify-between gap-6 flex-wrap">
             <div className="flex items-end gap-5">
-              <div className="w-1 self-stretch bg-[#00a6f0]" />
+              <div className="w-1 self-stretch bg-[#006ec2]" />
               <div>
-                <p className="text-[11px] font-black uppercase tracking-[0.4em] mb-2 text-[#00a6f0]">
+                <p className="text-[11px] font-black uppercase tracking-[0.4em] mb-2 text-[#006ec2]">
                   Terras de Gaia
                 </p>
                 <h1 className="text-5xl md:text-7xl font-black uppercase italic tracking-tighter leading-none">
-                  Arena <span className="text-[#00a6f0]">Gaia</span>
+                  Arena <span className="text-[#006ec2]">Gaia</span>
                 </h1>
               </div>
             </div>
@@ -70,9 +70,9 @@ export default async function SportsMainPage({
                 <Link
                   key={m.slug}
                   href={`/desporto/${m.slug}`}
-                  className="group flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 hover:border-[#00a6f0] transition-all"
+                  className="group flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 hover:border-[#006ec2] transition-all"
                 >
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#00a6f0] group-hover:scale-150 transition-transform" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#006ec2] group-hover:scale-150 transition-transform" />
                   <span className="text-[10px] font-black uppercase tracking-widest whitespace-nowrap">{m.name}</span>
                 </Link>
               ))}
@@ -138,7 +138,7 @@ export default async function SportsMainPage({
                       />
                     )}
                     <div className="absolute bottom-0 p-5 z-20">
-                      <span className="bg-[#00a6f0] text-black text-[9px] font-black px-2 py-0.5 uppercase italic mb-2 inline-block">
+                      <span className="bg-[#006ec2] text-black text-[9px] font-black px-2 py-0.5 uppercase italic mb-2 inline-block">
                         {post.category?.name ?? "Desporto"}
                       </span>
                       <h3 className="text-lg font-black uppercase italic leading-tight line-clamp-2">
@@ -155,7 +155,7 @@ export default async function SportsMainPage({
               <div className="lg:col-span-8">
                 <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
                   <h2 className="text-2xl font-black uppercase italic flex items-center gap-3">
-                    <Trophy className="text-[#00a6f0]" size={24} />
+                    <Trophy className="text-[#006ec2]" size={24} />
                     Em Destaque
                   </h2>
                 </div>
@@ -165,15 +165,15 @@ export default async function SportsMainPage({
               <aside className="lg:col-span-4 space-y-10 sticky top-32 self-start">
                 <AdPlaceholder position="sidebar" />
 
-                <div className="bg-[#0e1014] border-l-4 border-[#00a6f0] p-6">
+                <div className="bg-[#0e1014] border-l-4 border-[#006ec2] p-6">
                   <h3 className="text-sm font-black uppercase tracking-widest mb-6 flex items-center gap-2">
-                    <Timer size={16} className="text-[#00a6f0]" /> Calendário
+                    <Timer size={16} className="text-[#006ec2]" /> Calendário
                   </h3>
                   <div className="space-y-4">
                     {[1, 2, 3].map((i) => (
                       <div key={i} className="flex items-center gap-4 border-b border-white/5 pb-4 last:border-0">
                         <div className="text-center w-10 shrink-0">
-                          <span className="block text-xs font-black text-[#00a6f0]">MAI</span>
+                          <span className="block text-xs font-black text-[#006ec2]">MAI</span>
                           <span className="block text-lg font-black italic">1{i}</span>
                         </div>
                         <div>
@@ -187,7 +187,7 @@ export default async function SportsMainPage({
 
                 <div>
                   <h3 className="text-sm font-black uppercase tracking-widest mb-6 flex items-center gap-2">
-                    <Star size={16} className="text-[#00a6f0]" /> Top Arena
+                    <Star size={16} className="text-[#006ec2]" /> Top Arena
                   </h3>
                   <div className="space-y-6">
                     {posts.slice(0, 5).map((p, idx) => (
@@ -196,10 +196,10 @@ export default async function SportsMainPage({
                         href={`/desporto/${p.category?.slug ?? "desporto"}/${p.slug}`}
                         className="flex gap-4 group"
                       >
-                        <span className="text-4xl font-black italic text-white/10 group-hover:text-[#00a6f0]/20 transition-colors shrink-0">
+                        <span className="text-4xl font-black italic text-white/10 group-hover:text-[#006ec2]/20 transition-colors shrink-0">
                           0{idx + 1}
                         </span>
-                        <p className="text-xs font-black uppercase italic leading-snug group-hover:text-[#00a6f0] transition-colors">
+                        <p className="text-xs font-black uppercase italic leading-snug group-hover:text-[#006ec2] transition-colors">
                           {p.title_clean}
                         </p>
                       </Link>

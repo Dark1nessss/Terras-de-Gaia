@@ -40,15 +40,15 @@ export function FeaturedPostSection({ post }: FeaturedPostProps) {
         {/* Strong bottom-to-top gradient so text is always readable */}
         <div className="absolute inset-0 bg-linear-to-t from-[#080a0d] via-[#080a0d]/55 to-transparent" />
         {/* Top accent line */}
-        <div className="absolute top-0 left-0 right-0 h-0.5 bg-[#00a6f0]" />
+        <div className="absolute top-0 left-0 right-0 h-0.5 bg-[#006ec2]" />
       </div>
 
       {/* Content — overlaid on the gradient */}
       <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-10 lg:p-12">
-        <p className="text-[11px] font-black uppercase tracking-[0.45em] text-[#00a6f0] mb-3">
+        <p className="text-[11px] font-black uppercase tracking-[0.45em] text-[#006ec2] mb-3">
           Destaque
         </p>
-        <h2 className="text-xl sm:text-3xl md:text-5xl lg:text-6xl font-black uppercase italic tracking-tighter leading-none text-white group-hover:text-[#00a6f0] transition-colors mb-3 sm:mb-4 line-clamp-3">
+        <h2 className="text-xl sm:text-3xl md:text-5xl lg:text-6xl font-black uppercase italic tracking-tighter leading-none text-white group-hover:text-[#006ec2] transition-colors mb-3 sm:mb-4 line-clamp-3">
           {decodeHtml(post.title.rendered)}
         </h2>
         {excerpt && (

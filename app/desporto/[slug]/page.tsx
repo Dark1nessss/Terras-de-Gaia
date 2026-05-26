@@ -173,7 +173,7 @@ export default async function SportsCategoryPage({
                       <div className="font-black text-lg leading-none" style={{ color: ACCENT }}>#{idx + 1}</div>
                       <p className="text-xs font-black uppercase leading-tight" style={{ color: ACCENT }}>Destaque</p>
                     </div>
-                    <p className="text-xs font-black uppercase italic group-hover:text-[#00a6f0] transition-colors leading-snug line-clamp-2">
+                    <p className="text-xs font-black uppercase italic group-hover:text-[#006ec2] transition-colors leading-snug line-clamp-2">
                       {p.title.rendered.replace(/<[^>]*>/g, "")}
                     </p>
                   </div>

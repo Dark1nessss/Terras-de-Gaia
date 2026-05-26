@@ -94,7 +94,7 @@ export function TVSidebarInfo({ program, onClose }: TVSidebarInfoProps) {
               {activeProgram.title}
             </h2>
 
-            <div className="h-1 w-8 bg-[#00a6f0] mb-4" />
+            <div className="h-1 w-8 bg-[#006ec2] mb-4" />
 
             <div 
               className="text-[#999] text-lg leading-snug font-normal normal-case prose-p:mb-3"

@@ -32,7 +32,7 @@ export default function ViraParceiro() {
         
         {/* Kinetic Header */}
         <div className="relative mb-24">
-          <span className="text-[#00a6f0] text-xs font-black uppercase tracking-[0.8em] mb-5 block">
+          <span className="text-[#006ec2] text-xs font-black uppercase tracking-[0.8em] mb-5 block">
             Oportunidades de Negócio
           </span>
           <h1 className="text-8xl md:text-[12rem] font-black uppercase italic leading-[0.7] tracking-tighter">
@@ -49,7 +49,7 @@ export default function ViraParceiro() {
             
             {/* Intro */}
             <div>
-              <p className="text-[#00a6f0] text-[10px] font-black uppercase tracking-widest mb-4">Sobre a Parceria</p>
+              <p className="text-[#006ec2] text-[10px] font-black uppercase tracking-widest mb-4">Sobre a Parceria</p>
               <p className="text-white/70 leading-relaxed mb-4">
                 O Terras de Gaia é uma plataforma digital de comunicação mais influente
                 da região. Ao tornar-se parceiro, a sua marca ganha acesso direto a uma audiência ativa,
@@ -64,9 +64,9 @@ export default function ViraParceiro() {
 
             {/* Email Contact */}
             <div className="group cursor-pointer">
-              <p className="text-[#00a6f0] text-[10px] font-black uppercase tracking-widest mb-4">Email</p>
-              <a href={`mailto:${CONTACT_INFO.email_comercial}`} className="flex items-center gap-4 border-b border-white/5 pb-6 group-hover:border-[#00a6f0] transition-colors">
-                <Mail className="text-white/20 group-hover:text-[#00a6f0]" size={24} />
+              <p className="text-[#006ec2] text-[10px] font-black uppercase tracking-widest mb-4">Email</p>
+              <a href={`mailto:${CONTACT_INFO.email_comercial}`} className="flex items-center gap-4 border-b border-white/5 pb-6 group-hover:border-[#006ec2] transition-colors">
+                <Mail className="text-white/20 group-hover:text-[#006ec2]" size={24} />
                 <span className="text-2xl font-bold italic uppercase tracking-tighter group-hover:pl-2 transition-all">
                   {CONTACT_INFO.email_comercial}
                 </span>
@@ -75,9 +75,9 @@ export default function ViraParceiro() {
 
             {/* Phone Contact */}
             <div className="group cursor-pointer">
-              <p className="text-[#00a6f0] text-[10px] font-black uppercase tracking-widest mb-4">Telefone</p>
-              <a href={`tel:${CONTACT_INFO.phone}`} className="flex items-center gap-4 border-b border-white/5 pb-6 group-hover:border-[#00a6f0] transition-colors">
-                <Phone className="text-white/20 group-hover:text-[#00a6f0]" size={24} />
+              <p className="text-[#006ec2] text-[10px] font-black uppercase tracking-widest mb-4">Telefone</p>
+              <a href={`tel:${CONTACT_INFO.phone}`} className="flex items-center gap-4 border-b border-white/5 pb-6 group-hover:border-[#006ec2] transition-colors">
+                <Phone className="text-white/20 group-hover:text-[#006ec2]" size={24} />
                 <span className="text-2xl font-bold italic uppercase tracking-tighter group-hover:pl-2 transition-all">
                   {CONTACT_INFO.phone}
                 </span>
@@ -93,7 +93,7 @@ export default function ViraParceiro() {
                   
                   {/* Number + Title */}
                   <div className="flex items-start gap-8 relative z-10 mb-6 md:mb-0 flex-1">
-                    <span className="text-white/10 group-hover:text-[#00a6f0] font-black italic text-3xl transition-colors flex-shrink-0">
+                    <span className="text-white/10 group-hover:text-[#006ec2] font-black italic text-3xl transition-colors flex-shrink-0">
                       {partnership.number}
                     </span>
                     <div>
@@ -108,7 +108,7 @@ export default function ViraParceiro() {
                       <ul className="space-y-2">
                         {partnership.items.map((item, itemIdx) => (
                           <li key={itemIdx} className="flex items-center gap-2 text-sm">
-                            <CheckCircle2 size={16} className="text-[#00a6f0] flex-shrink-0" />
+                            <CheckCircle2 size={16} className="text-[#006ec2] flex-shrink-0" />
                             <span className="text-white/80">{item}</span>
                           </li>
                         ))}

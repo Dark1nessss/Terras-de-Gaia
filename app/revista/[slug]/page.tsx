@@ -81,8 +81,8 @@ export default async function RevistaDetailPage({ params }: Props) {
             {/* Meta */}
             <div className="flex flex-col justify-center">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-6 h-0.75 bg-[#00a6f0]" />
-                <span className="text-[#00a6f0] text-xs font-black uppercase tracking-[0.2em] flex items-center gap-1.5">
+                <div className="w-6 h-0.75 bg-[#006ec2]" />
+                <span className="text-[#006ec2] text-xs font-black uppercase tracking-[0.2em] flex items-center gap-1.5">
                   <BookOpen size={13} />
                   Revista Digital
                 </span>
@@ -120,7 +120,7 @@ export default async function RevistaDetailPage({ params }: Props) {
             <p className="text-xl font-bold uppercase italic">PDF não disponível para esta edição.</p>
             <Link
               href="/revista"
-              className="flex items-center gap-2 text-[#00a6f0] hover:underline text-sm mt-2"
+              className="flex items-center gap-2 text-[#006ec2] hover:underline text-sm mt-2"
             >
               <ArrowLeft size={14} />
               Voltar ao arquivo

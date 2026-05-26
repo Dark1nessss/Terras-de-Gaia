@@ -52,11 +52,11 @@ export function WeatherWidgetSidebar() {
     >
       <div className="flex items-center justify-between text-white/40 mb-2">
         <span className="text-xs font-black uppercase tracking-widest">Gaia Agora</span>
-        <ArrowUpRight size={14} className="text-[#00a6f0]" />
+        <ArrowUpRight size={14} className="text-[#006ec2]" />
       </div>
       <div className="flex items-end gap-4">
         <div className="flex items-center gap-2">
-          {weather && <WeatherIcon name={weather.icon} size={28} className="text-[#00a6f0]" />}
+          {weather && <WeatherIcon name={weather.icon} size={28} className="text-[#006ec2]" />}
           <span className="text-4xl text-white font-black italic leading-none">
             {weather ? `${weather.temperature}°C` : '—°C'}
           </span>
@@ -88,8 +88,8 @@ export function WeatherWidgetTile() {
       className="flex items-center gap-6 w-full h-full"
     >
       <div className="flex items-center gap-2">
-        {weather && <WeatherIcon name={weather.icon} size={28} className="text-[#00a6f0]" />}
-        <span className="text-4xl font-black italic text-[#00a6f0]">
+        {weather && <WeatherIcon name={weather.icon} size={28} className="text-[#006ec2]" />}
+        <span className="text-4xl font-black italic text-[#006ec2]">
           {weather ? `${weather.temperature}°C` : '—°C'}
         </span>
       </div>

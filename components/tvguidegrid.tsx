@@ -103,7 +103,7 @@ export function TVGuideGrid({ initialPrograms = [], maxDays = 7 }: { initialProg
     <section className="bg-[#0a0c10] font-nurom border-t border-white/5 select-none relative">
       <div className="container mx-auto px-6 pt-10 pb-10">
         <h2 className="text-3xl font-black uppercase italic tracking-tighter text-white mb-8">
-          Guia <span className="text-[#00a6f0]">TV</span>
+          Guia <span className="text-[#006ec2]">TV</span>
         </h2>
         
         <div 
@@ -119,7 +119,7 @@ export function TVGuideGrid({ initialPrograms = [], maxDays = 7 }: { initialProg
                 relative shrink-0 transition-all duration-300 group snap-start
                 before:absolute before:inset-0 before:-skew-x-12 before:origin-bottom cursor-pointer
                 ${day === activeDay
-                  ? "text-[#00a6f0] before:bg-[#161b22] z-10" 
+                  ? "text-[#006ec2] before:bg-[#161b22] z-10" 
                   : "text-white/30 hover:text-white/60 before:bg-white/5"
                 }
               `}
@@ -128,7 +128,7 @@ export function TVGuideGrid({ initialPrograms = [], maxDays = 7 }: { initialProg
                 {day}
               </span>
               {day === activeDay && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00a6f0] -skew-x-12 translate-y-px" />
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#006ec2] -skew-x-12 translate-y-px" />
               )}
               {i < availableDays.length - 1 && (
                 <div className="absolute right-0 top-1/4 h-1/2 w-px bg-white/10 -skew-x-12" />
@@ -174,12 +174,12 @@ export function TVGuideGrid({ initialPrograms = [], maxDays = 7 }: { initialProg
                 </div>
                 
                 <div className="flex flex-col px-4 md:px-8 min-w-0">
-                  <h4 className="text-white font-black uppercase italic text-sm md:text-lg group-hover:text-[#00a6f0] transition-colors leading-tight">
+                  <h4 className="text-white font-black uppercase italic text-sm md:text-lg group-hover:text-[#006ec2] transition-colors leading-tight">
                     {item.title}
                   </h4>
                   <div className="flex items-center gap-2 md:gap-4 text-xs mt-1.5">
                     <div className="flex items-center gap-1 md:gap-1.5 text-white/40">
-                      <Clock size={11} className="text-[#00a6f0] shrink-0" />
+                      <Clock size={11} className="text-[#006ec2] shrink-0" />
                       <span className="font-bold uppercase tracking-wider text-[10px] md:text-xs">{item.time}</span>
                     </div>
                     {duration > 0 && (
@@ -195,7 +195,7 @@ export function TVGuideGrid({ initialPrograms = [], maxDays = 7 }: { initialProg
               <div className="pt-6 flex justify-center">
                 <button 
                   onClick={() => setLimit(limit >= dayPrograms.length ? 5 : dayPrograms.length)}
-                  className="group flex items-center gap-2 text-[10px] font-black uppercase italic tracking-[0.2em] text-[#00a6f0] hover:text-white transition-colors"
+                  className="group flex items-center gap-2 text-[10px] font-black uppercase italic tracking-[0.2em] text-[#006ec2] hover:text-white transition-colors"
                 >
                   {limit >= dayPrograms.length ? "Ver Menos" : "Ver Mais"}
                   {limit >= dayPrograms.length ? <Minus size={14} /> : <Plus size={14} />}

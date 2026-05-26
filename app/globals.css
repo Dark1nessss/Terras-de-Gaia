@@ -237,7 +237,7 @@
 
 /* Links */
 .prose a {
-  @apply text-[#00a6f0] hover:text-[#00ffff] font-semibold underline decoration-2 underline-offset-2 transition-all duration-200;
+  @apply text-[#006ec2] hover:text-[#00ffff] font-semibold underline decoration-2 underline-offset-2 transition-all duration-200;
   text-decoration-color: rgba(0, 212, 255, 0.3);
 }
 
@@ -247,7 +247,7 @@
 
 .prose a[href^="http"]:not([href*="terras-de-gaia"])::after {
   content: ' ↗';
-  @apply text-[#00a6f0] ml-1;
+  @apply text-[#006ec2] ml-1;
 }
 
 .prose a:visited {
@@ -255,7 +255,7 @@
 }
 
 .prose a:focus-visible {
-  @apply outline-2 outline-offset-2 outline-[#00a6f0];
+  @apply outline-2 outline-offset-2 outline-[#006ec2];
 }
 
 /* Lists */
@@ -323,7 +323,7 @@
 
 /* Blockquotes */
 .prose blockquote {
-  @apply border-l-4 border-[#00a6f0] pl-4 py-2 italic text-white/60 bg-white/5 rounded-r mb-4;
+  @apply border-l-4 border-[#006ec2] pl-4 py-2 italic text-white/60 bg-white/5 rounded-r mb-4;
 }
 
 .prose blockquote p {
@@ -415,7 +415,7 @@
 }
 
 .prose details summary {
-  @apply font-semibold text-white/80 hover:text-[#00a6f0] transition-colors;
+  @apply font-semibold text-white/80 hover:text-[#006ec2] transition-colors;
 }
 
 .prose details[open] summary {
@@ -439,11 +439,11 @@
 .prose input,
 .prose textarea,
 .prose select {
-  @apply bg-white/5 border border-white/10 rounded px-3 py-2 text-white/80 focus:border-[#00a6f0] focus:outline-none;
+  @apply bg-white/5 border border-white/10 rounded px-3 py-2 text-white/80 focus:border-[#006ec2] focus:outline-none;
 }
 
 .prose button {
-  @apply bg-[#00a6f0] hover:bg-[#00d4ff] text-black font-semibold px-4 py-2 rounded transition-colors cursor-pointer;
+  @apply bg-[#006ec2] hover:bg-[#00d4ff] text-black font-semibold px-4 py-2 rounded transition-colors cursor-pointer;
 }
 
 /* Containers/Divs with text */

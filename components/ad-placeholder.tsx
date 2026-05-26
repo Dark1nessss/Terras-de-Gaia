@@ -45,7 +45,7 @@ function PlaceholderFallback({ position }: { position: AdPosition }) {
         bgClasses[position]
       } bg-[#2a2a2a] flex flex-col items-center justify-center gap-1 group hover:bg-[#1a2a3a] transition-colors rounded`}
     >
-      <span className="text-[#00a6f0]/70 text-md uppercase font-bold group-hover:text-[#00a6f0] transition-colors">
+      <span className="text-[#006ec2]/70 text-md uppercase font-bold group-hover:text-[#006ec2] transition-colors">
         Valorize A Sua Marca Connosco
       </span>
       <span className="text-white/20 text-xs">Clica para saber mais</span>

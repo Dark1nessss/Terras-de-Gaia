@@ -36,7 +36,7 @@ export function GaiaWaves() {
           {/* LADO ESQUERDO: BRANDING E LISTA */}
           <div className="lg:col-span-5 space-y-8">
             <div className="space-y-4">
-              <span className="flex items-center gap-3 text-[#00a6f0] text-xs font-black uppercase tracking-[0.4em]">
+              <span className="flex items-center gap-3 text-[#006ec2] text-xs font-black uppercase tracking-[0.4em]">
                 <Mic2 size={16} />
                 Original Podcast
               </span>
@@ -53,12 +53,12 @@ export function GaiaWaves() {
                   onClick={() => setCurrentTrack(pod)}
                   className={`w-full flex items-center justify-between p-4 rounded-xl transition-all border cursor-pointer ${
                     currentTrack.id === pod.id 
-                    ? 'bg-[#00a6f0]/10 border-[#00a6f0]/30 text-white' 
+                    ? 'bg-[#006ec2]/10 border-[#006ec2]/30 text-white' 
                     : 'bg-white/5 border-transparent text-white/40 hover:bg-white/10'
                   }`}
                 >
                   <div className="flex items-center gap-4 text-left">
-                    <div className={`size-10 rounded-lg flex items-center justify-center ${currentTrack.id === pod.id ? 'bg-[#00a6f0] text-white' : 'bg-white/10'}`}>
+                    <div className={`size-10 rounded-lg flex items-center justify-center ${currentTrack.id === pod.id ? 'bg-[#006ec2] text-white' : 'bg-white/10'}`}>
                       <Headphones size={18} />
                     </div>
                     <div>
@@ -77,7 +77,7 @@ export function GaiaWaves() {
             <div className="relative p-8 md:p-12 bg-zinc-900/40 border border-white/10 rounded-[2.5rem] backdrop-blur-xl overflow-hidden group">
               
               {/* Background Glow Dinâmico */}
-              <div className={`absolute -top-24 -right-24 size-64 bg-[#00a6f0]/20 blur-[100px] rounded-full transition-opacity duration-1000 ${isPlaying ? 'opacity-100' : 'opacity-40'}`} />
+              <div className={`absolute -top-24 -right-24 size-64 bg-[#006ec2]/20 blur-[100px] rounded-full transition-opacity duration-1000 ${isPlaying ? 'opacity-100' : 'opacity-40'}`} />
 
               <div className="relative z-10 flex flex-col items-center text-center space-y-8">
                 
@@ -94,7 +94,7 @@ export function GaiaWaves() {
                         duration: 0.5 + Math.random() * 0.5,
                         ease: "easeInOut" 
                       }}
-                      className={`w-1.5 rounded-full ${isPlaying ? 'bg-[#00a6f0]' : 'bg-white/10'}`}
+                      className={`w-1.5 rounded-full ${isPlaying ? 'bg-[#006ec2]' : 'bg-white/10'}`}
                     />
                   ))}
                 </div>
@@ -108,7 +108,7 @@ export function GaiaWaves() {
                   >
                     {currentTrack.title}
                   </motion.h3>
-                  <p className="text-[#00a6f0] text-xs font-black uppercase tracking-[0.3em]">
+                  <p className="text-[#006ec2] text-xs font-black uppercase tracking-[0.3em]">
                     Com {currentTrack.host}
                   </p>
                 </div>
@@ -137,7 +137,7 @@ export function GaiaWaves() {
                     <motion.div 
                       initial={{ width: "0%" }}
                       animate={{ width: isPlaying ? "45%" : "45%" }}
-                      className="h-full bg-[#00a6f0]"
+                      className="h-full bg-[#006ec2]"
                     />
                   </div>
                   <div className="flex justify-between text-[10px] font-black text-white/20 uppercase tracking-widest">

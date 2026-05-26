@@ -9,7 +9,7 @@ export const PdfViewer = dynamic(
     ssr: false,
     loading: () => (
       <div className="flex items-center justify-center min-h-125 bg-[#0d0f14] rounded-xl border border-white/6">
-        <Loader2 className="animate-spin text-[#00a6f0]" size={40} />
+        <Loader2 className="animate-spin text-[#006ec2]" size={40} />
       </div>
     ),
   }

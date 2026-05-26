@@ -20,15 +20,15 @@ export async function News() {
         {/* Header */}
         <div className="border-y border-white/10 py-6 mb-12 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-4">
-            <span className="bg-[#00a6f0] text-white text-xs font-black px-2 py-0.5 uppercase tracking-tighter">Live</span>
+            <span className="bg-[#006ec2] text-white text-xs font-black px-2 py-0.5 uppercase tracking-tighter">Live</span>
             <div className="text-white/40 text-xs font-bold uppercase tracking-[0.2em] mt-1">
               {formattedDate}
             </div>
           </div>
           <h2 className="text-2xl font-black uppercase italic tracking-tighter text-white">
-            Terras de Gaia <span className="text-[#00a6f0]">Gazeta</span>
+            Terras de Gaia <span className="text-[#006ec2]">Gazeta</span>
           </h2>
-          <Link href="/noticias" className="text-white/40 hover:text-[#00a6f0] text-xs font-black uppercase tracking-widest transition-colors mt-1">
+          <Link href="/noticias" className="text-white/40 hover:text-[#006ec2] text-xs font-black uppercase tracking-widest transition-colors mt-1">
             Edição Digital
           </Link>
         </div>

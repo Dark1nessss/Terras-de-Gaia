@@ -87,13 +87,13 @@ export default async function SinglePostPage({ params }: Props) {
                 <div className="flex flex-wrap items-center gap-4 sm:gap-6">
                   <div className="flex items-center gap-2">
                     <span className="text-white/30 italic">Por</span>
-                    <span className="text-[#00a6f0] font-black">{authorName}</span>
+                    <span className="text-[#006ec2] font-black">{authorName}</span>
                   </div>
                   <div className="w-1 h-1 rounded-full bg-white/20" />
                   <span className="text-white/60">{formatDate(post.date, "short")}</span>
                 </div>
                 <div className="flex items-center gap-2 mt-4 sm:mt-0">
-                  <Clock size={16} className="text-[#00a6f0]" />
+                  <Clock size={16} className="text-[#006ec2]" />
                   <span className="text-white/60">{readingTime} min leitura</span>
                 </div>
               </div>

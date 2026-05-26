@@ -33,7 +33,7 @@ export function PostCard({ post }: PostCardProps) {
         )}
       </div>
       <div className="flex flex-col flex-1 p-4 gap-2.5">
-        <h4 className="font-black italic uppercase text-base tracking-tighter leading-tight group-hover:text-[#00a6f0] transition-colors line-clamp-3">
+        <h4 className="font-black italic uppercase text-base tracking-tighter leading-tight group-hover:text-[#006ec2] transition-colors line-clamp-3">
           {post.title.rendered.replace(/<[^>]*>/g, "")}
         </h4>
         <div className="mt-auto pt-2.5 border-t border-white/5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest">

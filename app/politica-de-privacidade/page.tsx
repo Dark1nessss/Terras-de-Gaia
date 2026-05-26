@@ -104,8 +104,8 @@ export default function PoliticaDePrivacidade() {
 
       {/* Background */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-20 left-1/3 w-125 h-125 bg-[#00a6f0]/4 rounded-full blur-[140px]" />
-        <div className="absolute bottom-0 right-0 w-100 h-100 bg-[#00a6f0]/3 rounded-full blur-[120px]" />
+        <div className="absolute top-20 left-1/3 w-125 h-125 bg-[#006ec2]/4 rounded-full blur-[140px]" />
+        <div className="absolute bottom-0 right-0 w-100 h-100 bg-[#006ec2]/3 rounded-full blur-[120px]" />
       </div>
 
       <div className="relative z-10 pt-32 pb-24">
@@ -116,9 +116,9 @@ export default function PoliticaDePrivacidade() {
             <motion.span
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="inline-flex items-center gap-2 text-[#00a6f0] text-[10px] font-black uppercase tracking-[0.8em] mb-6"
+              className="inline-flex items-center gap-2 text-[#006ec2] text-[10px] font-black uppercase tracking-[0.8em] mb-6"
             >
-              <span className="w-4 h-px bg-[#00a6f0]" />
+              <span className="w-4 h-px bg-[#006ec2]" />
               RGPD · Última atualização: Janeiro 2025
             </motion.span>
             <motion.h1
@@ -128,7 +128,7 @@ export default function PoliticaDePrivacidade() {
               className="text-5xl md:text-8xl font-black uppercase italic leading-[0.8] tracking-tighter mb-8"
             >
               POLÍTICA DE<br />
-              <span className="text-[#00a6f0]">
+              <span className="text-[#006ec2]">
                 PRIVACIDADE
               </span>
             </motion.h1>
@@ -136,7 +136,7 @@ export default function PoliticaDePrivacidade() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-white/40 text-sm leading-relaxed max-w-xl border-l-2 border-[#00a6f0]/30 pl-5"
+              className="text-white/40 text-sm leading-relaxed max-w-xl border-l-2 border-[#006ec2]/30 pl-5"
             >
               A Terras de Gaia TV respeita e protege a privacidade dos seus utilizadores.
               Esta política descreve como recolhemos, utilizamos e protegemos os seus dados,
@@ -165,11 +165,11 @@ export default function PoliticaDePrivacidade() {
                     onClick={() => scrollTo(s.id)}
                     className={`flex items-center gap-3 px-3 py-2.5 text-left transition-all duration-200 cursor-pointer border-l-2 ${
                       activeId === s.id
-                        ? "border-[#00a6f0] bg-[#00a6f0]/5 text-[#00a6f0]"
+                        ? "border-[#006ec2] bg-[#006ec2]/5 text-[#006ec2]"
                         : "border-transparent text-white/30 hover:text-white/60 hover:border-white/10"
                     }`}
                   >
-                    <span className={`text-[9px] font-black tabular-nums shrink-0 ${activeId === s.id ? "text-[#00a6f0]" : "text-white/20"}`}>
+                    <span className={`text-[9px] font-black tabular-nums shrink-0 ${activeId === s.id ? "text-[#006ec2]" : "text-white/20"}`}>
                       {s.num}
                     </span>
                     <span className="text-xs font-bold uppercase tracking-wide leading-tight">{s.title}</span>
@@ -198,20 +198,20 @@ export default function PoliticaDePrivacidade() {
                   <div
                     className={`absolute -left-1 top-1.5 w-2 h-2 rounded-full border transition-all duration-500 ${
                       activeId === s.id
-                        ? "bg-[#00a6f0] border-[#00a6f0] shadow-[0_0_10px_rgba(0, 166, 240, ,0.5)]"
-                        : "bg-[#0a0c10] border-white/20 group-hover:border-[#00a6f0]/50"
+                        ? "bg-[#006ec2] border-[#006ec2] shadow-[0_0_10px_rgba(0, 166, 240, ,0.5)]"
+                        : "bg-[#0a0c10] border-white/20 group-hover:border-[#006ec2]/50"
                     }`}
                   />
 
                   {/* Ghost number */}
-                  <span className="absolute right-0 top-0 text-[5rem] font-black italic leading-none text-white/2 select-none pointer-events-none group-hover:text-[#00a6f0]/4 transition-colors duration-500">
+                  <span className="absolute right-0 top-0 text-[5rem] font-black italic leading-none text-white/2 select-none pointer-events-none group-hover:text-[#006ec2]/4 transition-colors duration-500">
                     {s.num}
                   </span>
 
                   <div className="relative">
-                    <span className="inline-block text-[10px] font-black uppercase tracking-[0.4em] text-[#00a6f0]/50 mb-3">{s.num}</span>
+                    <span className="inline-block text-[10px] font-black uppercase tracking-[0.4em] text-[#006ec2]/50 mb-3">{s.num}</span>
                     <h2 className={`text-base font-black uppercase italic tracking-tight mb-4 transition-colors duration-300 ${
-                      activeId === s.id ? "text-[#00a6f0]" : "text-white group-hover:text-[#00a6f0]"
+                      activeId === s.id ? "text-[#006ec2]" : "text-white group-hover:text-[#006ec2]"
                     }`}>
                       {s.title}
                     </h2>

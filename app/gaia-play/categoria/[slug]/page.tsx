@@ -43,7 +43,7 @@ export default async function GaiaPlayCategoryPage({
 
       {/* ── HEADER ─────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden border-b border-white/5">
-        <div className="absolute top-0 right-0 w-[40%] h-full bg-[#00a6f0]/5 blur-[140px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 right-0 w-[40%] h-full bg-[#006ec2]/5 blur-[140px] rounded-full pointer-events-none" />
 
         <div className="container mx-auto px-6 pt-10 pb-12 relative z-10">
           <Breadcrumb
@@ -56,7 +56,7 @@ export default async function GaiaPlayCategoryPage({
 
           <div className="mt-8 flex items-end justify-between gap-6">
             <div className="min-w-0">
-              <span className="flex items-center gap-2 text-[#00a6f0] text-[10px] font-black uppercase tracking-[0.5em] mb-4">
+              <span className="flex items-center gap-2 text-[#006ec2] text-[10px] font-black uppercase tracking-[0.5em] mb-4">
                 <Layers size={12} />
                 Categoria
               </span>
@@ -70,7 +70,7 @@ export default async function GaiaPlayCategoryPage({
 
             <Link
               href="/gaia-play"
-              className="hidden md:flex items-center gap-2 text-white/30 hover:text-[#00a6f0] transition-colors text-xs font-black uppercase tracking-widest shrink-0"
+              className="hidden md:flex items-center gap-2 text-white/30 hover:text-[#006ec2] transition-colors text-xs font-black uppercase tracking-widest shrink-0"
             >
               <ArrowLeft size={14} />
               <span className="mt-0.5">Voltar</span>
@@ -86,7 +86,7 @@ export default async function GaiaPlayCategoryPage({
             <Link
               key={prog.id}
               href={`/gaia-play/${prog.slug}`}
-              className="group relative aspect-3/4 overflow-hidden border border-white/10 hover:border-[#00a6f0]/50 transition-all duration-300 bg-zinc-900/40"
+              className="group relative aspect-3/4 overflow-hidden border border-white/10 hover:border-[#006ec2]/50 transition-all duration-300 bg-zinc-900/40"
             >
               {/* Thumbnail */}
               {prog.featured_image_url ? (
@@ -97,18 +97,18 @@ export default async function GaiaPlayCategoryPage({
                   className="object-cover opacity-50 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700"
                 />
               ) : (
-                <div className="absolute inset-0 bg-linear-to-br from-[#00a6f0]/10 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-br from-[#006ec2]/10 to-transparent" />
               )}
 
               {/* Gradient overlay */}
               <div className="absolute inset-0 bg-linear-to-t from-[#0a0c10] via-[#0a0c10]/40 to-transparent" />
 
               {/* Top accent bar */}
-              <div className="absolute top-0 left-0 h-0.5 w-0 group-hover:w-full bg-[#00a6f0] transition-all duration-500" />
+              <div className="absolute top-0 left-0 h-0.5 w-0 group-hover:w-full bg-[#006ec2] transition-all duration-500" />
 
               {/* Content */}
               <div className="absolute inset-0 p-6 flex flex-col justify-end">
-                <h2 className="text-xl font-black uppercase italic tracking-tighter leading-tight mb-3 group-hover:text-[#00a6f0] transition-colors">
+                <h2 className="text-xl font-black uppercase italic tracking-tighter leading-tight mb-3 group-hover:text-[#006ec2] transition-colors">
                   {prog.title.rendered}
                 </h2>
 

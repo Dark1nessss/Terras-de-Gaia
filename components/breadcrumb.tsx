@@ -44,7 +44,7 @@ export function Breadcrumb({ items, current }: BreadcrumbProps) {
         <div key={item.href} className="flex items-center gap-2 whitespace-nowrap">
           <Link 
             href={item.href}
-            className="hover:text-[#00a6f0] transition-colors"
+            className="hover:text-[#006ec2] transition-colors"
           >
             {cleanText(item.label)}
           </Link>

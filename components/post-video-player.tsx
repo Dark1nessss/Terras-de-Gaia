@@ -60,7 +60,7 @@ export function PostVideoPlayer({ videoUrl, thumbnailUrl, title }: PostVideoPlay
             aria-label="Reproduzir vídeo"
             className="absolute inset-0 flex items-center justify-center group"
           >
-            <span className="w-20 h-20 rounded-full bg-[#00a6f0] flex items-center justify-center shadow-[0_0_40px_rgba(0,166,240,0.5)] group-hover:scale-110 group-hover:bg-[#0090d0] transition-all duration-200">
+            <span className="w-20 h-20 rounded-full bg-[#006ec2] flex items-center justify-center shadow-[0_0_40px_rgba(0,166,240,0.5)] group-hover:scale-110 group-hover:bg-[#0090d0] transition-all duration-200">
               <Play size={36} fill="white" className="text-white ml-1" />
             </span>
           </button>

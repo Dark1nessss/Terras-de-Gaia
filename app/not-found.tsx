@@ -25,7 +25,7 @@ export default function NotFound() {
       />
 
       {/* Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] max-w-3xl h-[60vh] bg-[#00a6f0]/5 blur-[140px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] max-w-3xl h-[60vh] bg-[#006ec2]/5 blur-[140px] rounded-full pointer-events-none" />
 
       {/* Ghost number */}
       <span className="absolute inset-0 flex items-center justify-center text-[40vw] font-black italic text-white/2.5 leading-none select-none pointer-events-none">
@@ -34,13 +34,13 @@ export default function NotFound() {
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center text-center gap-0">
-        <p className="text-[#00a6f0] text-[10px] font-black uppercase tracking-[0.6em] mb-6">
+        <p className="text-[#006ec2] text-[10px] font-black uppercase tracking-[0.6em] mb-6">
           Erro 404
         </p>
 
         <h1 className="text-[clamp(3.5rem,14vw,11rem)] font-black uppercase italic leading-[0.82] tracking-tighter mb-6">
           Página<br />
-          <span className="text-[#00a6f0] drop-shadow-[0_0_50px_rgba(0,166,240,0.35)]">
+          <span className="text-[#006ec2] drop-shadow-[0_0_50px_rgba(0,166,240,0.35)]">
             não encontrada.
           </span>
         </h1>
@@ -54,7 +54,7 @@ export default function NotFound() {
         <div className="flex flex-wrap gap-4 justify-center">
           <Link
             href="/"
-            className="group flex items-center gap-2 bg-[#00a6f0] text-white text-[11px] font-black uppercase tracking-[0.3em] px-8 py-4 hover:bg-[#00a6f0]/80 transition-colors duration-300"
+            className="group flex items-center gap-2 bg-[#006ec2] text-white text-[11px] font-black uppercase tracking-[0.3em] px-8 py-4 hover:bg-[#006ec2]/80 transition-colors duration-300"
           >
             <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform duration-300" />
             <span className="mt-1">Início</span>

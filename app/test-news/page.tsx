@@ -57,7 +57,7 @@ function SectionBand({
       <div className="h-px flex-1 bg-white/8" />
       {href && (
         <Link href={href}
-          className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-white/30 hover:text-[#00a6f0] transition-colors border border-white/10 px-4 py-3">
+          className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-white/30 hover:text-[#006ec2] transition-colors border border-white/10 px-4 py-3">
           Ver tudo <ArrowRight size={10} />
         </Link>
       )}
@@ -80,7 +80,7 @@ function LatestRow({ post, rank }: { post: P; rank: number }) {
           {post.category?.name}
         </span>
         <h4
-          className="text-[13px] font-black uppercase italic tracking-tight leading-snug line-clamp-2 group-hover:text-[#00a6f0] transition-colors"
+          className="text-[13px] font-black uppercase italic tracking-tight leading-snug line-clamp-2 group-hover:text-[#006ec2] transition-colors"
           dangerouslySetInnerHTML={{ __html: post.title.rendered }}
         />
         <span className="text-[9px] text-white/25 tabular-nums mt-1 block">
@@ -110,7 +110,7 @@ function ThreeCard({ post }: { post: P }) {
       <div className="p-5 flex flex-col flex-1">
         <CatLabel p={post} size="sm" />
         <h3
-          className="mt-3 text-xl md:text-2xl font-black uppercase italic tracking-tight leading-tight mb-3 group-hover:text-[#00a6f0] transition-colors flex-1"
+          className="mt-3 text-xl md:text-2xl font-black uppercase italic tracking-tight leading-tight mb-3 group-hover:text-[#006ec2] transition-colors flex-1"
           dangerouslySetInnerHTML={{ __html: post.title.rendered }}
         />
         {excerpt && (
@@ -152,7 +152,7 @@ function BreakingLead({ post }: { post: P }) {
       <div className="p-6 flex flex-col flex-1">
         <CatLabel p={post} size="md" />
         <h3
-          className="mt-4 text-2xl md:text-3xl font-black uppercase italic tracking-tight leading-tight mb-4 group-hover:text-[#00a6f0] transition-colors flex-1"
+          className="mt-4 text-2xl md:text-3xl font-black uppercase italic tracking-tight leading-tight mb-4 group-hover:text-[#006ec2] transition-colors flex-1"
           dangerouslySetInnerHTML={{ __html: post.title.rendered }}
         />
         {excerpt && (
@@ -162,7 +162,7 @@ function BreakingLead({ post }: { post: P }) {
           <span>{post.author_name}</span>
           <span className="text-white/15">·</span>
           <span className="tabular-nums">{formatDate(post.date, "short")}</span>
-          <ChevronRight size={12} className="ml-auto text-white/20 group-hover:text-[#00a6f0] transition-colors" />
+          <ChevronRight size={12} className="ml-auto text-white/20 group-hover:text-[#006ec2] transition-colors" />
         </div>
       </div>
     </Link>
@@ -187,7 +187,7 @@ function BreakingSmall({ post }: { post: P }) {
       <div className="flex-1 min-w-0">
         <CatLabel p={post} size="sm" />
         <h4
-          className="mt-2 text-[15px] font-black uppercase italic tracking-tight leading-snug line-clamp-2 group-hover:text-[#00a6f0] transition-colors"
+          className="mt-2 text-[15px] font-black uppercase italic tracking-tight leading-snug line-clamp-2 group-hover:text-[#006ec2] transition-colors"
           dangerouslySetInnerHTML={{ __html: post.title.rendered }}
         />
         <span className="text-[9px] text-white/25 tabular-nums mt-1.5 block">
@@ -224,7 +224,7 @@ function FeatureBand({ post }: { post: P }) {
               </span>
             </div>
             <h3
-              className="text-3xl md:text-4xl xl:text-5xl font-black uppercase italic tracking-tighter leading-[0.9] mb-5 group-hover:text-[#00a6f0] transition-colors"
+              className="text-3xl md:text-4xl xl:text-5xl font-black uppercase italic tracking-tighter leading-[0.9] mb-5 group-hover:text-[#006ec2] transition-colors"
               dangerouslySetInnerHTML={{ __html: post.title.rendered }}
             />
             {excerpt && (
@@ -268,12 +268,12 @@ function TableRow({ post }: { post: P }) {
           <span className="text-[9px] text-white/25 tabular-nums">{formatDate(post.date, "short")}</span>
         </div>
         <h4
-          className="text-base md:text-lg font-black uppercase italic tracking-tight leading-snug line-clamp-2 group-hover:text-[#00a6f0] transition-colors"
+          className="text-base md:text-lg font-black uppercase italic tracking-tight leading-snug line-clamp-2 group-hover:text-[#006ec2] transition-colors"
           dangerouslySetInnerHTML={{ __html: post.title.rendered }}
         />
         <p className="text-[12px] text-white/35 mt-1.5 line-clamp-1">{excr(post, 100)}</p>
       </div>
-      <ChevronRight size={16} className="shrink-0 mt-2 text-white/15 group-hover:text-[#00a6f0] transition-colors" />
+      <ChevronRight size={16} className="shrink-0 mt-2 text-white/15 group-hover:text-[#006ec2] transition-colors" />
     </Link>
   );
 }
@@ -339,7 +339,7 @@ export default async function TestNewsPage() {
             {quickLinks.map((lk) => (
               <Link key={lk.href} href={lk.href}
                 className="group flex items-center gap-2.5 px-6 py-3.5 border-r border-white/8 last:border-0 hover:bg-white/4 transition-colors shrink-0">
-                <span className="text-[#00a6f0] font-black text-base leading-none">&rarr;</span>
+                <span className="text-[#006ec2] font-black text-base leading-none">&rarr;</span>
                 <span className="text-[10px] font-black uppercase tracking-widest text-white/55 group-hover:text-white transition-colors">
                   {lk.label}
                 </span>
@@ -379,7 +379,7 @@ export default async function TestNewsPage() {
                   </div>
                   <div className="p-7 lg:p-9 flex flex-col flex-1">
                     <h2
-                      className="text-4xl md:text-5xl lg:text-6xl font-black uppercase italic tracking-tighter leading-[0.88] mb-5 group-hover:text-[#00a6f0] transition-colors duration-400"
+                      className="text-4xl md:text-5xl lg:text-6xl font-black uppercase italic tracking-tighter leading-[0.88] mb-5 group-hover:text-[#006ec2] transition-colors duration-400"
                       dangerouslySetInnerHTML={{ __html: hero.title.rendered }}
                     />
                     {excerpt && (

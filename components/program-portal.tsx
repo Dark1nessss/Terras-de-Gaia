@@ -71,15 +71,15 @@ export function ProgramsPortal() {
     <section className="relative bg-[#0a0c10] py-24 font-nurom overflow-hidden border-t border-white/10">
       
       {/* Background Glow */}
-      <div className="absolute top-0 right-0 w-[50%] h-full bg-[#00a6f0]/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[50%] h-full bg-[#006ec2]/5 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
           
           {/* LADO ESQUERDO: BRANDING FIXO */}
           <div className="lg:col-span-6 flex flex-col justify-center">
-            <span className="flex items-center gap-3 text-[#00a6f0] text-xs font-black uppercase tracking-[0.5em] mb-8 drop-shadow-[0_0_8px_rgba(0,166,240,0.4)]">
-              <span className="size-2 bg-[#00a6f0] rounded-full animate-pulse" />
+            <span className="flex items-center gap-3 text-[#006ec2] text-xs font-black uppercase tracking-[0.5em] mb-8 drop-shadow-[0_0_8px_rgba(0,166,240,0.4)]">
+              <span className="size-2 bg-[#006ec2] rounded-full animate-pulse" />
               <span className="mt-1">Conteúdo On Demand</span>
             </span>
             
@@ -88,12 +88,12 @@ export function ProgramsPortal() {
               <span className="text-transparent border-text-blue outline-text-vibrant">PLAY</span>
             </h2>
 
-            <p className="text-white/50 text-lg font-bold uppercase italic tracking-tight leading-snug max-w-sm mb-12 border-l-4 border-[#00a6f0] pl-6 py-2">
+            <p className="text-white/50 text-lg font-bold uppercase italic tracking-tight leading-snug max-w-sm mb-12 border-l-4 border-[#006ec2] pl-6 py-2">
               Explore os nossos programas originais, reportagens e teasers exclusivos.
             </p>
 
             <Link href="/gaia-play">
-              <button className="group bg-[#00a6f0] text-white px-10 py-5 font-black uppercase italic tracking-widest text-sm flex items-center gap-4 hover:bg-white hover:text-black transition-all shadow-[0_10px_30px_rgba(0,166,240,0.3)] cursor-pointer">
+              <button className="group bg-[#006ec2] text-white px-10 py-5 font-black uppercase italic tracking-widest text-sm flex items-center gap-4 hover:bg-white hover:text-black transition-all shadow-[0_10px_30px_rgba(0,166,240,0.3)] cursor-pointer">
                 Ver Todo o Catálogo <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </button>
             </Link>
@@ -105,7 +105,7 @@ export function ProgramsPortal() {
               
               {isLoading && (
                 <div className="absolute inset-0 bg-[#161b22] border border-white/20 rounded-xl flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-12 w-12 border-2 border-[#00a6f0] border-t-transparent" />
+                  <div className="animate-spin rounded-full h-12 w-12 border-2 border-[#006ec2] border-t-transparent" />
                 </div>
               )}
               
@@ -144,7 +144,7 @@ export function ProgramsPortal() {
                       <motion.span 
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="text-[#00a6f0] text-[10px] font-black uppercase tracking-widest bg-black/40 backdrop-blur-md px-2 py-1 rounded"
+                        className="text-[#006ec2] text-[10px] font-black uppercase tracking-widest bg-black/40 backdrop-blur-md px-2 py-1 rounded"
                       >
                         {activeProg.acf?.categoria_programa || 'Programa'}
                       </motion.span>
@@ -160,7 +160,7 @@ export function ProgramsPortal() {
 
                     {/* Botão Play Dinâmico */}
                     <Link href={`/gaia-play/${activeProg.slug}`} className="relative z-20">
-                      <div className="size-16 rounded-full bg-[#00a6f0] flex items-center justify-center shadow-[0_0_30px_rgba(0,166,240,0.5)] hover:scale-110 transition-transform cursor-pointer">
+                      <div className="size-16 rounded-full bg-[#006ec2] flex items-center justify-center shadow-[0_0_30px_rgba(0,166,240,0.5)] hover:scale-110 transition-transform cursor-pointer">
                         <Play fill="white" className="text-white ml-1 size-7" />
                       </div>
                     </Link>
@@ -168,12 +168,12 @@ export function ProgramsPortal() {
 
                   {/* Barra de Progresso Autoplay */}
                   <div 
-                    className="absolute bottom-0 left-0 h-1 bg-[#00a6f0] w-full origin-left animate-progress" 
+                    className="absolute bottom-0 left-0 h-1 bg-[#006ec2] w-full origin-left animate-progress" 
                     key={`progress-${currentIndex}`} 
                   />
                   {/* Elemento Decorativo Flutuante */}
                   <div className="absolute -top-6 -right-6 bg-white/5 backdrop-blur-lg border border-white/10 p-4 rounded-lg z-20 hidden md:block">
-                    <MonitorPlay className="text-[#00a6f0]" size={24} />
+                    <MonitorPlay className="text-[#006ec2]" size={24} />
                   </div>
                 </motion.div>
                 )}
@@ -187,7 +187,7 @@ export function ProgramsPortal() {
                 <button 
                   key={i}
                   onClick={() => setCurrentIndex(i)}
-                  className={`h-1 transition-all duration-500 ${currentIndex === i ? 'w-10 bg-[#00a6f0]' : 'w-4 bg-white/10'}`}
+                  className={`h-1 transition-all duration-500 ${currentIndex === i ? 'w-10 bg-[#006ec2]' : 'w-4 bg-white/10'}`}
                 />
               ))}
             </div>

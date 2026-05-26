@@ -16,7 +16,7 @@ export default function Footer() {
   return (
     <footer className="bg-[#0a0c10] border-t border-white/[0.08] text-white pt-16 pb-10 relative overflow-hidden">
       {/* Decorative Background Glows */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#00a6f0]/5 rounded-full filter blur-3xl opacity-40 pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#006ec2]/5 rounded-full filter blur-3xl opacity-40 pointer-events-none" />
 
       <div className="container mx-auto px-6 md:px-12 relative z-10">
         {/* Main Footer Content */}
@@ -44,21 +44,21 @@ export default function Footer() {
           {/* Quick Links Column */}
           <div className="flex flex-col gap-4">
             <h4 className="text-sm font-black uppercase tracking-widest text-white/30 flex items-center gap-2">
-              <span className="w-1 h-3.5 bg-[#00a6f0] rounded-full"></span>
+              <span className="w-1 h-3.5 bg-[#006ec2] rounded-full"></span>
               Navegação
             </h4>
             <nav className="flex flex-col gap-2.5 pl-3 border-l border-white/5">
-              <Link href="/live" className="text-sm text-white/60 hover:text-[#00a6f0] transition-all duration-300 flex items-center justify-between group max-w-[200px]">
+              <Link href="/live" className="text-sm text-white/60 hover:text-[#006ec2] transition-all duration-300 flex items-center justify-between group max-w-[200px]">
                 <span>Emissão em Directo</span>
-                <ExternalLink size={12} className="opacity-0 group-hover:opacity-100 transition-opacity text-[#00a6f0]" />
+                <ExternalLink size={12} className="opacity-0 group-hover:opacity-100 transition-opacity text-[#006ec2]" />
               </Link>
-              <Link href="/programacao" className="text-sm text-white/60 hover:text-[#00a6f0] transition-all duration-300">
+              <Link href="/programacao" className="text-sm text-white/60 hover:text-[#006ec2] transition-all duration-300">
                 Programação
               </Link>
-              <Link href="/gaia-play" className="text-sm text-white/60 hover:text-[#00a6f0] transition-all duration-300">
+              <Link href="/gaia-play" className="text-sm text-white/60 hover:text-[#006ec2] transition-all duration-300">
                 Gaia Play
               </Link>
-              <Link href="/contacto" className="text-sm text-white/60 hover:text-[#00a6f0] transition-all duration-300">
+              <Link href="/contacto" className="text-sm text-white/60 hover:text-[#006ec2] transition-all duration-300">
                 Contactos
               </Link>
             </nav>
@@ -67,17 +67,17 @@ export default function Footer() {
           {/* Support Column */}
           <div className="flex flex-col gap-4">
             <h4 className="text-sm font-black uppercase tracking-widest text-white/30 flex items-center gap-2">
-              <span className="w-1 h-3.5 bg-[#00a6f0] rounded-full"></span>
+              <span className="w-1 h-3.5 bg-[#006ec2] rounded-full"></span>
               Suporte
             </h4>
             <nav className="flex flex-col gap-2.5 pl-3 border-l border-white/5">
-              <Link href="/centro-de-ajuda" className="text-sm text-white/60 hover:text-[#00a6f0] transition-all duration-300">
+              <Link href="/centro-de-ajuda" className="text-sm text-white/60 hover:text-[#006ec2] transition-all duration-300">
                 Centro de Ajuda
               </Link>
-              <Link href="/termos-de-utilizacao" className="text-sm text-white/60 hover:text-[#00a6f0] transition-all duration-300">
+              <Link href="/termos-de-utilizacao" className="text-sm text-white/60 hover:text-[#006ec2] transition-all duration-300">
                 Termos de Utilização
               </Link>
-              <Link href="/politica-de-privacidade" className="text-sm text-white/60 hover:text-[#00a6f0] transition-all duration-300">
+              <Link href="/politica-de-privacidade" className="text-sm text-white/60 hover:text-[#006ec2] transition-all duration-300">
                 Política de Privacidade
               </Link>
             </nav>
@@ -86,20 +86,20 @@ export default function Footer() {
           {/* Contacts Column */}
           <div className="flex flex-col gap-4">
             <h4 className="text-sm font-black uppercase tracking-widest text-white/30 flex items-center gap-2">
-              <span className="w-1 h-3.5 bg-[#00a6f0] rounded-full"></span>
+              <span className="w-1 h-3.5 bg-[#006ec2] rounded-full"></span>
               Contactos
             </h4>
             <div className="flex flex-col gap-3 pl-3 border-l border-white/5 text-white/50">
-              <a href={`mailto:${CONTACT_INFO.email}`} className="flex items-center gap-2.5 text-sm hover:text-[#00a6f0] transition-all duration-200">
-                <Mail size={14} className="text-[#00a6f0]" />
+              <a href={`mailto:${CONTACT_INFO.email}`} className="flex items-center gap-2.5 text-sm hover:text-[#006ec2] transition-all duration-200">
+                <Mail size={14} className="text-[#006ec2]" />
                 <span className="underline decoration-white/20 underline-offset-4">{CONTACT_INFO.email}</span>
               </a>
-              <a href={`tel:${CONTACT_INFO.phone.replace(/\s/g, '')}`} className="flex items-center gap-2.5 text-sm hover:text-[#00a6f0] transition-all duration-200">
-                <Phone size={14} className="text-[#00a6f0]" />
+              <a href={`tel:${CONTACT_INFO.phone.replace(/\s/g, '')}`} className="flex items-center gap-2.5 text-sm hover:text-[#006ec2] transition-all duration-200">
+                <Phone size={14} className="text-[#006ec2]" />
                 <span>{CONTACT_INFO.phone}</span>
               </a>
               <div className="flex items-center gap-2.5 text-sm">
-                <MapPin size={14} className="text-[#00a6f0]" />
+                <MapPin size={14} className="text-[#006ec2]" />
                 <span>{CONTACT_INFO.location}</span>
               </div>
             </div>
@@ -115,7 +115,7 @@ export default function Footer() {
           </p>
 
           <div className="flex items-center gap-3 text-white/40">
-            <a href={OFFICIAL_PROFILES.facebook} className="p-2.5 bg-white/[0.03] rounded-xl border border-white/[0.08] hover:bg-[#00a6f0]/10 hover:text-[#00a6f0] hover:border-[#00a6f0]/20 transition-all duration-300">
+            <a href={OFFICIAL_PROFILES.facebook} className="p-2.5 bg-white/[0.03] rounded-xl border border-white/[0.08] hover:bg-[#006ec2]/10 hover:text-[#006ec2] hover:border-[#006ec2]/20 transition-all duration-300">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-4 w-4"
@@ -140,7 +140,7 @@ export default function Footer() {
                 <path d="M12.6.75h2.45l-5.34 5.92L16 15.25H11.1l-3.9-5.18L2.55 15.25H.1l5.72-6.35L0 .75h5.05l3.52 4.67L12.6.75zm-.24 13.5h1.28l-5.68-7.85H6.28l5.88 7.85z" />
               </svg>
             </a>
-            <a href={OFFICIAL_PROFILES.youtube} className="p-2.5 bg-white/[0.03] rounded-xl border border-white/[0.08] hover:bg-[#00a6f0]/10 hover:text-[#00a6f0] hover:border-[#00a6f0]/20 transition-all duration-300">
+            <a href={OFFICIAL_PROFILES.youtube} className="p-2.5 bg-white/[0.03] rounded-xl border border-white/[0.08] hover:bg-[#006ec2]/10 hover:text-[#006ec2] hover:border-[#006ec2]/20 transition-all duration-300">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-4 w-4"

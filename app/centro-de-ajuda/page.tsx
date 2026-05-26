@@ -92,21 +92,21 @@ function AccordionItem({ q, a, index }: { q: string; a: string; index: number })
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4, delay: index * 0.04 }}
-      className={`border-b border-white/6 last:border-0 transition-colors duration-300 ${open ? "bg-[#00a6f0]/4" : ""}`}
+      className={`border-b border-white/6 last:border-0 transition-colors duration-300 ${open ? "bg-[#006ec2]/4" : ""}`}
     >
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-start justify-between gap-6 py-5 px-4 text-left group cursor-pointer"
       >
         <div className="flex items-start gap-4">
-          <span className={`text-[10px] font-black tabular-nums pt-0.5 transition-colors duration-200 ${open ? "text-[#00a6f0]" : "text-white/20"}`}>
+          <span className={`text-[10px] font-black tabular-nums pt-0.5 transition-colors duration-200 ${open ? "text-[#006ec2]" : "text-white/20"}`}>
             {String(index + 1).padStart(2, "0")}
           </span>
           <span className={`font-bold text-sm leading-snug transition-colors duration-200 ${open ? "text-white" : "text-white/70 group-hover:text-white"}`}>
             {q}
           </span>
         </div>
-        <div className={`shrink-0 mt-0.5 w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-300 ${open ? "bg-[#00a6f0] border-[#00a6f0]" : "border-white/20 group-hover:border-[#00a6f0]/50"}`}>
+        <div className={`shrink-0 mt-0.5 w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-300 ${open ? "bg-[#006ec2] border-[#006ec2]" : "border-white/20 group-hover:border-[#006ec2]/50"}`}>
           <ChevronDown size={11} className={`transition-transform duration-300 ${open ? "rotate-180 text-white" : "text-white/40"}`} />
         </div>
       </button>
@@ -138,8 +138,8 @@ export default function CentroDeAjuda() {
 
       {/* Background glows */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 right-1/4 w-150 h-150 bg-[#00a6f0]/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/3 left-0 w-100 h-100 bg-[#00a6f0]/3 rounded-full blur-[100px]" />
+        <div className="absolute top-0 right-1/4 w-150 h-150 bg-[#006ec2]/5 rounded-full blur-[120px]" />
+        <div className="absolute bottom-1/3 left-0 w-100 h-100 bg-[#006ec2]/3 rounded-full blur-[100px]" />
       </div>
 
       <div className="relative z-10 pt-32 pb-24">
@@ -151,9 +151,9 @@ export default function CentroDeAjuda() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 text-[#00a6f0] text-[10px] font-black uppercase tracking-[0.8em] mb-6"
+              className="inline-flex items-center gap-2 text-[#006ec2] text-[10px] font-black uppercase tracking-[0.8em] mb-6"
             >
-              <span className="w-4 h-px bg-[#00a6f0]" />
+              <span className="w-4 h-px bg-[#006ec2]" />
               Suporte & FAQ
             </motion.span>
 
@@ -164,7 +164,7 @@ export default function CentroDeAjuda() {
               className="text-6xl md:text-[9rem] font-black uppercase italic leading-[0.8] tracking-tighter mb-8"
             >
               CENTRO<br />
-              <span className="text-[#00a6f0]">DE AJUDA</span>
+              <span className="text-[#006ec2]">DE AJUDA</span>
             </motion.h1>
 
             <motion.p
@@ -198,13 +198,13 @@ export default function CentroDeAjuda() {
                       onClick={() => setActiveSection(i)}
                       className={`group flex items-center gap-3 px-4 py-3 rounded-sm text-left transition-all duration-300 whitespace-nowrap lg:whitespace-normal w-full cursor-pointer ${
                         active
-                          ? "bg-[#00a6f0]/10 border border-[#00a6f0]/20 text-[#00a6f0]"
+                          ? "bg-[#006ec2]/10 border border-[#006ec2]/20 text-[#006ec2]"
                           : "border border-transparent text-white/40 hover:text-white/70 hover:border-white/10"
                       }`}
                     >
-                      <Icon size={14} className={active ? "text-[#00a6f0]" : "text-white/30 group-hover:text-white/50"} />
+                      <Icon size={14} className={active ? "text-[#006ec2]" : "text-white/30 group-hover:text-white/50"} />
                       <div>
-                        <p className={`text-[9px] font-black uppercase tracking-widest mb-0.5 ${active ? "text-[#00a6f0]/70" : "text-white/20"}`}>{s.label}</p>
+                        <p className={`text-[9px] font-black uppercase tracking-widest mb-0.5 ${active ? "text-[#006ec2]/70" : "text-white/20"}`}>{s.label}</p>
                         <p className="text-xs font-bold uppercase tracking-wide">{s.title}</p>
                       </div>
                     </button>
@@ -228,13 +228,13 @@ export default function CentroDeAjuda() {
                     {(() => {
                       const Icon = SECTIONS[activeSection].icon;
                       return (
-                        <div className="w-10 h-10 rounded-sm bg-[#00a6f0]/10 border border-[#00a6f0]/20 flex items-center justify-center">
-                          <Icon size={18} className="text-[#00a6f0]" />
+                        <div className="w-10 h-10 rounded-sm bg-[#006ec2]/10 border border-[#006ec2]/20 flex items-center justify-center">
+                          <Icon size={18} className="text-[#006ec2]" />
                         </div>
                       );
                     })()}
                     <div>
-                      <p className="text-[9px] font-black uppercase tracking-[0.5em] text-[#00a6f0]/60 mb-1">
+                      <p className="text-[9px] font-black uppercase tracking-[0.5em] text-[#006ec2]/60 mb-1">
                         {SECTIONS[activeSection].label}
                       </p>
                       <h2 className="text-xl font-black uppercase italic tracking-tight">
@@ -263,11 +263,11 @@ export default function CentroDeAjuda() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="mt-24 relative overflow-hidden rounded-sm border border-white/6 bg-linear-to-br from-[#00a6f0]/5 to-transparent p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8"
+            className="mt-24 relative overflow-hidden rounded-sm border border-white/6 bg-linear-to-br from-[#006ec2]/5 to-transparent p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8"
           >
-            <div className="absolute right-0 top-0 w-72 h-72 bg-[#00a6f0]/5 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute right-0 top-0 w-72 h-72 bg-[#006ec2]/5 rounded-full blur-3xl pointer-events-none" />
             <div className="relative">
-              <p className="text-[#00a6f0] text-[10px] font-black uppercase tracking-[0.5em] mb-3">
+              <p className="text-[#006ec2] text-[10px] font-black uppercase tracking-[0.5em] mb-3">
                 Não encontraste resposta?
               </p>
               <h2 className="text-3xl font-black uppercase italic tracking-tighter text-white">
@@ -276,7 +276,7 @@ export default function CentroDeAjuda() {
             </div>
             <Link
               href="/contacto"
-              className="relative shrink-0 group flex items-center gap-3 bg-[#00a6f0] hover:bg-[#0090d4] text-white font-black uppercase text-xs tracking-widest px-8 py-4 transition-colors duration-300"
+              className="relative shrink-0 group flex items-center gap-3 bg-[#006ec2] hover:bg-[#0090d4] text-white font-black uppercase text-xs tracking-widest px-8 py-4 transition-colors duration-300"
             >
               <Mail size={14} />
               Página de Contactos

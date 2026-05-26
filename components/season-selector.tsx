@@ -39,14 +39,14 @@ export const SeasonSelector: React.FC<SeasonSelectorProps> = ({
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between px-4 py-3 bg-white/[0.06] text-white text-sm font-black uppercase tracking-wider rounded-lg border border-white/20 hover:border-[#00a6f0]/50 focus:border-[#00a6f0] focus:outline-none focus:ring-2 focus:ring-[#00a6f0]/30 transition-colors cursor-pointer"
+        className="w-full flex items-center justify-between px-4 py-3 bg-white/[0.06] text-white text-sm font-black uppercase tracking-wider rounded-lg border border-white/20 hover:border-[#006ec2]/50 focus:border-[#006ec2] focus:outline-none focus:ring-2 focus:ring-[#006ec2]/30 transition-colors cursor-pointer"
       >
         <span className="flex-1 text-left truncate">
           T{(activeSeason + 1).toString().padStart(2, '0')} — {currentSeason?.descricao_temporada}
         </span>
         <ChevronDown
           size={16}
-          className={`flex-shrink-0 ml-2 text-[#00a6f0] ${
+          className={`flex-shrink-0 ml-2 text-[#006ec2] ${
             isOpen ? 'rotate-180' : ''
           }`}
         />
@@ -71,11 +71,11 @@ export const SeasonSelector: React.FC<SeasonSelectorProps> = ({
                 }}
                 className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-black uppercase tracking-wider transition-colors border-b border-white/5 last:border-b-0 cursor-pointer ${
                   activeSeason === idx
-                    ? 'bg-[#00a6f0]/10 text-[#00a6f0] border-l-4 border-l-[#00a6f0]'
+                    ? 'bg-[#006ec2]/10 text-[#006ec2] border-l-4 border-l-[#006ec2]'
                     : 'text-white/70 hover:bg-white/10 hover:text-white border-l-4 border-l-transparent'
                 }`}
               >
-                <span className="text-xs font-black text-[#00a6f0]">
+                <span className="text-xs font-black text-[#006ec2]">
                   T{(idx + 1).toString().padStart(2, '0')}
                 </span>
                 <span className="truncate">{season.descricao_temporada}</span>

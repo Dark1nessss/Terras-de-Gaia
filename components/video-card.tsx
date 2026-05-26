@@ -11,12 +11,12 @@ export function VideoCard({ post }: { post: any }) {
           alt="Video" fill className="object-cover opacity-80 group-hover:scale-105 transition-transform duration-500"
         />
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-12 h-12 bg-[#00a6f0] rounded-full flex items-center justify-center shadow-xl transform group-hover:scale-110 transition-transform">
+          <div className="w-12 h-12 bg-[#006ec2] rounded-full flex items-center justify-center shadow-xl transform group-hover:scale-110 transition-transform">
             <Play size={20} fill="white" className="text-white ml-1" />
           </div>
         </div>
       </div>
-      <h3 className="text-xl font-black uppercase italic tracking-tighter group-hover:text-[#00a6f0] transition-colors line-clamp-2"
+      <h3 className="text-xl font-black uppercase italic tracking-tighter group-hover:text-[#006ec2] transition-colors line-clamp-2"
           dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
       <p className="text-white/40 text-xs font-bold uppercase mt-2 tracking-widest">Ver Reportagem →</p>
     </Link>

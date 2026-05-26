@@ -21,7 +21,7 @@ export function LoadingSpinner({
         {[0, 0.1, 0.2].map((delay) => (
           <div
             key={delay}
-            className={`${dotSize} rounded-full bg-[#00a6f0] animate-bounce`}
+            className={`${dotSize} rounded-full bg-[#006ec2] animate-bounce`}
             style={{ animationDelay: `${delay}s` }}
           />
         ))}

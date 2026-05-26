@@ -58,11 +58,11 @@ export function LiveDot({ variant, size = 'md', className }: LiveDotProps) {
   const resolved = isManual ? variant! : liveStatus;
 
   const color =
-    resolved === 'broadcast' ? 'bg-[#00a6f0]' :
+    resolved === 'broadcast' ? 'bg-[#006ec2]' :
     resolved === 'inactive'  ? 'bg-white/20' :
     'bg-red-500';
   const pingColor =
-    resolved === 'broadcast' ? 'bg-[#00a6f0]' :
+    resolved === 'broadcast' ? 'bg-[#006ec2]' :
     resolved === 'inactive'  ? '' :
     'bg-red-400';
   const glow =

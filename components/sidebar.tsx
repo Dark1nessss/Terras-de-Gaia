@@ -139,13 +139,13 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                       className="group relative w-full flex items-center justify-between gap-2 rounded-sm px-4 py-3 text-left transition duration-300 active:scale-[0.98] cursor-pointer"
                     >
                       <div className="flex items-center gap-8">
-                        <div className="text-[#969199] group-hover:text-[#00a6f0] transition-colors">{item.icon}</div>
+                        <div className="text-[#969199] group-hover:text-[#006ec2] transition-colors">{item.icon}</div>
                         <div className="relative">
                           <span className="font-bold uppercase text-[15px] tracking-wide">{item.label}</span>
-                          <div className="absolute -bottom-1.5 left-0 w-6 h-0.5 bg-white/10 group-hover:bg-[#00a6f0] group-hover:w-full transition-all duration-300" />
+                          <div className="absolute -bottom-1.5 left-0 w-6 h-0.5 bg-white/10 group-hover:bg-[#006ec2] group-hover:w-full transition-all duration-300" />
                         </div>
                       </div>
-                      <ChevronRight size={16} className="text-[#969199] group-hover:text-[#00a6f0] group-hover:translate-x-1 transition-all" />
+                      <ChevronRight size={16} className="text-[#969199] group-hover:text-[#006ec2] group-hover:translate-x-1 transition-all" />
                     </button>
                   ) : (
                     <Link 
@@ -154,10 +154,10 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                       className="group relative flex items-center justify-between gap-2 rounded-sm px-4 py-3 text-left transition duration-300 active:scale-[0.98]"
                     >
                       <div className="flex items-center gap-8">
-                        <div className="text-[#969199] group-hover:text-[#00a6f0] transition-colors">{item.icon}</div>
+                        <div className="text-[#969199] group-hover:text-[#006ec2] transition-colors">{item.icon}</div>
                         <div className="relative">
                           <span className="font-bold uppercase text-[15px] tracking-wide">{item.label}</span>
-                          <div className="absolute -bottom-1.5 left-0 w-6 h-0.5 bg-white/10 group-hover:bg-[#00a6f0] group-hover:w-full transition-all duration-300" />
+                          <div className="absolute -bottom-1.5 left-0 w-6 h-0.5 bg-white/10 group-hover:bg-[#006ec2] group-hover:w-full transition-all duration-300" />
                         </div>
                       </div>
                     </Link>
@@ -176,8 +176,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                   className="group relative flex flex-col px-10 py-3 text-left transition duration-300 active:scale-[0.98]"
                 >
                   <div className="relative w-fit">
-                    <span className="font-bold uppercase text-[15px] tracking-wide text-white/80 group-hover:text-[#00a6f0] transition-colors">{sub}</span>
-                    <div className="absolute -bottom-1.5 left-0 w-6 h-0.5 bg-white/10 group-hover:bg-[#00a6f0] group-hover:w-full transition-all duration-300" />
+                    <span className="font-bold uppercase text-[15px] tracking-wide text-white/80 group-hover:text-[#006ec2] transition-colors">{sub}</span>
+                    <div className="absolute -bottom-1.5 left-0 w-6 h-0.5 bg-white/10 group-hover:bg-[#006ec2] group-hover:w-full transition-all duration-300" />
                   </div>
                 </Link>
               ))}

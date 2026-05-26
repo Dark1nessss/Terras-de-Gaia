@@ -28,17 +28,17 @@ export function NewsFeed({ initialPosts }: { initialPosts: any[] }) {
             ) : (
               <div className="w-full h-full bg-[#161b22] flex items-center justify-center text-white/5" />
             )}
-            <div className="absolute top-0 right-0 bg-[#00a6f0] text-white text-xs font-black uppercase px-4 py-2">
+            <div className="absolute top-0 right-0 bg-[#006ec2] text-white text-xs font-black uppercase px-4 py-2">
               {activePost._embedded?.['wp:term']?.[0]?.[0]?.name || "Destaque"}
             </div>
           </div>
           
           <h3 
-            className="text-4xl md:text-5xl text-white font-black leading-none uppercase italic tracking-tighter mb-4 group-hover:text-[#00a6f0] transition-colors duration-300"
+            className="text-4xl md:text-5xl text-white font-black leading-none uppercase italic tracking-tighter mb-4 group-hover:text-[#006ec2] transition-colors duration-300"
             dangerouslySetInnerHTML={{ __html: activePost.title?.rendered || "" }}
           />
           <div
-            className="text-white/50 text-lg line-clamp-2 font-medium border-l-2 border-[#00a6f0] pl-4 mb-2"
+            className="text-white/50 text-lg line-clamp-2 font-medium border-l-2 border-[#006ec2] pl-4 mb-2"
             dangerouslySetInnerHTML={{ __html: activePost.excerpt?.rendered || "" }}
           />
         </Link>
@@ -48,7 +48,7 @@ export function NewsFeed({ initialPosts }: { initialPosts: any[] }) {
       <div className="lg:col-span-4 flex flex-col justify-between h-full lg:max-h-145"> 
         <div className="flex flex-col h-full overflow-hidden">
           <div className="bg-white/5 p-4 mb-4 shrink-0">
-            <span className="text-[#00a6f0] text-xs font-black uppercase tracking-widest">Feed de Notícias</span>
+            <span className="text-[#006ec2] text-xs font-black uppercase tracking-widest">Feed de Notícias</span>
           </div>
           
           <div className="flex-1 overflow-y-auto scrollbar-hide space-y-6 pr-2 mb-4">
@@ -63,7 +63,7 @@ export function NewsFeed({ initialPosts }: { initialPosts: any[] }) {
               >
                 <div className="flex justify-between items-start gap-4 mb-1">
                   <span className={`text-xs font-black uppercase tracking-tighter transition-colors ${
-                    activePost.id === post.id ? 'text-[#00a6f0]' : 'text-gray-500 group-hover:text-white'
+                    activePost.id === post.id ? 'text-[#006ec2]' : 'text-gray-500 group-hover:text-white'
                   }`}>
                     {post._embedded?.['wp:term']?.[0]?.[0]?.name || "Gaia"}
                   </span>
@@ -74,7 +74,7 @@ export function NewsFeed({ initialPosts }: { initialPosts: any[] }) {
                 </div>
                 <h4 
                   className={`text-md font-black leading-tight uppercase italic tracking-tighter transition-colors duration-300 ${
-                    activePost.id === post.id ? 'text-[#00a6f0]' : 'text-white group-hover:text-[#00a6f0]'
+                    activePost.id === post.id ? 'text-[#006ec2]' : 'text-white group-hover:text-[#006ec2]'
                   }`}
                   dangerouslySetInnerHTML={{ __html: post.title?.rendered || "" }}
                 />

@@ -41,11 +41,11 @@ export default async function LivePage() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 border-b border-white/10 pb-6 gap-4">
           <div>
             <div className="flex items-center gap-1 mb-2">
-              <span className="text-[#00a6f0] text-xs font-black uppercase tracking-widest mt-0.5 ml-2 lg:ml-3">Em Direto</span>
+              <span className="text-[#006ec2] text-xs font-black uppercase tracking-widest mt-0.5 ml-2 lg:ml-3">Em Direto</span>
               <LiveDot />
             </div>
             <h1 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter leading-none">
-              Terras de Gaia <span className="text-[#00a6f0]">TV</span>
+              Terras de Gaia <span className="text-[#006ec2]">TV</span>
             </h1>
           </div>
           <div className="text-right hidden md:block">
@@ -63,7 +63,7 @@ export default async function LivePage() {
               <LivePlayer initialPrograms={programs as any[]} livestreamEmbedUrl={livestreamEmbedUrl} />
               <div className="absolute top-4 left-4">
                  <div className="bg-black/60 backdrop-blur-md px-3 py-1 border border-white/10 rounded flex items-center gap-2">
-                    <Tv size={14} className="text-[#00a6f0]" />
+                    <Tv size={14} className="text-[#006ec2]" />
                     <span className="text-xs font-black uppercase italic mt-1">
                       {liveNow?.title ?? 'Canal Principal'}
                     </span>
@@ -98,7 +98,7 @@ export default async function LivePage() {
           <div className="lg:col-span-4 flex flex-col gap-0 h-fit lg:sticky lg:top-24">
             
             {/* Header */}
-            <div className="bg-[#00a6f0] p-4 md:p-5 flex items-center justify-between">
+            <div className="bg-[#006ec2] p-4 md:p-5 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Calendar size={18} className="text-white" />
                 <span className="font-black uppercase italic tracking-tighter text-sm md:text-base">Programação</span>
@@ -117,17 +117,17 @@ export default async function LivePage() {
                 return (
                   <div
                     key={idx}
-                    className={'group px-4 md:px-5 py-4 md:py-5 border-b border-white/5 transition-all duration-300 hover:bg-white/3' + (isActive ? ' bg-white/5 border-l-4 border-l-[#00a6f0] pl-3 md:pl-4' : '')}
+                    className={'group px-4 md:px-5 py-4 md:py-5 border-b border-white/5 transition-all duration-300 hover:bg-white/3' + (isActive ? ' bg-white/5 border-l-4 border-l-[#006ec2] pl-3 md:pl-4' : '')}
                   >
                     <div className="flex items-center gap-3">
-                      <span className={'text-xs font-black italic whitespace-nowrap ' + (isActive ? 'text-[#00a6f0]' : 'text-white/30')}>
+                      <span className={'text-xs font-black italic whitespace-nowrap ' + (isActive ? 'text-[#006ec2]' : 'text-white/30')}>
                         {item.time}
                       </span>
                       <p className={'text-sm font-black uppercase tracking-tight italic line-clamp-1 flex-1 ' + (isActive ? 'text-white' : 'text-white/60 group-hover:text-white')}>
                         {item.title}
                       </p>
                       {isActive && (
-                        <span className="text-xs font-black uppercase text-[#00a6f0] animate-pulse whitespace-nowrap shrink-0 ml-2">
+                        <span className="text-xs font-black uppercase text-[#006ec2] animate-pulse whitespace-nowrap shrink-0 ml-2">
                           Agora
                         </span>
                       )}

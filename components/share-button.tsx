@@ -105,7 +105,7 @@ export function ShareButton({ title, season, episode }: ShareButtonProps) {
         className={`h-10 px-4 flex items-center gap-2 rounded bg-white/[0.02] border border-white/5 text-[11px] font-bold tracking-wider uppercase transition-all duration-300 ${
           copied
             ? "text-emerald-400 border-emerald-500/20 bg-emerald-500/5"
-            : "text-white/40 hover:text-[#00a6f0] hover:bg-[#00a6f0]/5 hover:border-[#00a6f0]/20"
+            : "text-white/40 hover:text-[#006ec2] hover:bg-[#006ec2]/5 hover:border-[#006ec2]/20"
         }`}
       >
         {copied ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}

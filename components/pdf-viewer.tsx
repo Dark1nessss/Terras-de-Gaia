@@ -127,7 +127,7 @@ export function PdfViewer({ pdfUrl, title }: PdfViewerProps) {
       {/* Toolbar */}
       <div className="w-full flex items-center justify-between px-4 py-3 border-b border-white/6 bg-[#0a0c10]/80 backdrop-blur-sm">
         <div className="flex items-center gap-2 text-white/50 text-xs font-bold uppercase tracking-widest min-w-0">
-          <BookOpen size={13} className="text-[#00a6f0] shrink-0" />
+          <BookOpen size={13} className="text-[#006ec2] shrink-0" />
           <span className="truncate">{title}</span>
         </div>
         <div className="flex items-center gap-2 shrink-0">
@@ -136,7 +136,7 @@ export function PdfViewer({ pdfUrl, title }: PdfViewerProps) {
             target="_blank"
             rel="noopener noreferrer"
             download
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-[#00a6f0] hover:bg-[#0091d1] text-white rounded text-xs font-bold transition-all"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-[#006ec2] hover:bg-[#0091d1] text-white rounded text-xs font-bold transition-all"
           >
             <Download size={12} />
             <span>Download</span>
@@ -160,7 +160,7 @@ export function PdfViewer({ pdfUrl, title }: PdfViewerProps) {
               className="flex flex-col items-center justify-center gap-4"
               style={{ height: pageHeight }}
             >
-              <Loader2 className="animate-spin text-[#00a6f0]" size={40} />
+              <Loader2 className="animate-spin text-[#006ec2]" size={40} />
               <p className="text-white/30 text-sm">A carregar revista...</p>
             </div>
           }
@@ -222,7 +222,7 @@ export function PdfViewer({ pdfUrl, title }: PdfViewerProps) {
         <div className="w-full flex items-center justify-center gap-4 py-4 border-t border-white/6 bg-[#0a0c10]/80">
           <button
             onClick={goToPrev}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-sm bg-white/5 hover:bg-white/10 text-white text-sm font-bold transition-all border border-white/10 hover:border-[#00a6f0]"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-sm bg-white/5 hover:bg-white/10 text-white text-sm font-bold transition-all border border-white/10 hover:border-[#006ec2]"
           >
             <ChevronLeft size={16} />
             <span>Anterior</span>
@@ -232,7 +232,7 @@ export function PdfViewer({ pdfUrl, title }: PdfViewerProps) {
           </span>
           <button
             onClick={goToNext}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-sm bg-white/5 hover:bg-white/10 text-white text-sm font-bold transition-all border border-white/10 hover:border-[#00a6f0]"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-sm bg-white/5 hover:bg-white/10 text-white text-sm font-bold transition-all border border-white/10 hover:border-[#006ec2]"
           >
             <span>Próxima</span>
             <ChevronRight size={16} />

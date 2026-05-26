@@ -29,12 +29,12 @@ export default async function ProgramacaoPage() {
       <section className="relative overflow-hidden">
 
         {/* Ambient glow */}
-        <div className="absolute top-0 right-0 w-150 h-75 bg-[#00a6f0]/5 blur-[140px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 right-0 w-150 h-75 bg-[#006ec2]/5 blur-[140px] rounded-full pointer-events-none" />
 
         <div className="container mx-auto px-6 pt-14 pb-10 relative z-10">
 
           {/* Label */}
-          <span className="flex items-center gap-3 text-[#00a6f0] text-[10px] font-black uppercase tracking-[0.5em] mb-8">
+          <span className="flex items-center gap-3 text-[#006ec2] text-[10px] font-black uppercase tracking-[0.5em] mb-8">
             <LiveDot variant="broadcast" />
             <span className="mt-1">Terras de Gaia TV</span>
           </span>
@@ -72,7 +72,7 @@ export default async function ProgramacaoPage() {
                 <div>
                   <span className="text-[9px] font-black uppercase tracking-[0.45em] text-white/30 block mb-2">A Seguir</span>
                   <p className="text-white/60 font-black uppercase italic text-lg leading-tight tracking-tighter">{upNext.title}</p>
-                  <p className="text-[#00a6f0] text-xs font-bold mt-1 tracking-widest">{upNext.time}</p>
+                  <p className="text-[#006ec2] text-xs font-bold mt-1 tracking-widest">{upNext.time}</p>
                 </div>
               ) : (
                 <div>
@@ -86,7 +86,7 @@ export default async function ProgramacaoPage() {
 
         {/* Full-width divider strip */}
         <div className="relative h-px bg-white/5">
-          <div className="absolute left-0 top-0 h-full w-1/3 bg-linear-to-r from-[#00a6f0]/40 to-transparent" />
+          <div className="absolute left-0 top-0 h-full w-1/3 bg-linear-to-r from-[#006ec2]/40 to-transparent" />
         </div>
       </section>
 
@@ -101,7 +101,7 @@ export default async function ProgramacaoPage() {
             <p className="text-white font-black uppercase italic text-2xl tracking-tighter">Acompanha a emissão ao vivo</p>
           </div>
           <Link href="/live">
-            <button className="flex items-center gap-3 bg-[#00a6f0] text-white px-10 py-4 font-black uppercase italic tracking-widest text-xs transition-all cursor-pointer">
+            <button className="flex items-center gap-3 bg-[#006ec2] text-white px-10 py-4 font-black uppercase italic tracking-widest text-xs transition-all cursor-pointer">
               <LiveDot />
               <span className="mt-1">Ver em Direto</span>
             </button>
