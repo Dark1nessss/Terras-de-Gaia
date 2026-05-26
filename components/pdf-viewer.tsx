@@ -7,8 +7,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Download,
-  Maximize2,
-  Minimize2,
   Loader2,
   FileWarning,
   BookOpen,
@@ -45,29 +43,55 @@ FlipPage.displayName = 'FlipPage';
 export function PdfViewer({ pdfUrl, title }: PdfViewerProps) {
   const [numPages, setNumPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const flipBookRef = useRef<any>(null);
-  const [containerWidth, setContainerWidth] = useState(960);
+  const [containerSize, setContainerSize] = useState({ width: 960, height: 800 });
 
+  const containerWidth = containerSize.width;
+  const containerHeight = containerSize.height;
   const isMobile = containerWidth < 680;
 
   useEffect(() => {
     if (!containerRef.current) return;
     const ro = new ResizeObserver((entries) => {
-      const w = entries[0]?.contentRect.width ?? 960;
-      setContainerWidth(w);
+      const r = entries[0]?.contentRect;
+      if (r) setContainerSize({ width: r.width ?? 960, height: r.height ?? 800 });
     });
     ro.observe(containerRef.current);
     return () => ro.disconnect();
   }, []);
 
-  // One page width; flipbook shows two side-by-side on desktop
-  const pageWidth = isMobile
-    ? Math.min(containerWidth - 32, 520)
-    : Math.floor((containerWidth - 120) / 2);
+  // Constrain page to always fit within the 100vh container
+  // toolbar ~46px + navbar ~60px + stage padding py-10 (80px) = ~186px overhead
+  const stageAvailableHeight = containerHeight > 300 ? containerHeight - 200 : Infinity;
+  const maxPageWidthFromHeight = isFinite(stageAvailableHeight) ? Math.floor(stageAvailableHeight / 1.415) : Infinity;
+  const rawPageWidth = isMobile ? Math.min(containerWidth - 32, 520) : Math.floor((containerWidth - 120) / 2);
+  const pageWidth = isFinite(maxPageWidthFromHeight) ? Math.min(rawPageWidth, maxPageWidthFromHeight) : rawPageWidth;
   const pageHeight = Math.floor(pageWidth * 1.415); // A4 ratio
+
+  const playFlipSound = useCallback(() => {
+    try {
+      type AudioCtxCtor = typeof AudioContext;
+      const AudioCtx: AudioCtxCtor =
+        window.AudioContext ||
+        (window as typeof window & { webkitAudioContext: AudioCtxCtor }).webkitAudioContext;
+      const ctx = new AudioCtx();
+      const n = Math.floor(ctx.sampleRate * 0.13);
+      const buf = ctx.createBuffer(1, n, ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < n; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 1.8) * 0.28;
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      const hp = ctx.createBiquadFilter();
+      hp.type = 'highpass';
+      hp.frequency.value = 900;
+      src.connect(hp);
+      hp.connect(ctx.destination);
+      src.start(0);
+      src.onended = () => ctx.close();
+    } catch { /* audio not available */ }
+  }, []);
 
   const onDocumentLoadSuccess = useCallback(
     ({ numPages }: { numPages: number }) => setNumPages(numPages),
@@ -86,20 +110,6 @@ export function PdfViewer({ pdfUrl, title }: PdfViewerProps) {
     return () => window.removeEventListener('keydown', onKey);
   });
 
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement && containerRef.current) {
-      containerRef.current.requestFullscreen();
-    } else {
-      document.exitFullscreen();
-    }
-  };
-
-  useEffect(() => {
-    const h = () => setIsFullscreen(!!document.fullscreenElement);
-    document.addEventListener('fullscreenchange', h);
-    return () => document.removeEventListener('fullscreenchange', h);
-  }, []);
-
   const pageLabel = (() => {
     if (isMobile) return `${currentPage + 1} / ${numPages}`;
     if (currentPage === 0) return `1 / ${numPages}`;
@@ -112,6 +122,7 @@ export function PdfViewer({ pdfUrl, title }: PdfViewerProps) {
     <div
       ref={containerRef}
       className="flex flex-col items-center w-full bg-[#0d0f14] rounded-xl border border-white/6 overflow-hidden"
+      style={{ height: '100vh' }}
     >
       {/* Toolbar */}
       <div className="w-full flex items-center justify-between px-4 py-3 border-b border-white/6 bg-[#0a0c10]/80 backdrop-blur-sm">
@@ -120,13 +131,6 @@ export function PdfViewer({ pdfUrl, title }: PdfViewerProps) {
           <span className="truncate">{title}</span>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <button
-            onClick={toggleFullscreen}
-            className="p-1.5 rounded bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all"
-            title="Ecrã completo"
-          >
-            {isFullscreen ? <Minimize2 size={15} /> : <Maximize2 size={15} />}
-          </button>
           <a
             href={pdfUrl}
             target="_blank"
@@ -144,7 +148,7 @@ export function PdfViewer({ pdfUrl, title }: PdfViewerProps) {
       <div
         className="w-full flex justify-center items-center py-10 px-4"
         style={{
-          minHeight: pageHeight + 80,
+          flex: 1,
           background: 'radial-gradient(ellipse at center, #1a1d24 0%, #0a0c10 100%)',
         }}
       >
@@ -172,7 +176,7 @@ export function PdfViewer({ pdfUrl, title }: PdfViewerProps) {
         >
           {numPages > 0 && pageWidth > 0 && (
             <HTMLFlipBook
-              key={String(isMobile)}
+              key={`${String(isMobile)}-${Math.round(pageWidth / 50) * 50}`}
               ref={flipBookRef}
               width={pageWidth}
               height={pageHeight}
@@ -198,7 +202,7 @@ export function PdfViewer({ pdfUrl, title }: PdfViewerProps) {
               style={{}}
               startPage={0}
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              onFlip={(e: any) => setCurrentPage(e.data)}
+              onFlip={(e: any) => { setCurrentPage(e.data); playFlipSound(); }}
             >
               {Array.from({ length: numPages }, (_, i) => (
                 <FlipPage

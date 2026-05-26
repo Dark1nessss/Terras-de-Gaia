@@ -112,35 +112,71 @@ export default function RevistaPage() {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-225 h-125 bg-[#00a6f0]/8 blur-[120px] rounded-full" />
         </div>
 
-        <div className="relative container mx-auto px-6 max-w-7xl">
+        {/* Latest journal cover — artistic right-side hero background */}
+        {!isLoading && revistas[0]?.featured_media_url && (
+          <div
+            className="absolute right-0 top-0 bottom-0 w-[42%] pointer-events-none z-10"
+            style={{ overflow: 'hidden' }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={revistas[0].featured_media_url}
+              alt=""
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'top center',
+                opacity: 0.65,
+              }}
+            />
+            {/* Fade left into page background */}
+            <div
+              className="absolute inset-0"
+              style={{ background: 'linear-gradient(to right, #0a0c10 0%, rgba(10,12,16,0.6) 40%, transparent 70%)' }}
+            />
+            {/* Artistic bottom cutoff */}
+            <div
+              className="absolute inset-0"
+              style={{ background: 'linear-gradient(to bottom, transparent 0%, transparent 45%, rgba(10,12,16,0.8) 65%, #0a0c10 85%)' }}
+            />
+          </div>
+        )}
+
+        <div className="relative container mx-auto px-6 max-w-7xl z-20">
           <Breadcrumb
             items={[{ label: 'Inicial', href: '/' }]}
             current="Revista Digital"
           />
 
-          <motion.div
-            initial={{ opacity: 0, y: 32 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-6"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-0.75 bg-[#00a6f0]" />
-              <span className="text-[#00a6f0] text-xs font-black uppercase tracking-[0.2em]">
-                Arquivo Digital
-              </span>
-            </div>
+          <div className="flex items-start justify-between mt-6 gap-8">
+            {/* Left: title + description */}
+            <motion.div
+              initial={{ opacity: 0, y: 32 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              className="flex-1"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-0.75 bg-[#00a6f0]" />
+                <span className="text-[#00a6f0] text-xs font-black uppercase tracking-[0.2em]">
+                  Arquivo Digital
+                </span>
+              </div>
 
-            <h1 className="text-6xl md:text-8xl font-black uppercase italic tracking-tighter leading-none mb-5">
-              Revista
-              <br />
-              <span className="text-[#00a6f0]">Digital</span>
-            </h1>
+              <h1 className="text-6xl md:text-8xl font-black uppercase italic tracking-tighter leading-none mb-5">
+                Revista
+                <br />
+                <span className="text-[#00a6f0]">Digital</span>
+              </h1>
 
-            <p className="text-white/40 text-base max-w-md leading-relaxed">
-              Consulte todas as edições digitais do Jornal Terras de Gaia — folheie cada número diretamente no seu browser.
-            </p>
-          </motion.div>
+              <p className="text-white/40 text-base max-w-md leading-relaxed">
+                Consulte todas as edições digitais do Jornal Terras de Gaia — folheie cada número diretamente no seu browser.
+              </p>
+            </motion.div>
+          </div>
         </div>
       </section>
 

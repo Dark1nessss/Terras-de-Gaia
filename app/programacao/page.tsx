@@ -102,7 +102,7 @@ export default async function ProgramacaoPage() {
           </div>
           <Link href="/live">
             <button className="flex items-center gap-3 bg-[#00a6f0] text-white px-10 py-4 font-black uppercase italic tracking-widest text-xs transition-all cursor-pointer">
-              <LiveDot variant={liveNow ? 'live' : 'inactive'} />
+              <LiveDot />
               <span className="mt-1">Ver em Direto</span>
             </button>
           </Link>
