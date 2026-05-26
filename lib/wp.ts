@@ -570,6 +570,20 @@ export async function getFeaturedProgramas() {
   return programas.filter((p: any) => p.acf?.destaque_gaia_play === true);
 }
 
+export async function getProgramasByCategory(categorySlug: string) {
+  const all = await getProgramas();
+  return all.filter((p: any) => {
+    const cat: string = p.acf?.categoria_programa || '';
+    const slug = cat
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-');
+    return slug === categorySlug;
+  });
+}
+
 /**
  * Get all advertisements from WordPress with featured images
  * - Uses ISR (Incremental Static Regeneration) for 30 min CDN cache

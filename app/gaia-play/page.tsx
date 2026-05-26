@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Program } from '@/lib/programas';
+import { slugifyCategory } from '@/lib/utils';
 import { Play, Plus, MonitorPlay, Layers, ArrowRight, Tv } from 'lucide-react';
 
 export default function ProgramsPage() {
@@ -192,7 +193,7 @@ export default function ProgramsPage() {
           ))}
           
           {/* Card Final de "Ver Tudo" */}
-          <Link href="/programacao" className="min-w-[300px] h-full flex flex-col items-center justify-center bg-white/5 border border-dashed border-white/10 hover:bg-[#00a6f0]/10 hover:border-[#00a6f0]/40 transition-all duration-300 gap-4 group">
+          <Link href="/gaia-play/todos" className="min-w-[300px] h-full flex flex-col items-center justify-center bg-white/5 border border-dashed border-white/10 hover:bg-[#00a6f0]/10 hover:border-[#00a6f0]/40 transition-all duration-300 gap-4 group">
             <MonitorPlay className="text-white/20 group-hover:text-[#00a6f0] transition-colors" size={40} />
             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 group-hover:text-[#00a6f0] transition-colors">Ver Tudo</span>
             <ArrowRight size={16} className="text-white/10 group-hover:text-[#00a6f0] group-hover:translate-x-1 transition-all" />
@@ -237,8 +238,8 @@ export default function ProgramsPage() {
             return (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {categories.map(([cat, progs], i) => (
+                  <Link key={cat} href={`/gaia-play/categoria/${slugifyCategory(cat)}`}>
                   <motion.div
-                    key={cat}
                     whileHover={{ y: -4 }}
                     transition={{ duration: 0.3 }}
                     className="group relative border border-white/10 hover:border-[#00a6f0]/50 bg-zinc-900/40 hover:bg-zinc-900/80 transition-all duration-300 p-8 cursor-pointer overflow-hidden"
@@ -263,21 +264,23 @@ export default function ProgramsPage() {
                       ))}
                     </div>
                   </motion.div>
+                  </Link>
                 ))}
 
                 {/* Platform CTA card */}
                 <motion.div
                   whileHover={{ y: -4 }}
                   transition={{ duration: 0.3 }}
-                  className="group border border-dashed border-[#00a6f0]/30 hover:border-[#00a6f0] bg-[#00a6f0]/5 hover:bg-[#00a6f0]/10 transition-all duration-300 p-8 flex flex-col justify-between cursor-pointer"
+                  className="group relative border border-dashed border-[#00a6f0]/30 hover:border-[#00a6f0] bg-[#00a6f0]/5 hover:bg-[#00a6f0]/10 transition-all duration-300 p-8 flex flex-col justify-between cursor-pointer"
                 >
+                  <Link href="/live" className="absolute inset-0 z-10" aria-label="Conteúdo On Demand" />
                   <Tv size={24} className="text-[#00a6f0]" />
                   <div>
                     <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#00a6f0]/60 mb-2">Gaia Play</p>
                     <h3 className="text-2xl font-black uppercase italic tracking-tighter mb-4">Conteúdo On Demand</h3>
-                    <Link href="/live" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#00a6f0] hover:gap-4 transition-all">
+                    <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#00a6f0] group-hover:gap-4 transition-all">
                       <span className="mt-0.75">Ver em Direto</span> <ArrowRight size={12} />
-                    </Link>
+                    </span>
                   </div>
                 </motion.div>
               </div>

@@ -13,7 +13,7 @@ interface WeatherData {
   icon: string;
 }
 
-const IPMA_URL = 'https://www.ipma.pt/pt/tempo/obs.superficie/';
+const IPMA_URL = 'https://www.accuweather.com/en/pt/vila-nova-de-gaia/275272/weather-forecast/275272';
 
 const WEATHER_ICONS: Record<string, LucideIcon> = {
   'sun':             Sun,
