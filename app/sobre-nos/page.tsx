@@ -56,7 +56,7 @@ function DrawLineV({ className }: { className?: string }) {
   );
 }
 
-function TimelineItem({ year, title, desc, index }: { year: string; title: string; desc: string; index: number }) {
+function TimelineItem({ year, title, desc, index, sub }: { year: string; title: string; desc: string; index: number; sub?: boolean }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
   const isLeft = index % 2 === 0;
@@ -75,7 +75,9 @@ function TimelineItem({ year, title, desc, index }: { year: string; title: strin
           animate={inView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
         >
-          <p className="text-[#006ec2] text-[9px] font-black uppercase tracking-[0.5em] mb-1">{year}</p>
+          <p className="text-[#006ec2] text-[10px] font-black uppercase tracking-[0.5em] mb-1">
+            {sub ? <span>{year}</span> : year}
+          </p>
           <p className="text-white/90 font-black uppercase italic tracking-tight text-xl mb-2">{title}</p>
           <p className="text-white/40 text-sm leading-relaxed">{desc}</p>
         </motion.div>
@@ -89,7 +91,9 @@ function TimelineItem({ year, title, desc, index }: { year: string; title: strin
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
-              <p className="text-[#006ec2] text-[9px] font-black uppercase tracking-[0.5em] mb-1">{year}</p>
+              <p className="text-[#006ec2] text-[10px] font-black uppercase tracking-[0.5em] mb-1">
+                {sub ? <span>{year}</span> : year}
+              </p>
               <p className="text-white/90 font-black uppercase italic tracking-tight text-2xl mb-3">{title}</p>
               <p className="text-white/40 text-sm leading-relaxed max-w-xs ml-auto">{desc}</p>
             </motion.div>
@@ -110,7 +114,9 @@ function TimelineItem({ year, title, desc, index }: { year: string; title: strin
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
-              <p className="text-[#006ec2] text-[9px] font-black uppercase tracking-[0.5em] mb-1">{year}</p>
+              <p className="text-[#006ec2] text-[10px] font-black uppercase tracking-[0.5em] mb-1">
+                {sub ? <span>{year}</span> : year}
+              </p>
               <p className="text-white/90 font-black uppercase italic tracking-tight text-2xl mb-3">{title}</p>
               <p className="text-white/40 text-sm leading-relaxed max-w-xs">{desc}</p>
             </motion.div>
@@ -145,16 +151,17 @@ const STATS = [
 
 const TIMELINE = [
   { year: "2003", title: "Jornal Notícias de Avintes", desc: "As primeiras páginas impressas chegam às mãos dos habitantes de Avintes. Um jornal local com grandes ambições." },
-  { year: "2009", title: "Presença na Internet", desc: "O jornalismo local dá os primeiros passos no digital. A informação começa a circular sem fronteiras físicas." },
-  { year: "2015", title: "Produção Audiovisual", desc: "A câmara entra em cena. Reportagens em vídeo, cobertura de eventos e o início da linguagem televisiva." },
-  { year: "2018", title: "Canal de Televisão", desc: "Nasce o canal Terras de Gaia TV. Transmissões em direto, programas originais e a região no ecrã de casa." },
-  { year: "2021", title: "Gaia Play", desc: "Plataforma on demand com programas originais, arquivo histórico e conteúdos exclusivos para a comunidade." },
+  { year: "2014", title: "Presença na Internet", desc: "O jornalismo local dá os primeiros passos no digital. A informação começa a circular sem fronteiras físicas." },
+  { year: "2016", title: "Produção Audiovisual", desc: "A câmara entra em cena. Reportagens em vídeo, cobertura de eventos e o início da linguagem televisiva." },
+  { year: "2016", title: "Canal de Televisão", desc: "Nasce o canal Terras de Gaia TV. Transmissões em direto, programas originais e a região no ecrã de casa.", sub: true },
+
+  { year: "2022", title: "Gaia Play", desc: "Plataforma on demand com programas originais, arquivo histórico e conteúdos exclusivos para a comunidade." },
   { year: "Hoje", title: "Ecossistema Completo", desc: "Jornal · Canal TV · Streaming · Redes Sociais. Um meio de comunicação completo ao serviço de Vila Nova de Gaia." },
 ];
 
 const PLATFORMS = [
   { Icon: Globe, label: "Jornal Online", desc: "Notícias, reportagens e opinião em terrasdegaia.pt", href: "/" },
-  { Icon: Newspaper, label: "Jornal em Papel", desc: "Edição impressa disponível em pontos de venda na região de Gaia", href: "/contacto" },
+  { Icon: Newspaper, label: "Jornal em Papel", desc: "Edição impressa disponível na redação Terras de Gaia", href: "/revista" },
   { Icon: Tv, label: "Canal TV", desc: "Transmissão televisiva em direto para a região", href: "/live" },
   { Icon: Play, label: "Gaia Play", desc: "Programas originais e conteúdos on demand", href: "/gaia-play" },
   { Icon: Users, label: "Redes Sociais", desc: "Siga-nos e acompanhe as últimas novidades", href: "/contacto" },
@@ -340,7 +347,7 @@ export default function SobreNos() {
               <div className="absolute left-1/2 -translate-x-px top-0 bottom-0 w-px bg-white/5 hidden md:block" />
               <DrawLineV className="absolute left-1/2 -translate-x-px top-0 bottom-0 w-px bg-[#006ec2]/30 hidden md:block" />
               {TIMELINE.map((t, i) => (
-                <TimelineItem key={t.year} year={t.year} title={t.title} desc={t.desc} index={i} />
+                <TimelineItem key={i} year={t.year} title={t.title} desc={t.desc} index={i} sub={t.sub} />
               ))}
             </div>
           </div>
@@ -493,7 +500,7 @@ export default function SobreNos() {
                         <ServiceIcon size={20} className="text-[#006ec2]/50 group-hover:text-[#006ec2] transition-colors duration-500 shrink-0" />
                         <span className="text-[#006ec2] text-[10px] font-black uppercase tracking-[0.5em]">{s.num}</span>
                         <div className="w-8 h-px bg-white/20" />
-                        <span className="text-white/30 text-[10px] font-black uppercase tracking-[0.3em]">{s.sub}</span>
+                        <span className="text-[#006ec2] text-[10px] font-black uppercase tracking-[0.5em]">{s.sub}</span>
                       </div>
 
                       {/* Oversized title */}
