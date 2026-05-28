@@ -130,9 +130,9 @@ function TimelineItem({ year, title, desc, index, sub }: { year: string; title: 
 /* ─── Data ───────────────────────────────────────────────────────────── */
 
 const MARQUEE_WORDS = [
-  "AVINTES", "JORNALISMO", "GAIA", "TELEVISÃO", "CULTURA",
-  "DESPORTO", "DIRETO", "COMUNIDADE", "INDEPENDENTE", "INFORMAÇÃO",
-  "AUDIOVISUAL", "Vila NOVA DE GAIA", "LIVRE", "RIGOR",
+  "DESPORTO", "INFORMAÇÃO", "ENTRETENIMENTO", 
+  "GAIA", "RIGOR", "COMPROMISSO", 
+  "INOVAÇÃO", "EXPERIÊNCIA",
 ];
 
 const SERVICES = [

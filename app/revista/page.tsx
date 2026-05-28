@@ -136,7 +136,7 @@ export default function RevistaPage() {
               <h1 className="text-6xl md:text-8xl font-black uppercase italic tracking-tighter leading-none mb-5">
                 Jornal
                 <br />
-                <span className="text-[#006ec2]">Digital</span>
+                <span className="text-[#006ec2]">Mensal</span>
               </h1>
 
               <p className="text-white/40 text-base max-w-md leading-relaxed">

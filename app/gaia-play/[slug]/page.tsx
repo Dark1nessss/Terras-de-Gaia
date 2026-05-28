@@ -358,24 +358,24 @@ export default function ProgramSlugPage() {
                         src={program.featured_image_url} 
                         alt={program.title.rendered} 
                         fill 
-                        className="object-cover opacity-50 transition-transform duration-1000 group-hover:scale-105"
+                        className="object-cover opacity-30 transition-transform duration-1000 group-hover:scale-105"
                       />
                     ) : (
                       <div className="absolute inset-0 bg-gradient-to-br from-[#006ec2]/20 to-[#0a0c10] opacity-50" />
                     )}
+
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                     
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center space-y-4">
-                        <Play size={40} className="mx-auto text-white/40" />
-                        <p className="text-white/40 text-sm">Nenhum vídeo disponível</p>
+                      <div className="text-center space-y-5 px-8">
+                        <div className="w-16 h-16 rounded-full border-2 border-white/10 flex items-center justify-center mx-auto bg-white/5 backdrop-blur-sm">
+                          <MonitorPlay size={28} className="text-white/30" />
+                        </div>
+                        <div className="space-y-2">
+                          <p className="text-white font-black text-lg uppercase italic tracking-tight">Conteúdo em breve disponível</p>
+                          <p className="text-white/40 text-xs uppercase tracking-widest font-bold">Os episódios deste programa serão adicionados em breve</p>
+                        </div>
                       </div>
-                    </div>
-
-                    <div className="absolute bottom-0 left-0 w-full p-6 md:p-10 bg-linear-to-t from-black via-black/80 to-transparent">
-                      <div className="flex items-center gap-4 mb-3">
-                        <span className="text-md font-black text-white/40 uppercase tracking-widest italic">S{(activeSeason + 1).toString().padStart(2, '0')} : EP{currentEp?.numero?.toString().padStart(2, '0')}</span>
-                      </div>
-                      <h2 className="text-3xl md:text-4xl font-black uppercase italic tracking-tighter leading-none">{currentEp?.titulo}</h2>
                     </div>
                   </>
                 )}
@@ -433,7 +433,15 @@ export default function ProgramSlugPage() {
             
             {/* LISTA DE EPISÓDIOS */}
             <div className="flex-1 overflow-y-auto custom-scrollbar bg-black/20">
-              {currentSeasonEpisodes.map((ep, idx) => (
+              {currentSeasonEpisodes.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-full min-h-50 gap-4 p-8 text-center">
+                  <MonitorPlay size={32} className="text-white/10" />
+                  <div className="space-y-1">
+                    <p className="text-xs font-black uppercase tracking-[0.2em] text-white/40">Conteúdo em breve disponível</p>
+                    <p className="text-xs text-white/20 font-medium">Os episódios serão adicionados em breve</p>
+                  </div>
+                </div>
+              ) : currentSeasonEpisodes.map((ep, idx) => (
                 <button 
                   key={`${ep.numero}`}
                   onClick={() => handleEpisodeClick(ep)}
