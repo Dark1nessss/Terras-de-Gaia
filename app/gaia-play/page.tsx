@@ -130,10 +130,10 @@ export default function ProgramsPage() {
               key={prog.id}
               layout
               whileHover={{ 
-                width: "650px",
+                width: "900px",
                 transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } 
               }}
-              className="group relative min-w-[280px] md:min-w-[320px] h-full flex-shrink-0 cursor-pointer overflow-hidden border-x border-white/5"
+              className="group relative min-w-[280px] md:min-w-[340px] h-full flex-shrink-0 cursor-pointer overflow-hidden border-x border-white/5"
             >
               <Link href={`/gaia-play/${prog.slug}`} className="group block size-full relative">
                 {/* Thumb Background */}
@@ -155,11 +155,11 @@ export default function ProgramsPage() {
                 <div className="absolute inset-0 bg-[#006ec2]/10 opacity-0 group-hover:opacity-100 transition-opacity" />
 
                 {/* Content Overlay */}
+                <span className="absolute top-4 left-3 text-[10px] font-black uppercase tracking-widest text-white/40 group-hover:text-[#006ec2] transition-colors z-10">
+                  {prog.id.toString().padStart(2, '0')}
+                </span>
                 <div className="absolute inset-0 p-8 flex flex-col justify-between">
-                  <div className="flex justify-between items-start">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-white/40 group-hover:text-[#006ec2] transition-colors">
-                      {prog.id.toString().padStart(2, '0')}
-                    </span>
+                  <div className="flex justify-end items-start">
                     <div className="opacity-0 group-hover:opacity-100 transition-all">
                        <Plus size={20} className="text-[#006ec2]" />
                     </div>
@@ -247,7 +247,7 @@ export default function ProgramsPage() {
                     className="group relative border border-white/10 hover:border-[#006ec2]/50 bg-zinc-900/40 hover:bg-zinc-900/80 transition-all duration-300 p-8 cursor-pointer overflow-hidden"
                   >
                     <div className="absolute top-0 left-0 h-0.5 w-0 group-hover:w-full bg-[#006ec2] transition-all duration-500" />
-                    <div className="absolute -right-6 -bottom-6 text-[6rem] font-black italic opacity-[0.04] group-hover:opacity-[0.08] transition-opacity select-none">
+                    <div className="absolute right-4 -bottom-6 text-[6rem] font-black italic opacity-[0.04] group-hover:opacity-[0.08] transition-opacity select-none">
                       {String(i + 1).padStart(2, '0')}
                     </div>
                     <div className="flex items-start justify-between mb-6">
