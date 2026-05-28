@@ -140,7 +140,7 @@ export default function RevistaPage() {
               </h1>
 
               <p className="text-white/40 text-base max-w-md leading-relaxed">
-                Consulte todas as edições digitais do Jornal Terras de Gaia — folheie cada número diretamente no seu browser.
+                Consulte a versão digital do Jornal impresso Terras de Gaia — folheie cada número diretamente no seu browser.
               </p>
             </motion.div>
           </div>

@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, useInView, useScroll, useTransform, type Variants } from "framer-motion";
 import { ArrowRight, Mail, MapPin, Newspaper, Radio, Tv, Camera, Globe, Play, Users } from "lucide-react";
+import { STATS_FALLBACK } from "@/lib/stats";
 
 /* ─── Animation helpers ──────────────────────────────────────────────── */
 
@@ -142,13 +143,6 @@ const SERVICES = [
   { num: "04", Icon: Camera, title: "Audiovisual & Fotografia", sub: "Produção · Criação · Registo", desc: "Produção audiovisual e fotografia profissional para empresas, instituições e eventos da região. Da ideia ao ecrã, somos o vosso parceiro criativo." },
 ];
 
-const STATS = [
-  { number: "100k+", label: "Utilizadores mensais" },
-  { number: "50+", label: "Parcerias ativas" },
-  { number: "6.6k+", label: "Seguidores" },
-  { number: "24/7", label: "Online" },
-];
-
 const TIMELINE = [
   { year: "2003", title: "Jornal Notícias de Avintes", desc: "As primeiras páginas impressas chegam às mãos dos habitantes de Avintes. Um jornal local com grandes ambições." },
   { year: "2014", title: "Presença na Internet", desc: "O jornalismo local dá os primeiros passos no digital. A informação começa a circular sem fronteiras físicas." },
@@ -172,6 +166,24 @@ const PLATFORMS = [
 export default function SobreNos() {
   const { scrollY } = useScroll();
   const heroGhostY = useTransform(scrollY, [0, 800], [0, 160]);
+
+  const [stats, setStats] = useState(STATS_FALLBACK);
+
+  useEffect(() => {
+    fetch('/api/stats')
+      .then((r) => r.json())
+      .then((data: Array<{ acf?: { stat_value?: string; stat_label?: string } }>) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setStats(
+            data.map((s) => ({
+              number: s.acf?.stat_value ?? '',
+              label: s.acf?.stat_label ?? '',
+            }))
+          );
+        }
+      })
+      .catch(() => { /* keep fallback */ });
+  }, []);
 
   return (
     <main className="min-h-screen bg-[#0a0c10] text-white font-nurom overflow-hidden">
@@ -414,9 +426,9 @@ export default function SobreNos() {
             <div className="flex-1 h-px bg-white/5" />
           </Reveal>
           <RevealStagger className="grid grid-cols-2 lg:grid-cols-4 gap-0 divide-x divide-white/5">
-            {STATS.map((s) => (
+            {stats.map((s) => (
               <motion.div key={s.label} variants={fadeUp} className="group px-8 py-10 text-center hover:bg-white/2 transition-colors">
-                <p className="text-6xl md:text-7xl font-black italic text-[#006ec2] tracking-tighter leading-none mb-3">
+                <p className="text-4xl md:text-6xl font-black italic text-[#006ec2] tracking-tighter leading-none mb-3">
                   {s.number}
                 </p>
                 <p className="text-white/30 text-[10px] font-black uppercase tracking-widest">{s.label}</p>
@@ -552,7 +564,7 @@ export default function SobreNos() {
                 </Link>
                 <Link href="/vira-parceiro">
                   <button className="group border border-white/20 text-white px-8 py-4 font-black uppercase italic tracking-widest text-sm flex items-center gap-3 hover:border-[#006ec2] hover:text-[#006ec2] transition-all cursor-pointer">
-                    Vira Parceiro <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                    Torne se parceiro TG <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                   </button>
                 </Link>
               </div>
