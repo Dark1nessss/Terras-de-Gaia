@@ -133,17 +133,19 @@ export default function ProgramsPage() {
                 width: "650px",
                 transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } 
               }}
-              className="relative min-w-[280px] md:min-w-[320px] h-full flex-shrink-0 cursor-pointer overflow-hidden border-x border-white/5"
+              className="group relative min-w-[280px] md:min-w-[320px] h-full flex-shrink-0 cursor-pointer overflow-hidden border-x border-white/5"
             >
-              <Link href={`/gaia-play/${prog.slug}`} className="block size-full relative">
+              <Link href={`/gaia-play/${prog.slug}`} className="group block size-full relative">
                 {/* Thumb Background */}
                 {prog.featured_image_url ? (
-                  <Image 
-                    src={prog.featured_image_url} 
-                    alt={prog.title.rendered} 
-                    fill 
-                    className="object-cover opacity-40 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
-                  />
+                  <div className="absolute inset-0 grayscale group-hover:grayscale-0 transition-all duration-700">
+                    <Image 
+                      src={prog.featured_image_url} 
+                      alt={prog.title.rendered} 
+                      fill 
+                      className="object-cover"
+                    />
+                  </div>
                 ) : (
                   <div className="absolute inset-0 bg-gradient-to-br from-[#006ec2]/20 to-transparent opacity-40 group-hover:opacity-100 transition-all duration-700 grayscale group-hover:grayscale-0" />
                 )}
