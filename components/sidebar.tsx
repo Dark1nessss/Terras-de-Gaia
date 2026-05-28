@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { 
@@ -104,12 +104,12 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       />
 
       <aside 
-        className={`fixed top-0 left-0 z-110 h-dvh w-[85%] md:w-[320px] bg-[#2c272f] text-white font-nurom shadow-[20px_0_50px_rgba(0,0,0,0.5)] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col ${
+        className={`fixed top-0 left-0 z-110 h-dvh w-[85%] md:w-[320px] bg-[#0f172a] text-white font-nurom shadow-[20px_0_50px_rgba(0,0,0,0.5)] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         {/* Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between p-4 border-none bg-[#2c272f]">
+        <div className="sticky top-0 z-10 flex items-center justify-between p-4 border-none bg-[#0f172a]">
           <div className="flex items-center gap-3">
             {activeSubmenu ? (
               <button onClick={() => setActiveSubmenu(null)} className="p-2 -ml-2 text-white/60 hover:text-white transition-colors cursor-pointer">
@@ -158,7 +158,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                           className="flex items-center gap-1 px-3 py-3 shrink-0 text-[#969199] hover:text-[#006ec2] hover:bg-white/5 transition-all cursor-pointer"
                           title="Ver subcategorias"
                         >
-                          <span className="text-[10px] font-bold uppercase tracking-widest leading-none">ver mais</span>
+                          <span className="text-[10px] font-bold uppercase tracking-widest leading-none mt-1">ver mais</span>
                           <ChevronRight size={12} />
                         </button>
                       </div>
@@ -213,6 +213,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               ))}
             </div>
           </div>
+        </div>
+
+        {/* Footer */}
+        <div className="px-4 py-3 border-t border-white/10 text-[11px] text-white/30 font-bold uppercase tracking-widest">
+          Terras de Gaia &copy; {new Date().getFullYear()}
         </div>
       </aside>
     </>
