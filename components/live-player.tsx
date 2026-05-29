@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Tv } from "lucide-react";
+import { Tv, Radio } from "lucide-react";
 import { parseYouTubeId } from "@/lib/video";
 import { parseBunnyEmbedUrl } from "@/lib/bunny";
 import { useMidroll } from "@/hooks/use-midroll";
@@ -47,6 +47,7 @@ export function LivePlayer({
   livestreamEmbedUrl?: string;
 }) {
   const [source, setSource] = useState<StreamSource>({ type: 'offline' });
+  const [liveViewers, setLiveViewers] = useState<number | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const playerContainerRef = useRef<HTMLDivElement>(null);
@@ -111,6 +112,20 @@ export function LivePlayer({
     applyPrograms(initialPrograms);
     return () => { if (timerRef.current) clearTimeout(timerRef.current); };
   }, [initialPrograms, livestreamEmbedUrl]);
+
+  // Poll concurrent live viewers from YouTube every 7 seconds
+  const ytLiveId = source.type === 'youtube' ? source.id : null;
+  useEffect(() => {
+    if (!ytLiveId) return;
+    const fetch_ = () =>
+      fetch(`/api/youtube-stats?id=${ytLiveId}&type=live`)
+        .then(r => r.json())
+        .then(d => { if (d.viewers != null) setLiveViewers(d.viewers); })
+        .catch(() => null);
+    fetch_();
+    const id = setInterval(fetch_, 7000);
+    return () => { clearInterval(id); setLiveViewers(null); };
+  }, [ytLiveId]);
 
   // Catch YouTube embed errors and fall back to offline placeholder
   useEffect(() => {
@@ -186,6 +201,12 @@ export function LivePlayer({
           )
         }
       />
+      {liveViewers != null && (
+        <div className="absolute bottom-4 left-4 z-10 flex items-center gap-1.5 bg-black/70 rounded-full px-3 py-1.5 text-white text-xs font-bold backdrop-blur-sm pointer-events-none select-none">
+          <Radio size={11} className="text-red-400 animate-pulse" />
+          <span className="mt-1">{liveViewers.toLocaleString('pt-PT')} a ver</span>
+        </div>
+      )}
       {showMidroll && <MidrollAd onFinished={handleAdFinished} containerRef={playerContainerRef} />}
     </div>
   );
