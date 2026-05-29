@@ -1,8 +1,5 @@
 import type { NextConfig } from "next";
 
-// Force webpack for cPanel compatibility (Turbopack can't handle symlinked node_modules)
-process.env.NEXT_PRIVATE_TURBOPACK = '0';
-
 const securityHeaders = [
   { key: 'X-DNS-Prefetch-Control', value: 'on' },
   { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
