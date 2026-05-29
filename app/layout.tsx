@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   title: "Jornal Terras de Gaia | Desporto, Informação e Entretenimento em Direto",
   description: "Desporto, Notícias, Politica, Cultura e muito mais. Fique informado sobre tudo o que acontece em Terras de Gaia.",
   verification: {
-    google: "3G0msJCJoaPBWSlcsF0raZmp4-vUeQh3tFC",
+    google: "3G0msJCJoaPBWSlcsF0raZmp4-vUeQh3tFCwzMCKPwo",
   },
 };
 
