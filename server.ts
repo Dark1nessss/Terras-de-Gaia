@@ -1,6 +1,30 @@
 import { createServer, IncomingMessage, ServerResponse } from 'http';
 import { parse } from 'url';
-import next from 'next';
+import { lstatSync, realpathSync } from 'fs';
+import path from 'path';
+import Module from 'module';
+
+// Fix module resolution for cPanel nodevenv symlinked node_modules.
+// Must run BEFORE loading Next.js so the native @next/swc binding is found.
+// Without this, Next.js falls back to a WASM binary that OOMs on shared hosting.
+const _nmPath = path.join(process.cwd(), 'node_modules');
+try {
+  if (lstatSync(_nmPath).isSymbolicLink()) {
+    const realNm = realpathSync(_nmPath);
+    process.env.NODE_PATH = process.env.NODE_PATH
+      ? `${process.env.NODE_PATH}:${realNm}`
+      : realNm;
+    (Module as any)._initPaths();
+    console.log(`[server] Symlinked node_modules → ${realNm} (NODE_PATH updated)`);
+  }
+} catch { /* not a symlink, skip */ }
+
+// Load Next.js AFTER NODE_PATH fix (inline require preserves execution order;
+// a top-level import would be hoisted before our fix code runs).
+// eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-explicit-any
+const _nextPkg: any = require('next');
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const next: (opts: any) => any = _nextPkg.default ?? _nextPkg;
 
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = process.env.HOST ?? 'localhost';
