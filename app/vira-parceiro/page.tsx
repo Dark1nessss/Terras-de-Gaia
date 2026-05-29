@@ -1,10 +1,40 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { CheckCircle2, Mail, Phone } from "lucide-react";
 import Link from "next/link";
 import { CONTACT_INFO } from "@/lib/contact";
+import { STATS_FALLBACK } from "@/lib/stats";
+
+function usePartnerStats() {
+  const fallback = {
+    utilizadores: STATS_FALLBACK.find(s => s.label.toLowerCase().includes("utilizadores"))?.number ?? "80k+",
+    parcerias:    STATS_FALLBACK.find(s => s.label.toLowerCase().includes("parcerias"))?.number    ?? "30+",
+  };
+  const [stats, setStats] = useState(fallback);
+
+  useEffect(() => {
+    fetch("/api/stats")
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (!Array.isArray(data)) return;
+        const find = (keyword: string) =>
+          data.find((s: { acf?: { stat_label?: string; stat_value?: string } }) =>
+            s.acf?.stat_label?.toLowerCase().includes(keyword)
+          )?.acf?.stat_value;
+        setStats({
+          utilizadores: find("utilizadores") ?? fallback.utilizadores,
+          parcerias:    find("parcerias")    ?? fallback.parcerias,
+        });
+      })
+      .catch(() => {});
+  }, []);
+
+  return stats;
+}
 
 export default function ViraParceiro() {
+  const stats = usePartnerStats();
   const partnershipTypes = [
     {
       number: "01",
@@ -56,9 +86,9 @@ export default function ViraParceiro() {
                 conteúdos de alto impacto e oportunidades exclusivas de visiblidade.
               </p>
               <div className="space-y-2 text-sm text-white/60">
-                <p>✓ 100k+ utilizadores mensais</p>
+                <p>✓ {stats.utilizadores} utilizadores mensais</p>
                 <p>✓ Disponibilidade 24/7</p>
-                <p>✓ 50+ parcerias ativas</p>
+                <p>✓ {stats.parcerias} parcerias ativas</p>
               </div>
             </div>
 
