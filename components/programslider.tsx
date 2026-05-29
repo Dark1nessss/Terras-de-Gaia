@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from 'react';
-import { ChevronRight, ChevronLeft, Clock } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Clock, Calendar } from 'lucide-react';
 import { TVSidebarInfo } from "./tv-sidebar-info";
 import Image from 'next/image';
 
@@ -114,11 +114,19 @@ export function ProgramSlider({ initialPrograms = [] }: ProgramSliderProps) {
                     {prog.title}
                   </h3>
                   
-                  <div className="flex flex-row items-center gap-1.5 text-white/60">
-                    <Clock size={14} />
-                    <span className="text-sm font-bold tracking-tight">
-                      {prog.time}
-                    </span>
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex flex-row items-center gap-1.5 text-white/60">
+                      <Clock size={14} />
+                      <span className="text-sm font-bold tracking-tight">
+                        {prog.time}
+                      </span>
+                    </div>
+                    <div className="flex flex-row items-center gap-1.5 text-white/60">
+                      <Calendar size={14} />
+                      <span className="text-sm font-bold tracking-tight">
+                        {prog.data_completa}{prog.sort_date && new Date().getFullYear() !== parseInt(prog.sort_date.substring(0, 4)) ? ` ${prog.sort_date.substring(0, 4)}` : ''}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>

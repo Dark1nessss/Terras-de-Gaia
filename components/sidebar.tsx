@@ -97,14 +97,14 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   return (
     <>
       <div 
-        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-100 transition-opacity duration-400 ease-in-out ${
+        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] transition-opacity duration-[400ms] ease-in-out ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={handleClose}
       />
 
       <aside 
-        className={`fixed top-0 left-0 z-110 h-dvh w-[85%] md:w-[320px] bg-[#0f172a] text-white font-nurom shadow-[20px_0_50px_rgba(0,0,0,0.5)] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col ${
+        className={`fixed top-0 left-0 z-[110] h-dvh w-[85%] md:w-[320px] bg-[#0f172a] text-white font-nurom shadow-[20px_0_50px_rgba(0,0,0,0.5)] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -129,7 +129,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
         {/* Main Menu */}
         <div className="relative flex-1 overflow-hidden">
-          <div className={`flex h-full w-[200%] transition-transform duration-400 ease-[cubic-bezier(0.05,0.7,0.1,1)] ${activeSubmenu ? "-translate-x-1/2" : "translate-x-0"}`}>
+          <div className={`flex h-full w-[200%] transition-transform duration-[400ms] ease-[cubic-bezier(0.05,0.7,0.1,1)] ${activeSubmenu ? "-translate-x-1/2" : "translate-x-0"}`}>
             
             {/* MAIN MENU LIST */}
             <div className="w-1/2 h-full overflow-y-auto scrollbar-hide flex flex-col px-2 py-4 gap-1">

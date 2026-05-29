@@ -47,7 +47,7 @@ export function TVSidebarInfo({ program, onClose }: TVSidebarInfoProps) {
         }}
         className={`fixed inset-0 bg-black/20 transition-opacity ease-in-out ${
           isAnimateIn 
-            ? 'opacity-100 duration-400' 
+            ? 'opacity-100 duration-[400ms]' 
             : 'opacity-0 duration-200 delay-150'
         }`}
       />
@@ -56,24 +56,24 @@ export function TVSidebarInfo({ program, onClose }: TVSidebarInfoProps) {
       <div 
         className={`
           fixed bg-[#0a0c10] shadow-2xl border-white/5 flex flex-col overflow-hidden
-          transition-transform cubic-bezier(0.05, 0.7, 0.1, 1.0)
-          
-          /* MOBILE: Bottom-up, 50-60% height, rounded top */
-          bottom-0 left-0 right-0 max-h-[calc(100dvh-4rem)] min-h-[60svh] rounded-t-xl border-t
-          ${isAnimateIn ? 'translate-y-0' : 'translate-y-full md:translate-y-0'}
+          transition-transform
 
-          /* DESKTOP: Right-to-left, max-w-lg */
-          md:top-0 md:right-0 md:left-auto md:h-full md:w-full md:max-w-lg md:rounded-none md:border-l md:border-t-0
+          max-md:bottom-0 max-md:left-0 max-md:right-0
+          max-md:max-h-[calc(100dvh-4rem)] max-md:rounded-t-xl max-md:border-t
+          ${isAnimateIn ? 'max-md:translate-y-0' : 'max-md:translate-y-full'}
+
+          md:top-0 md:right-0 md:left-auto
+          md:h-dvh md:max-h-dvh md:w-full md:max-w-lg
+          md:rounded-none md:border-l
           md:translate-y-0
           ${isAnimateIn ? 'md:translate-x-0' : 'md:translate-x-full'}
 
-          /* Durations */
-          ${isAnimateIn ? 'duration-400' : 'duration-250'}
+          ${isAnimateIn ? 'duration-[400ms]' : 'duration-[250ms]'}
         `}
         style={{ 
           transitionTimingFunction: isAnimateIn 
-            ? 'cubic-bezier(0.05, 0.7, 0.1, 1.0)' // Emphasized decelerate
-            : 'cubic-bezier(0.3, 0, 0.8, 0.15)'   // Emphasized accelerate
+            ? 'cubic-bezier(0.05, 0.7, 0.1, 1.0)'
+            : 'cubic-bezier(0.3, 0, 0.8, 0.15)'
         }}
       >
         <div className="flex-1 overflow-y-auto scrollbar-hide">
@@ -89,7 +89,7 @@ export function TVSidebarInfo({ program, onClose }: TVSidebarInfoProps) {
           </div>
 
           {/* 2. Conteúdo Compacto */}
-          <div className="p-6 md:p-10 flex flex-col">
+          <div className="p-6 md:p-10 flex flex-col pb-10">
             <h2 className="text-xl font-black uppercase tracking-tighter text-white mb-1 leading-tight">
               {activeProgram.title}
             </h2>

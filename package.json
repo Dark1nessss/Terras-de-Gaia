@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "cross-env TOKIO_WORKER_THREADS=2 RAYON_NUM_THREADS=2 next build && tsc -p tsconfig.server.json",
+    "build": "next build",
     "start": "node server.js",
     "lint": "eslint"
   },
