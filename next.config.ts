@@ -44,7 +44,7 @@ const nextConfig: NextConfig = {
   experimental: {
     // Limit worker processes for static page generation on cPanel shared hosting
     // (prevents EAGAIN "can't spawn process" errors due to OS thread/process limits)
-    // cpus: 1,
+    cpus: 1,
     workerThreads: false,
   },
   async headers() {
