@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "cross-env NEXT_PRIVATE_TURBOPACK=0 next build && tsc -p tsconfig.server.json",
+    "build": "npx cross-env NEXT_PRIVATE_TURBOPACK=0 next build && tsc -p tsconfig.server.json",
     "start": "node server.js",
     "lint": "eslint"
   },
