@@ -14,6 +14,10 @@ const nuromFont = localFont({
 export const metadata: Metadata = {
   title: "Jornal Terras de Gaia | Desporto, Informação e Entretenimento em Direto",
   description: "Desporto, Notícias, Politica, Cultura e muito mais. Fique informado sobre tudo o que acontece em Terras de Gaia.",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
