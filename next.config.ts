@@ -36,6 +36,14 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   ...(turbopackRoot ? { turbopack: { root: turbopackRoot } } : {}),
+  // Skip TypeScript check during build - we run tsc separately in the build script.
+  // This avoids spawning extra worker threads that exhaust cPanel's thread limit.
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   async headers() {
     return [
       {
