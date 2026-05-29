@@ -9,17 +9,23 @@ export async function getPosts() {
   const cacheKey = createCacheKey('wp-posts');
   
   return getOrSetCached(cacheKey, async () => {
-    const res = await fetch(`${API_URL}/posts?_embed`, {
-      headers: getSecureHeaders(),
-      next: { revalidate: 300 } // ISR: 5 minutes
-    });
+    try {
+      const res = await fetch(`${API_URL}/posts?_embed`, {
+        headers: getSecureHeaders(),
+        next: { revalidate: 300 } // ISR: 5 minutes
+      });
 
-    if (!res.ok) {
-      throw new Error('Failed to fetch posts');
+      if (!res.ok) {
+        wpLogger.error(`getPosts failed with status ${res.status}`);
+        return [];
+      }
+      
+      const posts = await res.json();
+      return enrichPosts(posts);
+    } catch (error) {
+      wpLogger.error("Erro em getPosts:", error);
+      return [];
     }
-    
-    const posts = await res.json();
-    return enrichPosts(posts);
   }, 30000); // Memory cache: 30 seconds (prevent thundering herd)
 }
 
