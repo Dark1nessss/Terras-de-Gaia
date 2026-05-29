@@ -110,9 +110,22 @@ export default function Footer() {
 
         {/* Footer Bottom / Copyright and Social */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-sm text-white/30 tracking-wider flex items-center gap-2 font-medium">
-            &copy; {getCurrentYear()} Terras de Gaia. Todos os direitos reservados.
-          </p>
+          <div className="flex flex-col items-center md:items-start gap-1.5">
+            <p className="text-sm text-white/30 tracking-wider flex items-center gap-2 font-medium">
+              &copy; {getCurrentYear()} Terras de Gaia. Todos os direitos reservados.
+            </p>
+            <p className="text-xs text-white/20 tracking-wide">
+              Desenvolvido por{" "}
+              <a
+                href="https://www.linkedin.com/in/dmytro-bohutskyy-723941268/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/35 hover:text-[#0a66c2] transition-colors duration-200 underline decoration-white/10 underline-offset-2"
+              >
+                DB
+              </a>
+            </p>
+          </div>
 
           <div className="flex items-center gap-3 text-white/40">
             <a href={OFFICIAL_PROFILES.facebook} className="p-2.5 bg-white/[0.03] rounded-xl border border-white/[0.08] hover:bg-[#006ec2]/10 hover:text-[#006ec2] hover:border-[#006ec2]/20 transition-all duration-300">
