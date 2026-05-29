@@ -266,7 +266,7 @@ export default function ProgramSlugPage() {
               <ArrowLeft size={16} />
               <span className="text-xs font-black uppercase tracking-[0.3em] pt-[2px]">Explorar Programas</span>
             </Link>
-            <h1 className="text-6xl md:text-8xl font-black uppercase italic tracking-tighter leading-none">
+            <h1 className="text-6xl md:text-8xl font-black uppercase italic tracking-tighter leading-[1] pt-3">
               {program.title.rendered.split(' ')[0]} <br />
               <span className="text-transparent outline-text-vibrant">
                 {program.title.rendered.split(' ').slice(1).join(' ')}

@@ -63,20 +63,6 @@ export default async function SportsMainPage({
                 </h1>
               </div>
             </div>
-
-            {/* MODALIDADES QUICK LINKS */}
-            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide shrink-0">
-              {modalities.map((m) => (
-                <Link
-                  key={m.slug}
-                  href={`/desporto/${m.slug}`}
-                  className="group flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 hover:border-[#006ec2] transition-all"
-                >
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#006ec2] group-hover:scale-150 transition-transform" />
-                  <span className="text-[10px] font-black uppercase tracking-widest whitespace-nowrap">{m.name}</span>
-                </Link>
-              ))}
-            </div>
           </div>
         </div>
       </div>

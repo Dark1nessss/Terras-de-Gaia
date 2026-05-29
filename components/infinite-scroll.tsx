@@ -32,6 +32,15 @@ interface InfiniteScrollPostsProps {
   showVideoCards?: boolean;
 }
 
+function dedupeById(arr: Post[]): Post[] {
+  const seen = new Set<number>();
+  return arr.filter(p => {
+    if (seen.has(p.id)) return false;
+    seen.add(p.id);
+    return true;
+  });
+}
+
 export function InfiniteScrollPosts({ 
   slug, 
   initialPosts,
@@ -39,7 +48,7 @@ export function InfiniteScrollPosts({
   showVideoCards = false
 }: InfiniteScrollPostsProps) {
   const pathname = usePathname();
-  const [posts, setPosts] = useState<Post[]>(initialPosts);
+  const [posts, setPosts] = useState<Post[]>(() => dedupeById(initialPosts));
   const [page, setPage] = useState(2);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -65,11 +74,11 @@ export function InfiniteScrollPosts({
       const data = await response.json();
 
       if (data.posts && data.posts.length > 0) {
-        setPosts(prev => {
-          const combined = [...prev, ...data.posts];
-          setCachedData(pathname, combined);
-          return combined;
-        });
+          setPosts(prev => {
+            const combined = dedupeById([...prev, ...data.posts]);
+            setCachedData(pathname, combined);
+            return combined;
+          });
         setPage(prev => prev + 1);
         setLoadCount(prev => prev + 1); // Incrementa counter
         setHasMore(data.hasMore);

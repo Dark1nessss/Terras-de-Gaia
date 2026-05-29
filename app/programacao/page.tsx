@@ -98,7 +98,7 @@ export default async function ProgramacaoPage() {
         <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
             <p className="text-white/30 text-xs font-black uppercase tracking-widest mb-1">Quer ver em direto?</p>
-            <p className="text-white font-black uppercase italic text-2xl tracking-tighter">Acompanha a emissão ao vivo</p>
+            <p className="text-white font-black uppercase italic text-2xl tracking-tighter">Acompanhe a emissão ao vivo</p>
           </div>
           <Link href="/live">
             <button className="flex items-center gap-3 bg-[#006ec2] text-white px-10 py-4 font-black uppercase italic tracking-widest text-xs transition-all cursor-pointer">

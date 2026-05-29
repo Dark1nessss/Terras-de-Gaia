@@ -76,7 +76,7 @@ export default function ProgramsPage() {
                   <span className="text-white/40 text-xs font-bold uppercase tracking-widest italic pt-[2px]">Streaming em 4K</span>
                 </div>
 
-                <h1 className="text-7xl md:text-[11rem] font-black uppercase italic leading-[0.75] tracking-tighter">
+                <h1 className="text-7xl md:text-[11rem] font-black uppercase italic leading-[0.95] tracking-tighter pb-2">
                   {featuredProgram.title.rendered.length > 20 ? (
                     <>
                       {featuredProgram.title.rendered.split(' ').slice(0, -1).join(' ')} <br />
@@ -155,9 +155,6 @@ export default function ProgramsPage() {
                 <div className="absolute inset-0 bg-[#006ec2]/10 opacity-0 group-hover:opacity-100 transition-opacity" />
 
                 {/* Content Overlay */}
-                <span className="absolute top-4 left-3 text-[10px] font-black uppercase tracking-widest text-white/40 group-hover:text-[#006ec2] transition-colors z-10">
-                  {prog.id.toString().padStart(2, '0')}
-                </span>
                 <div className="absolute inset-0 p-8 flex flex-col justify-between">
                   <div className="flex justify-end items-start">
                     <div className="opacity-0 group-hover:opacity-100 transition-all">
@@ -166,17 +163,13 @@ export default function ProgramsPage() {
                   </div>
 
                   <div className="space-y-4">
-                    <div>
-                       <motion.p 
-                        initial={{ y: "100%" }}
-                        whileHover={{ y: 0 }}
-                        className="text-[#006ec2] text-[10px] font-black uppercase tracking-[0.3em] mb-2"
-                       >
+                    <div className="overflow-hidden">
+                       <p className="text-[#006ec2] text-[10px] font-black uppercase tracking-[0.3em] mb-2 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out">
                          {prog.acf?.categoria_programa || "Sem Categoria"}
-                       </motion.p>
+                       </p>
                     </div>
                     
-                    <h3 className="text-3xl md:text-5xl font-black uppercase italic leading-none tracking-tighter whitespace-nowrap">
+                    <h3 className="text-3xl md:text-5xl font-black uppercase italic leading-[1] pt-1 tracking-tighter whitespace-nowrap">
                       {prog.title.rendered}
                     </h3>
 

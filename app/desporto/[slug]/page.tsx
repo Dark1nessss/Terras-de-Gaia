@@ -148,7 +148,7 @@ export default async function SportsCategoryPage({
           </div>
 
           {/* Sidebar — 3 cols, always visible */}
-          <div className="lg:col-span-3">
+          <aside className="lg:col-span-3 space-y-8 sticky top-32 self-start">
             {/* Ad — sticks at top while scrolling widgets */}
               <AdPlaceholder position="sidebar" />
 
@@ -192,7 +192,7 @@ export default async function SportsCategoryPage({
               </div>
             </SidebarWidget>
             </div>{/* end scrollable widgets */}
-          </div>
+          </aside>
         </div>
       </div>
     </main>
