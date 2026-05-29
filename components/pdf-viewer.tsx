@@ -201,8 +201,8 @@ export function PdfViewer({ pdfUrl, title }: PdfViewerProps) {
               className=""
               style={{}}
               startPage={0}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              onFlip={(e: any) => { setCurrentPage(e.data); playFlipSound(); }}
+              // Removed sound bugged!
+              // onFlip={(e: any) => { setCurrentPage(e.data); playFlipSound(); }}
             >
               {Array.from({ length: numPages }, (_, i) => (
                 <FlipPage
