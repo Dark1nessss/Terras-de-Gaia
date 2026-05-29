@@ -4,6 +4,27 @@ import { revistaLogger } from './logger';
 
 const API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || process.env.WORDPRESS_API_URL;
 
+const MAIN_DOMAIN = 'terrasdegaia.pt';
+
+/**
+ * ACF media URLs were stored when WP lived on the main domain.
+ * Rewrite any `terrasdegaia.pt/wp-content/` URL to use the real CMS host
+ * so server-side fetches don't hit Vercel.
+ */
+function rewriteWpMediaUrl(url: string): string {
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname === MAIN_DOMAIN && parsed.pathname.startsWith('/wp-content/')) {
+      const cmsHostname = (() => {
+        try { return new URL(API_URL!).hostname; } catch { return `cms.${MAIN_DOMAIN}`; }
+      })();
+      parsed.hostname = cmsHostname;
+      return parsed.toString();
+    }
+  } catch { /* invalid URL, return as-is */ }
+  return url;
+}
+
 /** ACF "File" field returns a URL string or a full attachment object depending on field settings */
 type AcfFileField = string | { url: string; filename?: string; mime_type?: string; [key: string]: unknown };
 
@@ -66,7 +87,10 @@ export function getPdfUrlFromRevista(revista: Revista): string | null {
  */
 async function resolvePdfCoverUrl(pdfUrl: string): Promise<string | null> {
   try {
-    const parsed = new URL(pdfUrl);
+    // Rewrite old-domain URLs before building the JPG URL so the HEAD check
+    // hits the real CMS host, not Vercel.
+    const normalised = rewriteWpMediaUrl(pdfUrl);
+    const parsed = new URL(normalised);
     if (!parsed.pathname.toLowerCase().endsWith('.pdf')) return null;
     const jpgUrl = `${parsed.origin}${parsed.pathname.replace(/\.pdf$/i, '-pdf.jpg')}`;
     const check = await fetch(jpgUrl, { method: 'HEAD' });
@@ -85,14 +109,15 @@ async function resolvePdfCoverUrl(pdfUrl: string): Promise<string | null> {
  */
 async function resolveRevistaImage(revista: Revista): Promise<string> {
   const embedded = revista._embedded?.['wp:featuredmedia']?.[0]?.source_url;
-  if (embedded) return embedded;
+  // Rewrite in case featured-image URL also has the old domain
+  if (embedded) return rewriteWpMediaUrl(embedded);
 
   // Use pre-generated PDF cover thumbnail from wp:attachment if embedded
   const pdfAttachment = getPdfAttachment(revista);
   if (pdfAttachment) {
     const sizes = pdfAttachment.media_details?.sizes;
     const coverUrl = sizes?.large?.source_url ?? sizes?.medium?.source_url ?? sizes?.full?.source_url;
-    if (coverUrl) return coverUrl;
+    if (coverUrl) return rewriteWpMediaUrl(coverUrl);
   }
 
   // Fallback: derive cover from ACF PDF URL via WordPress naming convention

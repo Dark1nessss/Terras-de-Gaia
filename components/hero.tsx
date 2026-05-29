@@ -1,11 +1,39 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { LiveDot } from "@/components/live-dot";
 
 export default function Hero() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Some browsers pause autoplay videos on low-power mode, tab switching,
+    // Data Saver, or aggressive autoplay policies. Resume whenever that happens.
+    const resume = () => {
+      if (!video.ended && video.paused) {
+        video.play().catch(() => null);
+      }
+    };
+
+    video.addEventListener("pause", resume);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) resume();
+    });
+
+    return () => {
+      video.removeEventListener("pause", resume);
+    };
+  }, []);
+
   return (
     <section className="relative h-dvh w-full overflow-hidden flex flex-col justify-end font-nurom z-0">
       {/* Background Video */}
       <video 
+        ref={videoRef}
         autoPlay muted loop playsInline 
         className="absolute inset-0 size-full object-cover z-0 scale-105 md:scale-100"
       >
