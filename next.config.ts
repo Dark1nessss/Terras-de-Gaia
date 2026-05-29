@@ -41,8 +41,11 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
+  experimental: {
+    // Limit worker processes for static page generation on cPanel shared hosting
+    // (prevents EAGAIN "can't spawn process" errors due to OS thread/process limits)
+    cpus: 1,
+    workerThreads: false,
   },
   async headers() {
     return [
