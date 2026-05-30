@@ -18,7 +18,7 @@ export TOKIO_WORKER_THREADS=2
 export RAYON_NUM_THREADS=2
 export NODE_OPTIONS="--max-old-space-size=1536"
 
-npm run build
+npm run build -- --webpack
 
 # Compile server.ts → server.js (custom HTTP server for cPanel)
 npx tsc --outDir . --module commonjs --target es2019 --esModuleInterop --skipLibCheck server.ts

@@ -16,11 +16,6 @@ const nextConfig: NextConfig = {
   // Skip TS checks during build — saves memory/threads on shared hosting
   typescript: { ignoreBuildErrors: true },
 
-  // Force webpack bundler — Turbopack crashes on cPanel's symlinked node_modules.
-  // Next.js 16 uses Turbopack by default; having a webpack() function opts back to webpack.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  webpack: (config: any) => config,
-
   async headers() {
     return [
       {
