@@ -20,13 +20,22 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    // Cache optimised images for 30 days (2592000 s) so the same image
+    // is never re-processed within that period — biggest cost lever on Vercel.
+    minimumCacheTTL: 2592000,
+    // Only generate the device widths that the layout actually needs.
+    // Removing the default 750 / 2048 / 3840 breakpoints cuts the number
+    // of unique (src × width) variants that Vercel has to optimise.
+    deviceSizes: [640, 828, 1080, 1200, 1920],
+    // WebP gives great compression with lower encoding cost.
+    // Skipping AVIF avoids the extra CPU-intensive encoding step.
+    formats: ['image/webp'],
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'terrasdegaia.pt',
         pathname: '**',
       },
-      // If you are using standard WordPress paths, you can also add:
       {
         protocol: 'https',
         hostname: '**.terrasdegaia.pt',
@@ -36,11 +45,6 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'i.ytimg.com',
-        pathname: '**',
-      },
-      {
-        protocol: 'https',
-        hostname: '**.ytimg.com',
         pathname: '**',
       },
     ],
