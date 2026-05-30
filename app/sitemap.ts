@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getSecureHeaders } from "@/lib/auth";
 
-const BASE_URL = "https://terrasdegaia.pt";
+const BASE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://terrasdegaia.pt").replace(/\/$/, "");
 const API_URL = process.env.WORDPRESS_API_URL;
 
 // Static pages with their priority and change frequency

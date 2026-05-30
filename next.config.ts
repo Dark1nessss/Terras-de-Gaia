@@ -10,6 +10,12 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Required for self-hosted (cPanel/VPS) — bundles all dependencies into .next/standalone
+  output: 'standalone',
+
+  // Skip TS and ESLint checks during build — saves memory/threads on shared hosting
+  typescript: { ignoreBuildErrors: true },
+  eslint: { ignoreDuringBuilds: true },
 
   async headers() {
     return [

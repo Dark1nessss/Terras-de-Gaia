@@ -16,6 +16,6 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
     ],
-    sitemap: "https://terrasdegaia.pt/sitemap.xml",
+    sitemap: `${(process.env.NEXT_PUBLIC_SITE_URL || "https://terrasdegaia.pt").replace(/\/$/, "")}/sitemap.xml`,
   };
 }
