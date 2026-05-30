@@ -21,5 +21,6 @@ try {
 // We must use it directly — `next start` and the custom HTTP wrapper do not
 // work with standalone mode and will trigger a WASM OOM or a warning.
 // NODE_PATH is fixed above before this require runs.
+// Use __dirname so the path is absolute regardless of cwd when Passenger starts us.
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-require('./.next/standalone/server.js');
+require(path.join(__dirname, '.next', 'standalone', 'server.js'));
