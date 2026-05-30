@@ -20,6 +20,11 @@ export NODE_OPTIONS="--max-old-space-size=1536"
 
 npm run build -- --webpack
 
-# Compile server.ts → server.js (custom HTTP server for cPanel)
+# Copy public assets into standalone output (required for the standalone server to serve them)
+cp -r public .next/standalone/public
+cp -r .next/static .next/standalone/.next/static
+echo "Static assets copied to standalone"
+
+# Compile server.ts → server.js (fixes NODE_PATH then delegates to .next/standalone/server.js)
 npx tsc --outDir . --module commonjs --target es2019 --esModuleInterop --skipLibCheck server.ts
 echo "server.js compiled successfully"
