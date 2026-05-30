@@ -13,17 +13,14 @@ if [ -L "node_modules" ]; then
   echo "Detected symlinked node_modules → $REAL_NM (NODE_PATH set)"
 fi
 
-# Disable Turbopack — it crashes on cPanel's symlinked node_modules
-# (Next.js 16 uses Turbopack by default for builds; force webpack instead)
-export NEXT_DISABLE_TURBOPACK=1
-export NEXT_TURBOPACK=false
-
+# Disable Turbopack — it crashes on cPanel's symlinked node_modules.
+# Must pass --no-turbopack directly; env vars don't work in Next.js 16.
 # Limit worker threads to stay within cPanel's OS limits
 export TOKIO_WORKER_THREADS=2
 export RAYON_NUM_THREADS=2
 export NODE_OPTIONS="--max-old-space-size=1536"
 
-npm run build
+npx next build --no-turbopack
 
 # Compile server.ts → server.js (custom HTTP server for cPanel)
 npx tsc --outDir . --module commonjs --target es2019 --esModuleInterop --skipLibCheck server.ts
