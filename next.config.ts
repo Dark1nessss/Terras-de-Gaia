@@ -16,6 +16,13 @@ const nextConfig: NextConfig = {
   // Skip TS checks during build — saves memory/threads on shared hosting
   typescript: { ignoreBuildErrors: true },
 
+  experimental: {
+    // Limit worker processes for static page generation on cPanel shared hosting
+    // (prevents EAGAIN "can't spawn process" errors due to OS process limits)
+    cpus: 1,
+    workerThreads: false,
+  },
+
   async headers() {
     return [
       {
