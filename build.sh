@@ -20,8 +20,9 @@ if [ -L "node_modules" ]; then
 fi
 
 # Limit worker threads to stay within cPanel's OS limits
-export TOKIO_WORKER_THREADS=2
-export RAYON_NUM_THREADS=2
+export TOKIO_WORKER_THREADS=1
+export RAYON_NUM_THREADS=1
+export UV_THREADPOOL_SIZE=1
 export NODE_OPTIONS="--max-old-space-size=1536"
 
 npm run build -- --webpack
