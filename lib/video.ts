@@ -201,3 +201,18 @@ export function extractVideoUrl(post: any): string | null {
 
   return null;
 }
+
+/**
+ * Remove video embeds (YouTube iframes, WP embed blocks) from HTML body content.
+ * Used when PostVideoPlayer already shows the video above the body, to avoid duplication.
+ */
+export function stripVideoEmbeds(html: string): string {
+  if (!html) return html;
+  // Remove WP block embed figures (YouTube, Vimeo, etc.)
+  let out = html.replace(/<figure[^>]*class="[^"]*wp-block-embed[^"]*"[^>]*>[\s\S]*?<\/figure>/gi, '');
+  // Remove any standalone iframe pointing to YouTube or youtu.be
+  out = out.replace(/<iframe[^>]*src="[^"]*(?:youtube\.com|youtu\.be)[^"]*"[^>]*>.*?<\/iframe>/gi, '');
+  // Remove empty <p> wrappers left behind
+  out = out.replace(/<p>\s*<\/p>/g, '');
+  return out;
+}

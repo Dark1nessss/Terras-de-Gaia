@@ -13,6 +13,7 @@ import { AdPlaceholder } from "@/components/ad-placeholder";
 import { decodeHtml, truncateBreadcrumbTitle } from "@/lib/decode-html";
 import { formatDate } from "@/lib/date";
 import { PostVideoPlayer } from "@/components/post-video-player";
+import { stripVideoEmbeds } from "@/lib/video";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -51,7 +52,10 @@ export default async function SinglePostPage({ params }: Props) {
   const categories = post.categories || [];
   const relatedPosts = post.relatedPosts || [];
 
-  const contentText = post.content?.rendered.replace(/<[^>]*>/g, '') || '';
+  const bodyHtml = post.hasVideo
+    ? stripVideoEmbeds(post.content.rendered)
+    : post.content.rendered;
+  const contentText = bodyHtml.replace(/<[^>]*>/g, '') || '';
   const wordCount = contentText.split(/\s+/).length;
   const readingTime = Math.ceil(wordCount / 200);
 
@@ -128,7 +132,7 @@ export default async function SinglePostPage({ params }: Props) {
             {/* Body Content */}
             <div
               className="prose prose-invert max-w-none text-white/70 leading-relaxed space-y-6 text-base md:text-lg mb-16"
-              dangerouslySetInnerHTML={{ __html: post.content.rendered }}
+              dangerouslySetInnerHTML={{ __html: bodyHtml }}
             />
 
             {/* Footer Section */}
@@ -136,7 +140,7 @@ export default async function SinglePostPage({ params }: Props) {
               <ShareButton title={decodeHtml(post.title.rendered)} />
               <div className="flex gap-8 text-[10px] font-black uppercase tracking-[0.2em] text-white/30">
                 <span>{wordCount} Palavras</span>
-                <span>245 Visualizações</span>
+                {/* <span>245 Visualizações</span> */}
               </div>
             </div>
 
