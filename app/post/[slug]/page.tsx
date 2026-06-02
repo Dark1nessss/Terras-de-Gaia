@@ -140,7 +140,6 @@ export default async function SinglePostPage({ params }: Props) {
               <ShareButton title={decodeHtml(post.title.rendered)} />
               <div className="flex gap-8 text-[10px] font-black uppercase tracking-[0.2em] text-white/30">
                 <span>{wordCount} Palavras</span>
-                {/* <span>245 Visualizações</span> */}
               </div>
             </div>
 
