@@ -1,5 +1,11 @@
 #!/bin/bash
 # Build script for cPanel - handles nodevenv symlinked node_modules
+set -e
+
+# Clean previous build artifacts to prevent hash mismatches between
+# server.js and static files when rebuilding without restarting.
+echo "Cleaning previous build..."
+rm -rf .next
 
 # cPanel sets NODE_ENV=production which skips devDependencies.
 # Force a full install so build tools (tailwindcss, typescript, etc.) are present.
