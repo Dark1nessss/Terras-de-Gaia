@@ -8,6 +8,8 @@ import { AdPlaceholder } from "./ad-placeholder";
 import { getTVGuide } from '@/lib/wp';
 import PlaylistArchiveSection from './playlist-archive-section';
 
+export const dynamic = "force-dynamic";
+
 export default async function ContentHub() {
   const programs = await getTVGuide();
   return (

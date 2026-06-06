@@ -12,7 +12,7 @@ export async function getPosts() {
     try {
       const res = await fetch(`${API_URL}/posts?_embed`, {
         headers: getSecureHeaders(),
-        next: { revalidate: 300 } // ISR: 5 minutes
+        next: { revalidate: 0 }
       });
 
       if (!res.ok) {
@@ -402,7 +402,7 @@ export async function getTVGuide() {
     try {
       const res = await fetch(url, {
         headers: getSecureHeaders(),
-        next: { revalidate: 300 } // ISR cache for 5 minutes
+        next: { revalidate: 0 }
       });
 
       if (!res.ok) throw new Error('Falha ao carregar Guia TV');
