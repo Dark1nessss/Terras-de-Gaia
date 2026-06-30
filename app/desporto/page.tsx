@@ -7,8 +7,9 @@ import { Breadcrumb } from "@/components/breadcrumb";
 import { AdPlaceholder } from "@/components/ad-placeholder";
 import { CategoryFilters } from "@/components/category-filters";
 import { PostCard } from "@/components/post-card";
-import { Trophy, Timer, Star } from "lucide-react";
+import { Trophy, Star } from "lucide-react";
 import Link from "next/link";
+import { SportsCalendar } from "../../components/sports-calendar";
 
 const SORT_MAP: Record<string, { orderby: string; order: string }> = {
   date_desc: { orderby: "date",  order: "desc" },
@@ -32,13 +33,6 @@ export default async function SportsMainPage({
   ]);
 
   if (!posts || (posts.length === 0 && !isFiltered)) return null;
-
-  const modalities = [
-    { name: "Futebol", slug: "futebol" },
-    { name: "Basquetebol", slug: "basquetebol" },
-    { name: "Voleibol", slug: "voleibol" },
-    { name: "Trail", slug: "trail" }
-  ];
 
   const featuredPosts = posts.slice(0, 3);
   const remainingPosts = posts.slice(3);
@@ -110,7 +104,7 @@ export default async function SportsMainPage({
                 {featuredPosts.slice(1, 3).map((post) => (
                   <Link
                     key={post.id}
-                    href={`/desporto/${post.category?.slug ?? "desporto"}/${post.slug}`}
+                    href={`/post/${post.slug}`}
                     className="group relative overflow-hidden bg-zinc-900 border border-white/5 min-h-45"
                   >
                     <div className="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent z-10" />
@@ -151,25 +145,7 @@ export default async function SportsMainPage({
               <aside className="lg:col-span-4 space-y-10 sticky top-32 self-start">
                 <AdPlaceholder position="sidebar" />
 
-                <div className="bg-[#0e1014] border-l-4 border-[#006ec2] p-6">
-                  <h3 className="text-sm font-black uppercase tracking-widest mb-6 flex items-center gap-2">
-                    <Timer size={16} className="text-[#006ec2]" /> Calendário
-                  </h3>
-                  <div className="space-y-4">
-                    {[1, 2, 3].map((i) => (
-                      <div key={i} className="flex items-center gap-4 border-b border-white/5 pb-4 last:border-0">
-                        <div className="text-center w-10 shrink-0">
-                          <span className="block text-xs font-black text-[#006ec2]">MAI</span>
-                          <span className="block text-lg font-black italic">1{i}</span>
-                        </div>
-                        <div>
-                          <p className="text-[10px] text-white/40 font-bold uppercase">Campeonato Regional</p>
-                          <p className="text-xs font-black uppercase italic">Gaia FC vs Valadares</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <SportsCalendar />
 
                 <div>
                   <h3 className="text-sm font-black uppercase tracking-widest mb-6 flex items-center gap-2">
@@ -179,7 +155,7 @@ export default async function SportsMainPage({
                     {posts.slice(0, 5).map((p, idx) => (
                       <Link
                         key={p.id}
-                        href={`/desporto/${p.category?.slug ?? "desporto"}/${p.slug}`}
+                        href={`/post/${p.slug}`}
                         className="flex gap-4 group"
                       >
                         <span className="text-4xl font-black italic text-white/10 group-hover:text-[#006ec2]/20 transition-colors shrink-0">

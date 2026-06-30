@@ -68,7 +68,7 @@ export default async function SinglePostPage({ params }: Props) {
             { label: "Inicial", href: "/" },
             { 
               label: categoryName, 
-              href: categoryName === "Desporto" ? `/desporto/${categorySlug}` : `/categoria/${categorySlug}`
+              href: categoryName === "Desporto" ? "/desporto" : `/categoria/${categorySlug}`
             }
           ]} 
           current={truncateBreadcrumbTitle((post.title.rendered), 50)}

@@ -8,6 +8,7 @@ import { Breadcrumb } from "@/components/breadcrumb";
 import { AdPlaceholder } from "@/components/ad-placeholder";
 import { CategoryFilters } from "@/components/category-filters";
 import { PostCard } from "@/components/post-card";
+import Link from "next/link";
 
 const ACCENT = "#00a6f0";
 
@@ -168,7 +169,11 @@ export default async function SportsCategoryPage({
             <SidebarWidget title="Mais Vistos" icon={<TrendingUp size={18} />}>
               <div className="space-y-4">
                 {posts.slice(0, 3).map((p, idx) => (
-                  <div key={p.id} className="group border-b border-white/5 pb-3 last:border-0">
+                  <Link
+                    key={p.id}
+                    href={`/post/${p.slug}`}
+                    className="group block border-b border-white/5 pb-3 last:border-0"
+                  >
                     <div className="flex items-start gap-3 mb-2">
                       <div className="font-black text-lg leading-none" style={{ color: ACCENT }}>#{idx + 1}</div>
                       <p className="text-xs font-black uppercase leading-tight" style={{ color: ACCENT }}>Destaque</p>
@@ -176,7 +181,7 @@ export default async function SportsCategoryPage({
                     <p className="text-xs font-black uppercase italic group-hover:text-[#006ec2] transition-colors leading-snug line-clamp-2">
                       {p.title.rendered.replace(/<[^>]*>/g, "")}
                     </p>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </SidebarWidget>
