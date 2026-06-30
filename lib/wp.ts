@@ -79,24 +79,12 @@ export async function getPostBySlug(slug: string) {
         post.category = extractCategory(post);
         
         // Fetch related posts from same category
-        const categories = extractCategories(post);
-        if (categories.length > 0) {
-          const categorySlug = categories[0].slug;
+        const categorySlug = post.category?.slug;
+        if (categorySlug) {
           wpLogger.debug("Fetching related posts for category:", categorySlug);
-          
-          const relatedRes = await fetch(
-            `${API_URL}/posts?category_slug=${categorySlug}&_embed&per_page=6`,
-            { 
-              headers: getSecureHeaders(),
-              next: { revalidate: 300 } // Keep related posts fresh
-            }
-          );
-          
-          if (relatedRes.ok) {
-            const relatedPostsData = await relatedRes.json();
-            post.relatedPosts = await enrichPosts(relatedPostsData);
-            wpLogger.debug("Related posts fetched:", post.relatedPosts.length);
-          }
+          const related = await getPostsByCategoryPaginated(categorySlug, 1, 6);
+          post.relatedPosts = related.posts.filter((relatedPost) => relatedPost.id !== post.id);
+          wpLogger.debug("Related posts fetched:", post.relatedPosts.length);
         }
       }
 
@@ -224,33 +212,41 @@ export function extractCategory(post: any) {
   const categories = extractCategories(post);
   if (categories.length === 0) return { name: "Notícias", href: "/categoria/noticias" };
   
-  // Prioridade: se houver uma categoria de desporto, escolhemos essa como principal
-  const sportCat = categories.find(c => SPORTS_SLUGS.includes(c.slug.toLowerCase()));
-  return sportCat || categories[0];
+  // Prioridade: primeiro tentamos encontrar uma subcategoria específica de desporto.
+  // Ex.: futebol, basquetebol, voleibol. Se não existir, caímos para o termo base "desporto".
+  const specificSportCat = categories.find(c => {
+    const slug = c.slug.toLowerCase().trim();
+    return slug !== "desporto" && SPORTS_SLUGS.includes(slug);
+  });
+
+  const sportCat = categories.find(c => SPORTS_SLUGS.includes(c.slug.toLowerCase().trim()));
+  return specificSportCat || sportCat || categories[0];
 }
 
 // Category mapping cache to avoid repeated API calls
 const categoryCache = new Map<string, string>();
 
 export const SPORTS_SLUGS = [
-  'futebol', 'basquetebol', 'voleibol', 'hoquei', 
-  'natacao', 'desporto', 'modalidades', 'trail', 'atletismo'
+  'futebol', 'futsal', 'andebol', 'basquetebol', 'voleibol', 'ciclismo', 'hoquei', 
+  'natacao', 'desporto-adaptado', 'ginastica', 'artes-marciais', 'tenis-de-mesa'
 ];
 
 export function getCategoryLink(slug: string): string {
-  if (slug === 'desporto') {
+  const normalizedSlug = slug.trim().toLowerCase();
+
+  if (normalizedSlug === 'desporto') {
     return '/desporto';
   }
 
   // Verifica se o slug pertence às modalidades de desporto
-  const isSport = SPORTS_SLUGS.includes(slug);
+  const isSport = SPORTS_SLUGS.includes(normalizedSlug);
   
   if (isSport) {
-    return `/desporto/${slug}`;
+    return `/desporto/${normalizedSlug}`;
   }
 
   // Para todas as outras categorias (ex: Opinião, Atualidade)
-  return `/categoria/${slug}`;
+  return `/categoria/${normalizedSlug}`;
 }
 
 export function extractCategories(post: any) {

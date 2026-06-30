@@ -1,26 +1,31 @@
-import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { MoveRight } from "lucide-react";
 import { decodeHtml } from "@/lib/decode-html";
+import { getCategoryLink } from "@/lib/wp";
 
-interface RelatedPostsProps {
-  posts: any[];
-  currentPostId?: number;
-  categorySlug: string;
-  categoryName: string;
+interface RelatedPost {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  category?: { name?: string };
+  _embedded?: { "wp:featuredmedia"?: Array<{ source_url: string }> };
 }
 
-export function RelatedPosts({ posts, currentPostId, categorySlug, categoryName }: RelatedPostsProps) {
+interface RelatedPostsProps {
+  posts: RelatedPost[];
+  currentPostId?: number;
+  categorySlug: string;
+}
+
+export function RelatedPosts({ posts, currentPostId, categorySlug }: RelatedPostsProps) {
   const filteredPosts = posts
     .filter((post) => post.id !== currentPostId)
     .slice(0, 3);
 
   if (filteredPosts.length === 0) return null;
 
-  const viewAllHref = categoryName === "Desporto" 
-    ? `/desporto/${categorySlug}` 
-    : `/categoria/${categorySlug}`;
+  const viewAllHref = getCategoryLink(categorySlug);
 
   return (
     <div className="w-full mt-20 pt-12 border-t-2 border-white/10">
@@ -35,7 +40,7 @@ export function RelatedPosts({ posts, currentPostId, categorySlug, categoryName 
         {/* Link must be from category */}
 
         <Link href={viewAllHref} className="hidden md:flex items-center gap-2 text-white/40 hover:text-[#006ec2] transition-colors text-xs font-bold uppercase tracking-widest pb-2">
-          Ver Tudo <MoveRight size={16} />
+          <span className="mt-0.5"> Ver Tudo </span> <MoveRight size={16} />
         </Link>
       </div>
 
@@ -48,10 +53,10 @@ export function RelatedPosts({ posts, currentPostId, categorySlug, categoryName 
             <Link 
               key={post.id} 
               href={`/post/${post.slug}`}
-              className="group relative bg-[#0a0c10] p-6 md:p-8 hover:bg-[#006ec2] transition-all duration-500 flex flex-col min-h-[300px]"
+              className="group relative bg-[#0a0c10] p-6 md:p-8 hover:bg-[#006ec2] transition-all duration-500 flex flex-col min-h-75"
             >
               {/* Index Number Background */}
-              <span className="absolute top-4 right-6 text-6xl font-black italic text-white/[0.03] group-hover:text-white/50 transition-colors">
+              <span className="absolute top-4 right-6 text-6xl font-black italic text-white/3 group-hover:text-white/50 transition-colors">
                 0{index + 1}
               </span>
 

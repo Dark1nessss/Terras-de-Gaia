@@ -1,9 +1,8 @@
 import React from "react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { Eye, Clock, FileText } from "lucide-react";
-import Link from "next/link";
-import { getPostBySlug } from "@/lib/wp";
+import { Clock } from "lucide-react";
+import { getPostBySlug, getCategoryLink } from "@/lib/wp";
 import { ShareButton } from "@/components/share-button";
 import { CategoryBadges } from "@/components/category-badges";
 import { RelatedPosts } from "@/components/related-posts";
@@ -68,7 +67,7 @@ export default async function SinglePostPage({ params }: Props) {
             { label: "Inicial", href: "/" },
             { 
               label: categoryName, 
-              href: categoryName === "Desporto" ? "/desporto" : `/categoria/${categorySlug}`
+              href: getCategoryLink(categorySlug)
             }
           ]} 
           current={truncateBreadcrumbTitle((post.title.rendered), 50)}
@@ -136,7 +135,7 @@ export default async function SinglePostPage({ params }: Props) {
             />
 
             {/* Footer Section */}
-            <div className="bg-white/[0.02] border border-white/5 p-8 rounded-lg flex flex-col md:flex-row justify-between items-center gap-6 mb-16">
+            <div className="bg-white/2 border border-white/5 p-8 rounded-lg flex flex-col md:flex-row justify-between items-center gap-6 mb-16">
               <ShareButton title={decodeHtml(post.title.rendered)} />
               <div className="flex gap-8 text-[10px] font-black uppercase tracking-[0.2em] text-white/30">
                 <span>{wordCount} Palavras</span>
@@ -145,7 +144,7 @@ export default async function SinglePostPage({ params }: Props) {
 
             {/* Related Posts Section */}
             {relatedPosts.length > 0 && (
-              <RelatedPosts posts={relatedPosts} currentPostId={post.id} categorySlug={categorySlug} categoryName={categoryName} />
+              <RelatedPosts posts={relatedPosts} currentPostId={post.id} categorySlug={categorySlug} />
             )}
 
           </article>
