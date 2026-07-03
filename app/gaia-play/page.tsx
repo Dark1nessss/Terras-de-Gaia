@@ -8,6 +8,20 @@ import type { Program } from '@/lib/programas';
 import { slugifyCategory } from '@/lib/utils';
 import { Play, Plus, MonitorPlay, Layers, ArrowRight, Tv } from 'lucide-react';
 
+function getHeroTitleSizeClass(title: string) {
+  const longestWord = title
+    .trim()
+    .split(/\s+/)
+    .reduce((a, b) => (b.length > a.length ? b : a), '');
+
+  const len = longestWord.length;
+
+  if (len > 14) return 'text-4xl sm:text-5xl md:text-7xl lg:text-8xl';
+  if (len > 10) return 'text-5xl sm:text-6xl md:text-8xl lg:text-9xl';
+  if (len > 6) return 'text-6xl sm:text-7xl md:text-9xl lg:text-[9rem]';
+  return 'text-6xl sm:text-7xl md:text-9xl lg:text-[11rem]';
+}
+
 export default function ProgramsPage() {
   const [programs, setPrograms] = useState<Program[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -76,19 +90,23 @@ export default function ProgramsPage() {
                   <span className="text-white/40 text-xs font-bold uppercase tracking-widest italic pt-[2px]">Streaming em 4K</span>
                 </div>
 
-                <h1 className="text-7xl md:text-[11rem] font-black uppercase italic leading-[0.95] tracking-tighter pb-2">
-                  {featuredProgram.title.rendered.length > 20 ? (
-                    <>
-                      {featuredProgram.title.rendered.split(' ').slice(0, -1).join(' ')} <br />
-                      <span className="text-transparent outline-text-vibrant">
-                        {featuredProgram.title.rendered.split(' ').slice(-1).join(' ')}
-                      </span>
-                    </>
-                  ) : (
-                    <span className="text-transparent outline-text-vibrant">
-                      {featuredProgram.title.rendered}
-                    </span>
-                  )}
+                <h1 className={`${getHeroTitleSizeClass(featuredProgram.title.rendered)} font-black uppercase italic leading-[0.95] tracking-tighter pb-2 break-words hyphens-auto max-w-full`}>
+                  {(() => {
+                    const words = featuredProgram.title.rendered.trim().split(/\s+/);
+                    const [firstWord, ...restWords] = words;
+                    const rest = restWords.join(' ');
+
+                    return (
+                      <>
+                        <span className="block text-white">{firstWord}</span>
+                        {rest && (
+                          <span className="block text-transparent outline-text-vibrant">
+                            {rest}
+                          </span>
+                        )}
+                      </>
+                    );
+                  })()}
                 </h1>
 
                 <p className="text-xl md:text-2xl text-white/60 font-medium italic max-w-2xl leading-relaxed border-l-2 border-[#006ec2] pl-8">
@@ -286,7 +304,7 @@ export default function ProgramsPage() {
 
       <style jsx>{`
         .outline-text-vibrant { 
-          -webkit-text-stroke: 2.1px #00a6f0;
+          -webkit-text-stroke: clamp(1.1px, 0.14vw, 2.1px) #00a6f0;
           text-shadow: 0 0 30px rgba(0,166,240,0.3);
         }
         .no-scrollbar::-webkit-scrollbar { display: none; }
